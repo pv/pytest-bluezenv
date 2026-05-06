@@ -20,10 +20,14 @@ jobs:
       run: >-
         python3 -m
         pip install
-        build
+        build twine
         --user
     - name: Build a source tarball
-      run: python3 -m build --sdist
+      run: python3 -m build
+    - name: Check distributions
+      run: python3 -m twine check dist/*
+    - name: Remove wheels
+      run: rm -f dist/*.whl
     - name: Store the distribution packages
       uses: actions/upload-artifact@v5
       with:
@@ -50,27 +54,3 @@ jobs:
         path: dist/
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-
-  publish-to-testpypi:
-    name: Publish to TestPyPI
-    needs:
-    - build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/pytest-bluezenv
-
-    permissions:
-      id-token: write
-
-    steps:
-    - name: Download dists
-      uses: actions/download-artifact@v6
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
