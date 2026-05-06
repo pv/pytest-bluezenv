@@ -26,6 +26,7 @@ dependencies = [
     "dbus-python",
     "PyGObject>=3.40",
 ]
+license-files = ["LICENSE.txt"]
 dynamic = ["version"]
 
 [project.urls]
