@@ -69,12 +69,20 @@ def bluez_src_dir():
     return None
 
 
+def pkg_bin_dir():
+    bin_dir = Path(_file__).parent / "bin"
+    if bin_dir.is_dir():
+        return bin_dir
+    return None
+
+
 def find_exe(subdir, name):
     """
     Find executable, either in BlueZ build tree or system
     """
     src = bluez_src_dir()
     paths = [
+        pkg_bin_dir(),
         src and src / "builddir" / subdir / name,
         src and src / "build" / subdir / name,
         src and src / subdir / name,
