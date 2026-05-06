@@ -1,0 +1,5 @@
+[wrap-git]
+url = https://github.com/bluez/bluez.git
+revision = 31e4fb1498f47dfbf18b414acbbbeac26dcda366
+patch_directory = bluez
+diff_files = 0001-emulator-btvirt-check-pkt-lengths-don-t-get-stuck-on.patch, 0002-emulator-btvirt-allow-specifying-where-server-unix-s.patch, 0003-emulator-btvirt-support-SCO-data-packets.patch, 0004-emulator-btdev-clear-more-state-on-Reset.patch, 0005-test-runner-enable-path-argument-for-unix.patch, 0006-test-runner-Add-o-option-option.patch, 0007-test-runner-allow-source-tree-root-for-k.patch, 0008-doc-enable-CONFIG_VIRTIO_CONSOLE-in-tester-config.patch, 0009-test-runner-use-virtio-serial-for-implementing-u-dev.patch, 0010-doc-enable-KVM-paravirtualization-clock-support-in-t.patch
