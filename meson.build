@@ -14,6 +14,7 @@ py = py_mod.find_installation(pure: false)
 bluez_proj = subproject('bluez', required: true)
 bluez_btvirt = bluez_proj.get_variable('btvirt')
 bluez_test_runner = bluez_proj.get_variable('test_runner')
+bluez_tester_config = bluez_proj.get_variable('tester_config')
 
 btvirt = custom_target(
   'btvirt',
@@ -29,6 +30,13 @@ test_runner = custom_target(
   command: ['cp', '@INPUT@', '@OUTPUT@'],
   input: bluez_test_runner,
   output: 'test-runner',
+  install_dir: py.get_install_dir(subdir: 'pytest_bluezenv/bin'),
+  install: true
+)
+
+tester_conf = fs.copyfile(
+  bluez_tester_config,
+  'tester.config',
   install_dir: py.get_install_dir(subdir: 'pytest_bluezenv/bin'),
   install: true
 )

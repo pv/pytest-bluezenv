@@ -79,3 +79,4 @@ test_runner = executable(
   include_directories: ['lib', '.'],
 )
 
+tester_config = files('doc/tester.config')

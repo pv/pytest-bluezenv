@@ -16,9 +16,11 @@ def run(*cmd):
 def build_kernel(base_dir, upstream, branch):
     src_dir = utils.bluez_src_dir()
     if src_dir is None:
-        raise ValueError("Can't find BlueZ source directory")
-
-    tester_config = src_dir / "doc" / "tester.config"
+        tester_config = Path(__file__).parent / "bin" / "tester.config"
+        if not tester_config.is_file():
+            raise ValueError("Can't find BlueZ source directory")
+    else:
+        tester_config = src_dir / "doc" / "tester.config"
 
     base_dir = Path(base_dir)
     repo = base_dir / "linux"

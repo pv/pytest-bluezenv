@@ -141,11 +141,14 @@ def pytest_addoption(parser):
     )
 
     parser.addini(
-        "kernel_upstream", "Kernel upstream Git url to use for building kernels"
+        "kernel_upstream",
+        "Kernel upstream Git url to use for building kernels",
+        default="https://github.com/torvalds/linux.git",
     )
     parser.addini(
         "kernel_branch",
         "Kernel upstream Git branch /  commit to use for building custom kernel",
+        default="master",
     )
 
 
