@@ -1,0 +1,32 @@
+[build-system]
+build-backend = 'mesonpy'
+requires = ['meson-python']
+
+[project]
+name = "pytest-bluezenv"
+description = "pytest BlueZ environment plugin"
+readme = "README.rst"
+license = "GPL-2.0-or-later"
+authors = [{name = "Pauli Virtanen", email = "pav@iki.fi"}]
+classifiers = [
+    "Development Status :: 1 - Alpha",
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "Operating System :: Linux",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Utilities",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "pytest>=8",
+    "pexpect",
+    "dbus-python",
+    "PyGObject>=3.40",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/pv/pytest-bluezenv"
