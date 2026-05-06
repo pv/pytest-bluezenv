@@ -76,5 +76,6 @@ btvirt = executable(
 test_runner = executable(
   'test-runner',
   sources: 'tools/test-runner.c',
+  include_directories: ['lib', '.'],
 )
 
