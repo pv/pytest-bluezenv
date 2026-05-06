@@ -62,15 +62,11 @@ def bluez_src_dir():
     if SRC_DIR is not None:
         return SRC_DIR
 
-    src_dir = Path(__file__).parent / ".." / ".."
-    if (src_dir / "src" / "org.bluez.service").exists():
-        return src_dir
-
     return None
 
 
 def pkg_bin_dir():
-    bin_dir = Path(_file__).parent / "bin"
+    bin_dir = Path(__file__).parent / "bin"
     if bin_dir.is_dir():
         return bin_dir
     return None
@@ -81,8 +77,10 @@ def find_exe(subdir, name):
     Find executable, either in BlueZ build tree or system
     """
     src = bluez_src_dir()
+    bin_dir = pkg_bin_dir()
     paths = [
-        pkg_bin_dir(),
+        BUILD_DIR and BUILD_DIR / subdir / name,
+        bin_dir and bin_dir / name,
         src and src / "builddir" / subdir / name,
         src and src / "build" / subdir / name,
         src and src / subdir / name,
@@ -90,8 +88,6 @@ def find_exe(subdir, name):
         src and src / subdir / name,
         f"/usr/libexec/bluetooth/{name}",
     ]
-    if BUILD_DIR is not None:
-        paths.insert(0, BUILD_DIR / subdir / name)
     for exe in paths:
         if exe is None:
             continue

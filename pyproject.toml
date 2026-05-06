@@ -9,10 +9,9 @@ readme = "README.rst"
 license = "GPL-2.0-or-later"
 authors = [{name = "Pauli Virtanen", email = "pav@iki.fi"}]
 classifiers = [
-    "Development Status :: 1 - Alpha",
+    "Development Status :: 3 - Alpha",
     "Framework :: Pytest",
     "Intended Audience :: Developers",
-    "Operating System :: Linux",
     "Topic :: Software Development :: Testing",
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: Utilities",

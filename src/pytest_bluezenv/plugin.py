@@ -19,7 +19,6 @@ __all__ = [
     "pytest_addoption",
     "pytest_configure",
     "pytest_collectreport",
-    "pytest_collection_finish",
     "pytest_collection_modifyitems",
     "pytest_sessionstart",
     "pytest_sessionfinish",
@@ -46,7 +45,7 @@ status_log_seen = set()
 
 
 def pytest_addoption(parser):
-    group = parser.getgroup("pytest_bluezenv", "bluez test options")
+    group = parser.getgroup("pytest_bluezenv", "bluezenv test options")
 
     group.addoption(
         "--kernel",

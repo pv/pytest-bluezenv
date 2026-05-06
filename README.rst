@@ -547,7 +547,7 @@ directory or on host.
 
 
 mainloop_invoke
--------------
+---------------
 
 .. code-block::
 
