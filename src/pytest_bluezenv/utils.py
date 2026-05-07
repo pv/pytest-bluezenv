@@ -23,6 +23,7 @@ import heapq
 import tempfile
 import queue
 import functools
+import importlib.resources
 from pathlib import Path
 
 from gi.repository import GLib
@@ -81,6 +82,7 @@ def find_exe(subdir, name):
     paths = [
         BUILD_DIR and BUILD_DIR / subdir / name,
         bin_dir and bin_dir / name,
+        importlib.resources.files(__package__).joinpath(f"bin/{name}"),
         src and src / "builddir" / subdir / name,
         src and src / "build" / subdir / name,
         src and src / subdir / name,
