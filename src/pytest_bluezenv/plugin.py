@@ -39,6 +39,16 @@ __all__ = [
     "hosts_once",
 ]
 
+VM_REQUIRED_EXE = {
+    ("", "agetty"): False,
+    ("", "chronyd"): False,
+    ("", "dbus-daemon"): False,
+    ("", "setsid"): False,
+    ("emulator", "btvirt"): True,
+    ("tools", "btmgmt"): True,
+    ("tools", "test-runner"): True,
+}
+
 # For logging test status messages to test-functional.log
 status_log = logging.getLogger("pytest")
 status_log_seen = set()
@@ -458,8 +468,30 @@ def vm_setup(request):
     return request.param
 
 
+def _check_requirements():
+    error = []
+
+    for (path, name), required in sorted(VM_REQUIRED_EXE.items()):
+        try:
+            utils.find_exe(path, name)
+        except FileNotFoundError:
+            if required:
+                msg = f"Required executable '{name}' not found"
+                error.append(msg)
+            else:
+                msg = f"Executable '{name}' not found"
+                warnings.warn(msg)
+
+    return "; ".join(error)
+
+
 def _vm_impl(request, kernel, num_hosts, hw, mem):
     config = request.session.config
+
+    err = _check_requirements()
+    if err:
+        pytest.skip(reason=err)
+        return
 
     if hw or config.option.force_usb:
         usb_indices, messages = request.getfixturevalue("usb_indices")

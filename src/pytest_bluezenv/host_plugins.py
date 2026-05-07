@@ -142,8 +142,11 @@ class Call(env.HostPlugin):
 
 
 class _Dbus(env.HostPlugin):
-    def __init__(self):
-        self.exe = utils.find_exe("", "dbus-daemon")
+    def presetup(self, config):
+        try:
+            self.exe = utils.find_exe("", "dbus-daemon")
+        except FileNotFoundError as exc:
+            pytest.skip(reason=f"DBus: {exc!r}")
 
     def setup(self, impl):
         self.log = logging.getLogger(self.name)
@@ -256,11 +259,17 @@ class Bluetoothd(env.HostPlugin):
         if debug and "-d" not in self.args:
             self.args += ("-d",)
 
+    def presetup(self, config):
+        try:
+            self.exe = utils.find_exe("src", "bluetoothd")
+        except FileNotFoundError as exc:
+            pytest.skip(reason=f"Bluetoothd: {exc!r}")
+
     @utils.mainloop_wrap
     def setup(self, impl):
         self.log = logging.getLogger(self.name)
 
-        exe = utils.find_exe("src", "bluetoothd")
+        exe = self.exe
 
         self.tmpdir = utils.TmpDir(prefix="bluetoothd-state-")
         state_dir = Path(self.tmpdir.name) / "state"
@@ -465,8 +474,11 @@ class Bluetoothctl(env.HostPlugin):
     name = "bluetoothctl"
     depends = [Bluetoothd()]
 
-    def __init__(self):
-        self.exe = utils.find_exe("client", "bluetoothctl")
+    def presetup(self, config):
+        try:
+            self.exe = utils.find_exe("client", "bluetoothctl")
+        except FileNotFoundError as exc:
+            pytest.skip(reason=f"Bluetoothctl: {exc!r}")
 
     def setup(self, impl):
         from pexpect.popen_spawn import PopenSpawn
