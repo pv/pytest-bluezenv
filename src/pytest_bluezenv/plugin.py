@@ -49,7 +49,7 @@ VM_REQUIRED_EXE = {
     ("tools", "test-runner"): True,
 }
 
-# For logging test status messages to test-functional.log
+# For logging test status messages to test-bluezenv.log
 status_log = logging.getLogger("pytest")
 status_log_seen = set()
 
@@ -117,7 +117,7 @@ def pytest_addoption(parser):
     group.addoption(
         "--btmon",
         action="store_true",
-        help="Launch btmon on all hosts to log events, and dump traffic to test-functional-*.btsnoop",
+        help="Launch btmon on all hosts to log events, and dump traffic to test-bluezenv-*.btsnoop",
     )
 
     # host_plugins.Rcvbuf:
@@ -175,7 +175,7 @@ def pytest_configure(config):
     worker_id = os.environ.get("PYTEST_XDIST_WORKER")
     logfile = config.getini("log_file")
     if worker_id is not None and logfile:
-        logfile = logfile.replace(".log", f"-{worker_id}.log")
+        logfile = logfile.replace(".log", "") + f"-{worker_id}.log"
         with open(logfile, "wb"):
             pass
 
@@ -574,7 +574,7 @@ def _copy_host_files(vm):
     for j, h in enumerate(vm.hosts):
         path = Path(h._path).parent / f"shared-{j}"
         for f in path.iterdir():
-            if f.name.startswith("test-functional-"):
+            if f.name.startswith("test-bluezenv-"):
                 shutil.copyfile(f, f.name)
                 os.unlink(f)
                 if f.name.endswith(".core"):

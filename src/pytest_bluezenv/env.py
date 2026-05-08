@@ -327,7 +327,7 @@ def _main_runner_instance():
 
     utils.SIMPLE_LOG_HANDLER.start()
     try:
-        dev = _find_vport(b"bluez-func-test-rpc\n")
+        dev = _find_vport(b"pytest-bluezenv-rpc\n")
         log.info(f"Test RPC server on {dev}")
         rpc.server_file(dev, Implementation())
     finally:
@@ -351,7 +351,7 @@ def _setup_vm_instance():
 
     # Set up core dumps
     with open("/proc/sys/kernel/core_pattern", "w") as f:
-        f.write("|/usr/bin/env tee /run/shared/test-functional-%h-%e-%t.core")
+        f.write("|/usr/bin/env tee /run/shared/test-bluezenv-%h-%e-%t.core")
 
     resource.setrlimit(
         resource.RLIMIT_CORE, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
@@ -439,7 +439,7 @@ def _main_runner():
     """
     VM-side tester supervisor
     """
-    log_port = _find_vport(b"bluez-func-test-log\n")
+    log_port = _find_vport(b"pytest-bluezenv-log\n")
     log_stream = open(log_port, "w", encoding="utf-8", errors="surrogateescape")
     utils.SIMPLE_LOG_HANDLER = _RunnerLogHandler(log_stream)
     logging.basicConfig(level=0, handlers=[utils.SIMPLE_LOG_HANDLER])
@@ -517,7 +517,7 @@ class Environment:
         self.runner += [str((Path(__file__).parent / "runner.py").absolute())]
 
     def start(self):
-        self.path = Path(tempfile.mkdtemp(prefix="bluez-func-test-"))
+        self.path = Path(tempfile.mkdtemp(prefix="pytest-bluezenv-"))
 
         if self.usb_indices is None:
             args = self._start_btvirt()
@@ -556,7 +556,7 @@ class Environment:
                 if f.name.startswith("shared-"):
                     shutil.rmtree(f.resolve(), ignore_errors=True)
                     continue
-                if f.name.startswith("bluez-func-test-"):
+                if f.name.startswith("pytest-bluezenv-"):
                     f.unlink()
 
             self.path.rmdir()
@@ -655,11 +655,11 @@ class Environment:
         ENV_INDEX += 1
 
         for idx, arg in enumerate(args):
-            socket_path = str(self.path / f"bluez-func-test-rpc-{idx}")
+            socket_path = str(self.path / f"pytest-bluezenv-rpc-{idx}")
             socket_paths.append(socket_path)
 
-            tty_path = str(self.path / f"bluez-func-test-tty-{idx}")
-            log_path = str(self.path / f"bluez-func-test-log-{idx}")
+            tty_path = str(self.path / f"pytest-bluezenv-tty-{idx}")
+            log_path = str(self.path / f"pytest-bluezenv-log-{idx}")
 
             shared_path = self.path / f"shared-{idx}"
             shared_path.mkdir()
@@ -686,7 +686,7 @@ class Environment:
                 "-device",
                 "virtio-serial",
                 "-device",
-                "virtserialport,chardev=ser0,name=bluez-func-test-rpc",
+                "virtserialport,chardev=ser0,name=pytest-bluezenv-rpc",
             ]
 
             # Separate TTY access
@@ -710,7 +710,7 @@ class Environment:
                 "-device",
                 "virtio-serial",
                 "-device",
-                "virtserialport,chardev=ser2,name=bluez-func-test-log",
+                "virtserialport,chardev=ser2,name=pytest-bluezenv-log",
             ]
 
             # Shared filesystem

@@ -35,7 +35,7 @@ class Btmon(env.HostPlugin):
 
         subprocess.run(["mount"])
 
-        self.dumpfile = f"/run/shared/test-functional-{impl.instance_name}.btsnoop"
+        self.dumpfile = f"/run/shared/test-bluezenv-{impl.instance_name}.btsnoop"
 
         if self.args is None:
             self.args = [
