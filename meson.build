@@ -1,7 +1,7 @@
 project(
   'pytest-bluezenv',
   'c',
-  version: '0.1.2.dev0',
+  version: '0.1.2',
   meson_version: '>=0.64.0',
 )
 
