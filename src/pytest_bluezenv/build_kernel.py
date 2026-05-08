@@ -3,6 +3,7 @@
 import subprocess
 import shutil
 import os
+import importlib.resources
 from pathlib import Path
 
 from . import utils
@@ -17,6 +18,10 @@ def build_kernel(base_dir, upstream, branch):
     src_dir = utils.bluez_src_dir()
     if src_dir is None:
         tester_config = Path(__file__).parent / "bin" / "tester.config"
+        if not tester_config.is_file():
+            tester_config = Path(
+                importlib.resources.files(__package__).joinpath(f"bin/tester.config")
+            )
         if not tester_config.is_file():
             raise ValueError("Can't find BlueZ source directory")
     else:
