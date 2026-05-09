@@ -524,19 +524,23 @@ def _hosts_impl(request, vm, setup, name, reuse):
     if vm.path is None:
         vm.start()
 
-    for idx, (h, plugins) in enumerate(zip(vm.hosts, setup)):
-        timeout = max(vm_timeout * len(plugins) ** 0.5, timeout)
+    try:
+        for idx, (h, plugins) in enumerate(zip(vm.hosts, setup)):
+            timeout = max(vm_timeout * len(plugins) ** 0.5, timeout)
 
-        h.set_instance_name(f"{name}.{idx}")
+            h.set_instance_name(f"{name}.{idx}")
 
-        if request.session.config.option.btmon:
-            plugins = (Btmon(),) + plugins
+            if request.session.config.option.btmon:
+                plugins = (Btmon(),) + plugins
 
-        for p in plugins:
-            h.start_load(p)
+            for p in plugins:
+                h.start_load(p)
 
-    for h in vm.hosts:
-        h.wait_load(timeout=timeout)
+        for h in vm.hosts:
+            h.wait_load(timeout=timeout)
+    except:
+        _close_hosts(request, vm, True)
+        raise
 
     yield vm.hosts
 
