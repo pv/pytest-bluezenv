@@ -256,6 +256,8 @@ class Implementation:
             if not self._unload(name):
                 success = False
             log.info(f"Plugin {name} teardown done")
+
+        subprocess.run(["sync"])
         if not success:
             raise RuntimeError("teardown failure")
 
