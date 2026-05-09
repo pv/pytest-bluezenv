@@ -577,17 +577,10 @@ def _close_hosts(request, vm, name):
 
 
 def _copy_host_files(vm):
-    wait_done = False
-
     for j, h in enumerate(vm.hosts):
         path = Path(h._path).parent / f"shared-{j}"
         for f in path.iterdir():
             if f.name.startswith("test-bluezenv-"):
-                if not wait_done and fnmatch.fnmatch(f.name, "*.core"):
-                    # Add delay in case dump + transfer is not complete yet
-                    time.sleep(4)
-                    wait_done = True
-
                 shutil.copyfile(f, f.name)
                 os.unlink(f)
                 if f.name.endswith(".core"):

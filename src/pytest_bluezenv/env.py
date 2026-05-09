@@ -17,6 +17,7 @@ import time
 import shlex
 import argparse
 import shutil
+import glob
 import threading
 import tempfile
 import operator
@@ -258,6 +259,12 @@ class Implementation:
             log.info(f"Plugin {name} teardown done")
 
         subprocess.run(["sync"])
+        if glob.glob("/run/shared/*.core"):
+            # Wait for core dumps, if any
+            log.info("Core dump found: delay teardown")
+            time.sleep(4)
+            subprocess.run(["sync"])
+
         if not success:
             raise RuntimeError("teardown failure")
 
