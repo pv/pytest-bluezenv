@@ -258,15 +258,52 @@ class Implementation:
                 success = False
             log.info(f"Plugin {name} teardown done")
 
-        subprocess.run(["sync"])
-        if glob.glob("/run/shared/*.core"):
-            # Wait for core dumps, if any
-            log.info("Core dump found: delay teardown")
-            time.sleep(4)
-            subprocess.run(["sync"])
+        # Wait for child process core dumping
+        _wait_core_dumps()
 
         if not success:
             raise RuntimeError("teardown failure")
+
+
+def _wait_core_dumps():
+    """
+    Wait for core dumping processes.
+    """
+
+    exited = {}
+
+    # First check for completed child processes. Add 0.5 sec delay in
+    # case core dumping started just in teardown and file isn't
+    # created yet.
+    for j in range(2):
+        try:
+            while True:
+                pid, status = os.waitpid(-1, os.WNOHANG)
+                if pid == 0:
+                    time.sleep(0.25)
+                    break
+                exited[pid] = True
+        except ChildProcessError:
+            break
+
+    # If something is dumping core, wait for that pid, so that we
+    # don't quit before the core file is complete.
+    for core in glob.glob("/run/shared/*.core"):
+        m = re.match(r".*-(\d+).core", core)
+        if not m:
+            continue
+
+        pid = int(m.group(1))
+        if pid in exited:
+            continue
+
+        log.info(f"Wait for pid {pid} core dump")
+        try:
+            os.waitpid(pid, 0)
+        except ChildProcessError:
+            pass
+
+    subprocess.run(["sync"])
 
 
 def _find_vport(target_name):
@@ -358,9 +395,10 @@ def _setup_vm_instance():
             f
         )
 
-    # Set up core dumps
+    # Set up core dumps: use a pipe since 9p doesn't support user ID
+    # maps and core dumping there is refused due to permissions
     with open("/proc/sys/kernel/core_pattern", "w") as f:
-        f.write("|/usr/bin/env tee /run/shared/test-bluezenv-%h-%e-%t.core")
+        f.write("|/usr/bin/env tee /run/shared/test-bluezenv-%h-%e-%t-%p.core")
 
     resource.setrlimit(
         resource.RLIMIT_CORE, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)

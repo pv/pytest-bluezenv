@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 import os
 import re
-import time
-import fnmatch
 import shutil
 import logging
 import warnings
