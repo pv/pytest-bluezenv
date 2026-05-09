@@ -296,7 +296,7 @@ class _RunnerLogHandler(logging.Handler):
             if nsec is None:
                 nsec = int(record.created * 1e9)
             for line in msg.splitlines():
-                self.emit_simple(name, levelno, msg, nsec)
+                self.emit_simple(name, levelno, line, nsec)
             self.stream.flush()
         except RecursionError:
             raise
