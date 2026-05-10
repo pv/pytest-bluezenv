@@ -47,9 +47,10 @@ def test_basic(tmp_path):
     s_2.start()
 
     try:
-        with rpc.client_unix_socket(socket_1) as c_1, rpc.client_unix_socket(
-            socket_2
-        ) as c_2:
+        with (
+            rpc.client_unix_socket(socket_1) as c_1,
+            rpc.client_unix_socket(socket_2) as c_2,
+        ):
             assert c_1.call("__call__", "hello 1") == "1: got hello 1"
             assert c_2.call("method", "hello 2") == "2: got hello 2"
             with pytest.raises(rpc.RemoteError, match="Remote traceback"):
