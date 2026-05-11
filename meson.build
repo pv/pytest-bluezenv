@@ -5,6 +5,8 @@ project(
   meson_version: '>=0.64.0',
 )
 
+meson.add_dist_script('dist-filter.sh')
+
 cc = meson.get_compiler('c')
 fs = import('fs')
 
