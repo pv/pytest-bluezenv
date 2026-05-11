@@ -210,7 +210,6 @@ class _Dbus(env.HostPlugin):
     def teardown(self):
         self.job.terminate()
         self.tmpdir.cleanup()
-        self.log_stream.close()
 
 
 class DbusSystem(_Dbus):
@@ -324,7 +323,6 @@ class Bluetoothd(env.HostPlugin):
         self.log.info("Stop bluetoothd")
         self.job.terminate()
         self.tmpdir.cleanup()
-        self.log_stream.close()
 
 
 class Obexd(env.HostPlugin):
@@ -382,7 +380,6 @@ class Obexd(env.HostPlugin):
     def teardown(self):
         self.log.info("Stop obexd")
         self.job.terminate()
-        self.log_stream.close()
         shutil.rmtree(self.path)
 
 
@@ -427,7 +424,6 @@ class Pexpect(env.HostPlugin):
         for ctl in self.ctls.values():
             ctl.sendeof()
             ctl.kill(signal.SIGTERM)
-        self.log_stream.close()
 
     def close(self, ctl_id):
         ctl = self.ctls[ctl_id]
@@ -496,7 +492,6 @@ class Bluetoothctl(env.HostPlugin):
     def teardown(self):
         self.ctl.sendeof()
         self.ctl.kill(signal.SIGTERM)
-        self.log_stream.close()
 
     def expect(self, *a, **kw):
         ret = self.ctl.expect(*a, **kw)

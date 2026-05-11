@@ -388,7 +388,7 @@ class LogStream:
         self._tee = tee
         self._nsec = None
         self._start_log_thread()
-        self._read_thread = threading.Thread(target=self._run_read)
+        self._read_thread = threading.Thread(target=self._run_read, daemon=True)
         self._read_thread.start()
         self._flush_event = threading.Event()
 
@@ -538,7 +538,8 @@ class LogStream:
             self._flush_event.wait()
 
     def __del__(self):
-        self.close()
+        if getattr(self._read_thread, "ident", None) != threading.get_ident():
+            self.close()
 
 
 class _OutputLogRecord(logging.LogRecord):
