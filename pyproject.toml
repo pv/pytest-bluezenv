@@ -30,3 +30,6 @@ dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/pv/pytest-bluezenv"
+
+[tool.meson-python.args]
+dist = ['--include-subprojects']
