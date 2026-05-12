@@ -533,7 +533,9 @@ ENV_INDEX = -1
 
 
 class Environment:
-    def __init__(self, kernel, num_hosts, usb_indices=None, timeout=20, mem=None):
+    def __init__(
+        self, kernel, num_hosts, usb_indices=None, timeout=20, mem=None, controller=True
+    ):
         if Path(kernel).is_dir():
             self.kernel = str(Path(kernel) / "arch" / "x86" / "boot" / "bzImage")
         else:
@@ -547,6 +549,7 @@ class Environment:
         self.path = None
         self.reuse_group = None
         self.mem = mem
+        self.controller = controller
 
         if usb_indices is None:
             self.usb_indices = None
@@ -566,10 +569,13 @@ class Environment:
     def start(self):
         self.path = Path(tempfile.mkdtemp(prefix="pytest-bluezenv-"))
 
-        if self.usb_indices is None:
-            args = self._start_btvirt()
+        if self.controller:
+            if self.usb_indices is None:
+                args = self._start_btvirt()
+            else:
+                args = self._start_usb()
         else:
-            args = self._start_usb()
+            args = [[]] * self.num_hosts
 
         paths, names = self._start_runners(args)
         self._start_hosts(paths, names)

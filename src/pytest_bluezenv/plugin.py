@@ -487,7 +487,7 @@ def _check_requirements():
     return "; ".join(error)
 
 
-def _vm_impl(request, kernel, num_hosts, hw, mem):
+def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     config = request.session.config
 
     err = _check_requirements()
@@ -508,6 +508,7 @@ def _vm_impl(request, kernel, num_hosts, hw, mem):
         num_hosts,
         usb_indices=usb_indices,
         mem=mem,
+        controller=controller,
         timeout=utils.DEFAULT_TIMEOUT,
     ) as vm:
         yield vm

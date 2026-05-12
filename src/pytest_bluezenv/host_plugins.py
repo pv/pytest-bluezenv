@@ -503,14 +503,19 @@ class Bluetoothctl(env.HostPlugin):
 
 
 HOST_SETUPS = 0
-DEFAULT_PLUGINS = [Rcvbuf(), Bdaddr(), Call()]
+DEFAULT_PLUGINS = [Rcvbuf(), Call()]
+DEFAULT_PLUGINS_CONTROLLER = DEFAULT_PLUGINS + [Bdaddr()]
 
 
-def _expand_plugins(plugins):
+def _expand_plugins(plugins, controller):
     """
     Resolve plugin dependencies to linear load order
     """
-    plugins = DEFAULT_PLUGINS + list(plugins)
+    if controller:
+        plugins = DEFAULT_PLUGINS_CONTROLLER + list(plugins)
+    else:
+        plugins = DEFAULT_PLUGINS + list(plugins)
+
     to_load = []
     seen = set()
 
@@ -532,7 +537,7 @@ def _expand_plugins(plugins):
 
 
 def parametrized_host_config(
-    param_host_setups, hw=False, mem=None, ids=None, reuse=False
+    param_host_setups, hw=False, mem=None, controller=True, ids=None, reuse=False
 ):
     """
     Declare parametrized host configurations.
@@ -543,6 +548,8 @@ def parametrized_host_config(
     Args:
         param_host_setups (list): list of host setups
         hw (bool): whether to require hardware BT controller
+        mem (str): amount of memory for the VM instances
+        controller (bool): whether to add controller to the host
         reuse (bool): whether to define a setup where the test host processes
             are not required to be torn down between tests. This is only useful
             for tests that do not perturb e.g. bluetoothd state too much.
@@ -566,7 +573,7 @@ def parametrized_host_config(
     num_hosts = num_hosts.pop()
 
     for host_setup in param_host_setups:
-        setup = tuple(_expand_plugins(plugins) for plugins in host_setup)
+        setup = tuple(_expand_plugins(plugins, controller) for plugins in host_setup)
 
         name = f"hosts{HOST_SETUPS}"
         HOST_SETUPS += 1
@@ -577,9 +584,19 @@ def parametrized_host_config(
         if ids is None:
             host_ids.append(name)
 
-    vm_setup = dict(num_hosts=num_hosts, hw=hw, mem=str(mem) if mem else "")
+    vm_setup = dict(
+        num_hosts=num_hosts,
+        hw=bool(hw),
+        mem=str(mem) if mem else "",
+        controller=bool(controller),
+    )
     vm_ids = [
-        "vm{}{}{}".format(len(setup), f"-{mem}" if mem else "", "-hw" if hw else "")
+        "vm{}{}{}{}".format(
+            len(setup),
+            f"-{mem}" if mem else "",
+            "-hw" if hw else "",
+            "-noc" if not controller else "",
+        )
     ]
 
     def decorator(func):
@@ -594,7 +611,7 @@ def parametrized_host_config(
     return decorator
 
 
-def host_config(*host_setup, hw=False, mem=None, reuse=False):
+def host_config(*host_setup, hw=False, mem=None, controller=True, reuse=False):
     """
     Declare host configuration.
 
@@ -603,6 +620,7 @@ def host_config(*host_setup, hw=False, mem=None, reuse=False):
             The number of arguments specifies the number of hosts.
         hw (bool): whether to require hardware BT controller
         mem (str): amount of memory for the VM instances
+        controller (bool): whether to add controller to the host
         reuse (bool): whether to define a setup where the test host processes
             are not required to be torn down between tests. This is only useful
             for tests that do not perturb e.g. bluetoothd state too much.
@@ -631,4 +649,6 @@ def host_config(*host_setup, hw=False, mem=None, reuse=False):
             host0, = hosts
 
     """
-    return parametrized_host_config([host_setup], hw=hw, mem=mem, reuse=reuse)
+    return parametrized_host_config(
+        [host_setup], hw=hw, mem=mem, controller=controller, reuse=reuse
+    )
