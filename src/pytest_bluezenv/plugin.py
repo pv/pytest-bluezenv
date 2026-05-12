@@ -248,6 +248,8 @@ def pytest_collection_modifyitems(session, config, items):
             key += (host_setup["name"],)
         return key
 
+    items.sort(key=sort_key)
+
     # Specify default groups for pytest-xdist --dist loadgroup
     if config.pluginmanager.has_plugin("xdist"):
         for item in items:
