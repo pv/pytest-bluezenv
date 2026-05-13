@@ -30,6 +30,25 @@ __all__ = [
 
 
 class RemoteError(Exception):
+    """
+    Exception raised on the VM side, passed through RPC. Properties:
+    `traceback` is a traceback string and `exc` is the original exception
+    instance raised on the remote side.
+
+    Example:
+
+       .. code-block::
+
+          from pytest_bluez import RemoteError
+
+          try:
+              host.call(foo)
+          except RemoteError as exc:
+              print(exc.traceback)
+              original_exception = exc.exc
+
+    """
+
     def __init__(self, exc, traceback):
         super().__init__(str(exc))
         self.exc = exc

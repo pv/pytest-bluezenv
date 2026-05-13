@@ -93,7 +93,12 @@ class HostPlugin:
 
 class HostProxy:
     """
-    Parent-side proxy for VM host: load plugins, RPC calls to plugins
+    Parent host-side representation of one VM host with loadable plugins.
+
+    Plugins are usually loaded based on `host_setup`, but can also be
+    loaded during the test itself.
+
+    Loaded plugins appear as attributes on the host proxy.
     """
 
     def __init__(self, path, timeout, name):

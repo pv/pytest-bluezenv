@@ -11,5 +11,5 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 autosummary_generate = True
 
-html_theme = 'alabaster'
+html_theme = 'pyramid'
 html_static_path = ['_static']

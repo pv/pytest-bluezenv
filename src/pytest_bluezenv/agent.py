@@ -296,16 +296,18 @@ def dbus_service_event_method(
 
     Example:
 
-        class AgentObject(dbus.service.Object):
-            @utils.mainloop_assert
-            def __init__(self, bus, path, events):
-                self.events = events
-                super().__init__(bus, path)
+        .. code-block:: python
 
-            AuthorizeService = dbus_service_event_method(
-                "org.bluez.Agent1",
-                "AuthorizeService", ("device", "uuid"), "os", sync=False
-            )
+           class AgentObject(dbus.service.Object):
+               @utils.mainloop_assert
+               def __init__(self, bus, path, events):
+                   self.events = events
+                   super().__init__(bus, path)
+
+               AuthorizeService = dbus_service_event_method(
+                   "org.bluez.Agent1",
+                   "AuthorizeService", ("device", "uuid"), "os", sync=False
+               )
 
     """
 

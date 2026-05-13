@@ -1,10 +1,5 @@
-pytest-bluezenv documentation
-=============================
-
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
-
+pytest-bluezenv
+===============
 
 .. toctree::
    :maxdepth: 2
@@ -12,4 +7,4 @@ documentation for details.
 
    api
 
-.. .. include:: ../README.rst
+.. include:: ../README.rst

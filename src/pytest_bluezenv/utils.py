@@ -75,7 +75,16 @@ def pkg_bin_dir():
 
 def find_exe(subdir, name):
     """
-    Find executable, either in BlueZ build tree or system
+    Find absolute path to the given executable, either within BlueZ
+    build directory or on host.
+
+    Example:
+
+        .. code-block::
+
+           from pytest_bluez import find_exe
+           bluetoothctl = find_exe("client", "bluetoothctl")
+
     """
     src = bluez_src_dir()
     bin_dir = pkg_bin_dir()
@@ -356,6 +365,15 @@ class LogStream:
     Logger that forwards input from a stream to logging, and
     optionally tees to another stream.  The input pipe is in
     `LogStream.stream`.
+
+    Example:
+
+       .. code-block::
+
+          from pytest_bluez import LogStream
+
+          log_stream = LogStream("bluetoothctl")
+          subprocess.run(["bluetoothctl", "show"], stdout=log_stream.stream)
 
     """
 

@@ -591,7 +591,7 @@ def _copy_host_files(vm):
 @pytest.fixture(scope="package")
 def vm(request, kernel, vm_setup):
     """
-    Session-scope virtual machine fixture. Used internally by `hosts`.
+    Function-scope virtual machine fixture. Used internally by `hosts`.
 
     Yields:
         env.Environment
@@ -602,9 +602,9 @@ def vm(request, kernel, vm_setup):
 @pytest.fixture
 def hosts(request, vm, host_setup):
     """
-    Session-scope fixture that expands to a list of VM host proxies
-    (`HostProxy`), with configuration as specified in `host_config`. The
-    VM instances used may be reused by other tests.  The userspace test
+    Function-scope fixture that expands to a list of VM host proxies
+    (:obj:`HostProxy`), with configuration as specified in :obj:`host_config`.
+    The VM instances used may be reused by other tests.  The userspace test
     runner is torn down between tests.
 
     Example:

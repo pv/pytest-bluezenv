@@ -18,12 +18,6 @@ Fixtures
 
    pytest_bluezenv.hosts
    pytest_bluezenv.hosts_once
-   pytest_bluezenv.host_setup
-   pytest_bluezenv.kernel
-   pytest_bluezenv.usb_indices
-   pytest_bluezenv.vm
-   pytest_bluezenv.vm_once
-   pytest_bluezenv.vm_setup
 
 Host plugins
 ------------
@@ -78,3 +72,14 @@ Internals
    pytest_bluezenv.HostProxy
    pytest_bluezenv.PluginProxy
 
+Internal fixtures:
+
+.. autosummary::
+   :toctree: api
+
+   pytest_bluezenv.host_setup
+   pytest_bluezenv.kernel
+   pytest_bluezenv.usb_indices
+   pytest_bluezenv.vm
+   pytest_bluezenv.vm_once
+   pytest_bluezenv.vm_setup
