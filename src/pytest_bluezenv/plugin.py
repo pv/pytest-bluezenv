@@ -609,9 +609,11 @@ def hosts(request, vm, host_setup):
 
     Example:
 
-        def test_something(hosts):
-            host0 = hosts[0]
-            host1 = hosts[1]
+        .. code-block:: python
+
+           def test_something(hosts):
+               host0 = hosts[0]
+               host1 = hosts[1]
     """
     yield from _hosts_impl(request, vm, **host_setup)
 
@@ -638,8 +640,10 @@ def hosts_once(request, vm_once, host_setup):
 
     Example:
 
-        def test_something(hosts_once):
-            host0 = hosts_once[0]
-            host1 = hosts_once[1]
+        .. code-block:: python
+
+           def test_something(hosts_once):
+               host0 = hosts_once[0]
+               host1 = hosts_once[1]
     """
     yield from _hosts_impl(request, vm_once, **host_setup)

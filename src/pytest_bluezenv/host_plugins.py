@@ -83,13 +83,17 @@ class Call(env.HostPlugin):
 
     Example:
 
-        result = host0.call(my_func, 1, 2, 3)
+        .. code-block:: python
+
+           result = host0.call(my_func, 1, 2, 3)
 
     Example:
 
-        result_async = host0.call(my_func, 1, 2, 3, sync=False)
-        ...
-        result = result_async.wait()
+        .. code-block:: python
+
+           result_async = host0.call(my_func, 1, 2, 3, sync=False)
+           ...
+           result = result_async.wait()
     """
 
     name = "call"
@@ -389,10 +393,12 @@ class Pexpect(env.HostPlugin):
 
     Example:
 
-        btmgmt = host0.pexpect.spawn(find_exe("tools", "btmgmt"))
-        btmgmt.send("info\n")
-        btmgmt.expect("hci0")
-        btmgmt.close()
+        .. code-block:: python
+
+           btmgmt = host0.pexpect.spawn(find_exe("tools", "btmgmt"))
+           btmgmt.send("info\n")
+           btmgmt.expect("hci0")
+           btmgmt.close()
     """
 
     name = "pexpect"
@@ -630,23 +636,27 @@ def host_config(*host_setup, hw=False, mem=None, controller=True, reuse=False):
 
     Example:
 
-        @host_config([Bluetoothd()], [Bluetoothd()])
-        def test_something(hosts):
-            host0, host1 = hosts
+        .. code-block:: python
+
+           @host_config([Bluetoothd()], [Bluetoothd()])
+           def test_something(hosts):
+               host0, host1 = hosts
 
     Example:
 
-        # Allow not restarting Bluetoothd between tests sharing this configuration
-        base_config = host_config([Bluetoothd()], reuse=True)
+        .. code-block:: python
 
-        @base_config
-        def test_one(hosts):
-            host0, = hosts
+           # Allow not restarting Bluetoothd between tests sharing this configuration
+           base_config = host_config([Bluetoothd()], reuse=True)
 
-        @base_config
-        def test_two(hosts):
-            # Note: uses same Bluetoothd() instance as above
-            host0, = hosts
+           @base_config
+           def test_one(hosts):
+               host0, = hosts
+
+           @base_config
+           def test_two(hosts):
+               # Note: uses same Bluetoothd() instance as above
+               host0, = hosts
 
     """
     return parametrized_host_config(

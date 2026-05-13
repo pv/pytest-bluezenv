@@ -170,10 +170,13 @@ def mainloop_invoke(func, *a, **kw):
 
     Example:
 
-        value = mainloop_invoke(lambda: 123)
-        assert value == 123
+        .. code-block:: python
+
+           value = mainloop_invoke(lambda: 123)
+           assert value == 123
 
     Warning:
+
         dbus-python **MUST** be used only from the GLib main loop,
         as the library has concurrency bugs. All functions using it
         **MUST** either run from GLib main loop eg. via mainloop_wrap
@@ -210,9 +213,11 @@ def mainloop_wrap(func):
 
     Example:
 
-        @mainloop_wrap
-        def func():
-            bus = dbus.SystemBus()
+        .. code-block:: python
+
+           @mainloop_wrap
+           def func():
+               bus = dbus.SystemBus()
     """
 
     @functools.wraps(func)
@@ -232,9 +237,11 @@ def mainloop_assert(func):
 
     Example:
 
-        @mainloop_assert
-        def func():
-            bus = dbus.SystemBus()
+        .. code-block:: python
+
+           @mainloop_assert
+           def func():
+               bus = dbus.SystemBus()
     """
 
     @functools.wraps(func)

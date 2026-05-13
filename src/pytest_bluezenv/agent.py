@@ -168,10 +168,12 @@ class Agent(env.HostPlugin, EventPluginMixin):
 
     Example:
 
-        host.agent.device_method(host1.bdaddr, "Pair")
-        event = host.agent.expect("org.bluez.Agent1.RequestConfirmation")
-        assert event.passkey == 1234
-        host.agent.reply()
+        .. code-block:: python
+
+           host.agent.device_method(host1.bdaddr, "Pair")
+           event = host.agent.expect("org.bluez.Agent1.RequestConfirmation")
+           assert event.passkey == 1234
+           host.agent.reply()
     """
 
     depends = [Bluetoothd()]

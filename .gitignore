@@ -4,4 +4,6 @@ __pycache__
 /builddir
 /dist
 /subprojects/bluez
+/doc/api
+/doc/_build
 .wraplock

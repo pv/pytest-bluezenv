@@ -31,5 +31,8 @@ dynamic = ["version"]
 [project.urls]
 Homepage = "https://github.com/pv/pytest-bluezenv"
 
+[project.optional-dependencies]
+docs = ["Sphinx"]
+
 [tool.meson-python.args]
 dist = ['--include-subprojects']
