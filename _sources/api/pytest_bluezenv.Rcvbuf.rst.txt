@@ -1,0 +1,33 @@
+﻿pytest\_bluezenv.Rcvbuf
+=======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Rcvbuf
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Rcvbuf.__init__
+      ~Rcvbuf.presetup
+      ~Rcvbuf.setup
+      ~Rcvbuf.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Rcvbuf.depends
+      ~Rcvbuf.name
+      ~Rcvbuf.value
+   
+   

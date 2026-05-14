@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.vm\_setup
+==========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: vm_setup

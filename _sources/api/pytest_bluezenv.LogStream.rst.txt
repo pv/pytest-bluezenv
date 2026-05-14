@@ -1,0 +1,32 @@
+﻿pytest\_bluezenv.LogStream
+==========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: LogStream
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LogStream.__init__
+      ~LogStream.close
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LogStream.LOG_QUEUE
+      ~LogStream.LOG_THREAD
+      ~LogStream.LOG_THREAD_LOCK
+      ~LogStream.TS_STRUCT
+   
+   

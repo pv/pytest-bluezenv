@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.kernel
+=======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: kernel

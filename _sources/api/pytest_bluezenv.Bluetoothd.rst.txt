@@ -1,0 +1,33 @@
+﻿pytest\_bluezenv.Bluetoothd
+===========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Bluetoothd
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Bluetoothd.__init__
+      ~Bluetoothd.presetup
+      ~Bluetoothd.setup
+      ~Bluetoothd.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Bluetoothd.depends
+      ~Bluetoothd.name
+      ~Bluetoothd.value
+   
+   

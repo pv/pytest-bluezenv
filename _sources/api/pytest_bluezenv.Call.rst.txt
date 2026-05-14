@@ -1,0 +1,35 @@
+﻿pytest\_bluezenv.Call
+=====================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Call
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Call.__init__
+      ~Call.call_async
+      ~Call.presetup
+      ~Call.setup
+      ~Call.teardown
+      ~Call.wait_async
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Call.depends
+      ~Call.name
+      ~Call.value
+   
+   

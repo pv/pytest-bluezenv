@@ -1,0 +1,37 @@
+﻿pytest\_bluezenv.Pexpect
+========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Pexpect
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Pexpect.__init__
+      ~Pexpect.close
+      ~Pexpect.expect
+      ~Pexpect.presetup
+      ~Pexpect.send
+      ~Pexpect.setup
+      ~Pexpect.spawn
+      ~Pexpect.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Pexpect.depends
+      ~Pexpect.name
+      ~Pexpect.value
+   
+   

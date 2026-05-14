@@ -1,0 +1,33 @@
+﻿pytest\_bluezenv.Bdaddr
+=======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Bdaddr
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Bdaddr.__init__
+      ~Bdaddr.presetup
+      ~Bdaddr.setup
+      ~Bdaddr.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Bdaddr.depends
+      ~Bdaddr.name
+      ~Bdaddr.value
+   
+   

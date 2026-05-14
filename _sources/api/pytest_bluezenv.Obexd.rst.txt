@@ -1,0 +1,33 @@
+﻿pytest\_bluezenv.Obexd
+======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Obexd
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Obexd.__init__
+      ~Obexd.presetup
+      ~Obexd.setup
+      ~Obexd.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Obexd.depends
+      ~Obexd.name
+      ~Obexd.value
+   
+   

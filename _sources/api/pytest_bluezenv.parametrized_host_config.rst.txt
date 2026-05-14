@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.parametrized\_host\_config
+===========================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: parametrized_host_config

@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.hosts
+======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: hosts

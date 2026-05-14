@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.RemoteError
+============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoexception:: RemoteError

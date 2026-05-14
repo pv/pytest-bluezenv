@@ -1,0 +1,677 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; pytest-bluezenv 0.1.6.dev0</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="_static/documentation_options.js?v=6332dbee"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pytest-bluezenv 0.1.6.dev0</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="options.html">
+    Command line
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="requirements.html">
+    Requirements
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="writing_tests.html">
+    Writing tests
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="options.html">
+    Command line
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="requirements.html">
+    Requirements
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="writing_tests.html">
+    Writing tests
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#K"><strong>K</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#Q"><strong>Q</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Agent.html#pytest_bluezenv.Agent.__init__">__init__() (pytest_bluezenv.Agent method)</a>
+
+      <ul>
+        <li><a href="api/pytest_bluezenv.Bdaddr.html#pytest_bluezenv.Bdaddr.__init__">(pytest_bluezenv.Bdaddr method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Bluetoothctl.html#pytest_bluezenv.Bluetoothctl.__init__">(pytest_bluezenv.Bluetoothctl method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Bluetoothd.html#pytest_bluezenv.Bluetoothd.__init__">(pytest_bluezenv.Bluetoothd method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Btmon.html#pytest_bluezenv.Btmon.__init__">(pytest_bluezenv.Btmon method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Call.html#pytest_bluezenv.Call.__init__">(pytest_bluezenv.Call method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.DbusSession.html#pytest_bluezenv.DbusSession.__init__">(pytest_bluezenv.DbusSession method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.DbusSystem.html#pytest_bluezenv.DbusSystem.__init__">(pytest_bluezenv.DbusSystem method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Event.html#pytest_bluezenv.Event.__init__">(pytest_bluezenv.Event method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.EventPluginMixin.html#pytest_bluezenv.EventPluginMixin.__init__">(pytest_bluezenv.EventPluginMixin method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.HostPlugin.html#pytest_bluezenv.HostPlugin.__init__">(pytest_bluezenv.HostPlugin method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.HostProxy.html#pytest_bluezenv.HostProxy.__init__">(pytest_bluezenv.HostProxy method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.LogStream.html#pytest_bluezenv.LogStream.__init__">(pytest_bluezenv.LogStream method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Obexd.html#pytest_bluezenv.Obexd.__init__">(pytest_bluezenv.Obexd method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Pexpect.html#pytest_bluezenv.Pexpect.__init__">(pytest_bluezenv.Pexpect method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.PluginProxy.html#pytest_bluezenv.PluginProxy.__init__">(pytest_bluezenv.PluginProxy method)</a>
+</li>
+        <li><a href="api/pytest_bluezenv.Rcvbuf.html#pytest_bluezenv.Rcvbuf.__init__">(pytest_bluezenv.Rcvbuf method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.PluginProxy.html#pytest_bluezenv.PluginProxy._conn">_conn (pytest_bluezenv.PluginProxy attribute)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.PluginProxy.html#pytest_bluezenv.PluginProxy._name">_name (pytest_bluezenv.PluginProxy attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Agent.html#pytest_bluezenv.Agent">Agent (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Bdaddr.html#pytest_bluezenv.Bdaddr">Bdaddr (class in pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.Bluetoothctl.html#pytest_bluezenv.Bluetoothctl">Bluetoothctl (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Bluetoothd.html#pytest_bluezenv.Bluetoothd">Bluetoothd (class in pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.Btmon.html#pytest_bluezenv.Btmon">Btmon (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Call.html#pytest_bluezenv.Call">Call (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.dbus_service_event_method.html#pytest_bluezenv.dbus_service_event_method">dbus_service_event_method() (in module pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.DbusSession.html#pytest_bluezenv.DbusSession">DbusSession (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.DbusSystem.html#pytest_bluezenv.DbusSystem">DbusSystem (class in pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.HostPlugin.html#pytest_bluezenv.HostPlugin.depends">depends (pytest_bluezenv.HostPlugin attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Event.html#pytest_bluezenv.Event">Event (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.EventPluginMixin.html#pytest_bluezenv.EventPluginMixin">EventPluginMixin (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.find_exe.html#pytest_bluezenv.find_exe">find_exe() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.get_bdaddr.html#pytest_bluezenv.get_bdaddr">get_bdaddr() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.host_config.html#pytest_bluezenv.host_config">host_config() (in module pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.host_setup.html#pytest_bluezenv.host_setup">host_setup() (in module pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.HostPlugin.html#pytest_bluezenv.HostPlugin">HostPlugin (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.HostProxy.html#pytest_bluezenv.HostProxy">HostProxy (class in pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.hosts.html#pytest_bluezenv.hosts">hosts() (in module pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.hosts_once.html#pytest_bluezenv.hosts_once">hosts_once() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.kernel.html#pytest_bluezenv.kernel">kernel() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.LogStream.html#pytest_bluezenv.LogStream">LogStream (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.mainloop_assert.html#pytest_bluezenv.mainloop_assert">mainloop_assert() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.mainloop_invoke.html#pytest_bluezenv.mainloop_invoke">mainloop_invoke() (in module pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.mainloop_wrap.html#pytest_bluezenv.mainloop_wrap">mainloop_wrap() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.HostPlugin.html#pytest_bluezenv.HostPlugin.name">name (pytest_bluezenv.HostPlugin attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Obexd.html#pytest_bluezenv.Obexd">Obexd (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.parametrized_host_config.html#pytest_bluezenv.parametrized_host_config">parametrized_host_config() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Pexpect.html#pytest_bluezenv.Pexpect">Pexpect (class in pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.PluginProxy.html#pytest_bluezenv.PluginProxy">PluginProxy (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Q">Q</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.quoted.html#pytest_bluezenv.quoted">quoted() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.Rcvbuf.html#pytest_bluezenv.Rcvbuf">Rcvbuf (class in pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.RemoteError.html#pytest_bluezenv.RemoteError">RemoteError</a>
+</li>
+      <li><a href="api/pytest_bluezenv.run.html#pytest_bluezenv.run">run() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.usb_indices.html#pytest_bluezenv.usb_indices">usb_indices() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.HostPlugin.html#pytest_bluezenv.HostPlugin.value">value (pytest_bluezenv.HostPlugin attribute)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.vm.html#pytest_bluezenv.vm">vm() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.vm_once.html#pytest_bluezenv.vm_once">vm_once() (in module pytest_bluezenv)</a>
+</li>
+      <li><a href="api/pytest_bluezenv.vm_setup.html#pytest_bluezenv.vm_setup">vm_setup() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/pytest_bluezenv.wait_until.html#pytest_bluezenv.wait_until">wait_until() (in module pytest_bluezenv)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Pauli Virtanen.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

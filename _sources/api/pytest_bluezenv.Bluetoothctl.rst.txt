@@ -1,0 +1,35 @@
+﻿pytest\_bluezenv.Bluetoothctl
+=============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Bluetoothctl
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Bluetoothctl.__init__
+      ~Bluetoothctl.expect
+      ~Bluetoothctl.presetup
+      ~Bluetoothctl.send
+      ~Bluetoothctl.setup
+      ~Bluetoothctl.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Bluetoothctl.depends
+      ~Bluetoothctl.name
+      ~Bluetoothctl.value
+   
+   

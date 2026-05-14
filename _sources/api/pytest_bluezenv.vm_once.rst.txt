@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.vm\_once
+=========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: vm_once

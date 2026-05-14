@@ -1,0 +1,33 @@
+﻿pytest\_bluezenv.HostPlugin
+===========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: HostPlugin
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HostPlugin.__init__
+      ~HostPlugin.presetup
+      ~HostPlugin.setup
+      ~HostPlugin.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~HostPlugin.depends
+      ~HostPlugin.name
+      ~HostPlugin.value
+   
+   

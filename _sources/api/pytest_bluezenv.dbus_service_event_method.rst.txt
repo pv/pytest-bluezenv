@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.dbus\_service\_event\_method
+=============================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: dbus_service_event_method

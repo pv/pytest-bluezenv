@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.usb\_indices
+=============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: usb_indices

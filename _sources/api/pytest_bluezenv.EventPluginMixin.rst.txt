@@ -1,0 +1,27 @@
+﻿pytest\_bluezenv.EventPluginMixin
+=================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: EventPluginMixin
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventPluginMixin.__init__
+      ~EventPluginMixin.expect
+      ~EventPluginMixin.get_event
+      ~EventPluginMixin.reply
+      ~EventPluginMixin.reply_error
+      ~EventPluginMixin.setup
+   
+   
+
+   
+   
+   

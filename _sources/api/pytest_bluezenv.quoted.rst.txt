@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.quoted
+=======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: quoted

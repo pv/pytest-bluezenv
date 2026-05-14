@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.host\_setup
+============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: host_setup

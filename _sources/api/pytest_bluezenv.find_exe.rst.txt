@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.find\_exe
+==========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: find_exe

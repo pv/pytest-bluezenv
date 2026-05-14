@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.get\_bdaddr
+============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: get_bdaddr

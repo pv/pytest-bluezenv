@@ -1,0 +1,23 @@
+﻿pytest\_bluezenv.PluginProxy
+============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: PluginProxy
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PluginProxy.__init__
+      ~PluginProxy.set_connection
+   
+   
+
+   
+   
+   

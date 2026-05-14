@@ -1,0 +1,27 @@
+﻿pytest\_bluezenv.HostProxy
+==========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: HostProxy
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~HostProxy.__init__
+      ~HostProxy.close
+      ~HostProxy.load
+      ~HostProxy.set_instance_name
+      ~HostProxy.start_load
+      ~HostProxy.wait_load
+   
+   
+
+   
+   
+   

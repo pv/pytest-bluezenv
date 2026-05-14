@@ -1,0 +1,42 @@
+﻿pytest\_bluezenv.Agent
+======================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoclass:: Agent
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Agent.__init__
+      ~Agent.adapter_get
+      ~Agent.adapter_method
+      ~Agent.adapter_set
+      ~Agent.device_method
+      ~Agent.expect
+      ~Agent.get_event
+      ~Agent.has_device
+      ~Agent.presetup
+      ~Agent.reply
+      ~Agent.reply_error
+      ~Agent.setup
+      ~Agent.teardown
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Agent.depends
+      ~Agent.name
+      ~Agent.value
+   
+   
