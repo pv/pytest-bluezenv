@@ -388,7 +388,7 @@ class Obexd(env.HostPlugin):
 
 
 class Pexpect(env.HostPlugin):
-    """
+    r"""
     Host plugin for starting and controlling processes with pexpect.
 
     Example:
