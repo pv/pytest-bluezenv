@@ -24,10 +24,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Bdaddr.depends
-      ~Bdaddr.name
-      ~Bdaddr.value
+   .. autoattribute:: Bdaddr.depends
+      :no-index:
+   .. autoattribute:: Bdaddr.name
+      :no-index:
+   .. autoattribute:: Bdaddr.value
+      :no-index:
    
    

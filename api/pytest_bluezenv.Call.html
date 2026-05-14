@@ -116,6 +116,14 @@
   
   
   
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
   
     <p class="title logo__title">pytest-bluezenv 0.1.6.dev0</p>
   
@@ -420,7 +428,7 @@
 <h1>pytest_bluezenv.Call<a class="headerlink" href="#pytest-bluezenv-call" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytest_bluezenv.Call">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">Call</span></span><a class="headerlink" href="#pytest_bluezenv.Call" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">Call</span></span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/host_plugins.py#L79-L145"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.Call" title="Link to this definition">#</a></dt>
 <dd><p>Host plugin providing <code class="docutils literal notranslate"><span class="pre">host.call(func,</span> <span class="pre">*args,</span> <span class="pre">**kw)</span></code> and <cite>call_async</cite>
 which invoke the given functions on VM host side.  Loaded by default.</p>
 <p class="rubric">Example</p>
@@ -435,7 +443,7 @@ which invoke the given functions on VM host side.  Loaded by default.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytest_bluezenv.Call.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytest_bluezenv.Call.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/env.py#L61-L68"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.Call.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Configure plugin (runs on parent host side).  This is
 called at test discovery time, so should mainly store static
 data.</p>
@@ -466,20 +474,21 @@ data.</p>
 </table>
 </div>
 <p class="rubric">Attributes</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">depends</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">value</span></code></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">depends</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'call'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>

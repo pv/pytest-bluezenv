@@ -24,10 +24,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Obexd.depends
-      ~Obexd.name
-      ~Obexd.value
+   .. autoattribute:: Obexd.depends
+      :no-index:
+   .. autoattribute:: Obexd.name
+      :no-index:
+   .. autoattribute:: Obexd.value
+      :no-index:
    
    

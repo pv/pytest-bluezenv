@@ -33,10 +33,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Agent.depends
-      ~Agent.name
-      ~Agent.value
+   .. autoattribute:: Agent.depends
+      :no-index:
+   .. autoattribute:: Agent.name
+      :no-index:
+   .. autoattribute:: Agent.value
+      :no-index:
    
    

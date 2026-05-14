@@ -24,11 +24,14 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~DbusSystem.dbus_type
-      ~DbusSystem.depends
-      ~DbusSystem.name
-      ~DbusSystem.value
+   .. autoattribute:: DbusSystem.dbus_type
+      :no-index:
+   .. autoattribute:: DbusSystem.depends
+      :no-index:
+   .. autoattribute:: DbusSystem.name
+      :no-index:
+   .. autoattribute:: DbusSystem.value
+      :no-index:
    
    

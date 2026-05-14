@@ -22,11 +22,14 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~LogStream.LOG_QUEUE
-      ~LogStream.LOG_THREAD
-      ~LogStream.LOG_THREAD_LOCK
-      ~LogStream.TS_STRUCT
+   .. autoattribute:: LogStream.LOG_QUEUE
+      :no-index:
+   .. autoattribute:: LogStream.LOG_THREAD
+      :no-index:
+   .. autoattribute:: LogStream.LOG_THREAD_LOCK
+      :no-index:
+   .. autoattribute:: LogStream.TS_STRUCT
+      :no-index:
    
    

@@ -28,10 +28,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Pexpect.depends
-      ~Pexpect.name
-      ~Pexpect.value
+   .. autoattribute:: Pexpect.depends
+      :no-index:
+   .. autoattribute:: Pexpect.name
+      :no-index:
+   .. autoattribute:: Pexpect.value
+      :no-index:
    
    

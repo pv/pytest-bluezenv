@@ -25,10 +25,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Btmon.depends
-      ~Btmon.name
-      ~Btmon.value
+   .. autoattribute:: Btmon.depends
+      :no-index:
+   .. autoattribute:: Btmon.name
+      :no-index:
+   .. autoattribute:: Btmon.value
+      :no-index:
    
    

@@ -116,6 +116,14 @@
   
   
   
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
   
     <p class="title logo__title">pytest-bluezenv 0.1.6.dev0</p>
   
@@ -420,7 +428,7 @@
 <h1>pytest_bluezenv.dbus_service_event_method<a class="headerlink" href="#pytest-bluezenv-dbus-service-event-method" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="pytest_bluezenv.dbus_service_event_method">
-<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">dbus_service_event_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_signature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_signature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pytest_bluezenv.dbus_service_event_method" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">dbus_service_event_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_signature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_signature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L291-L346"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.dbus_service_event_method" title="Link to this definition">#</a></dt>
 <dd><p>dbus.service.method that pushes Event instances to self.events</p>
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AgentObject</span><span class="p">(</span><span class="n">dbus</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">Object</span><span class="p">):</span>

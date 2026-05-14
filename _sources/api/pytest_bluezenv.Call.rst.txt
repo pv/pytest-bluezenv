@@ -26,10 +26,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Call.depends
-      ~Call.name
-      ~Call.value
+   .. autoattribute:: Call.depends
+      :no-index:
+   .. autoattribute:: Call.name
+      :no-index:
+   .. autoattribute:: Call.value
+      :no-index:
    
    

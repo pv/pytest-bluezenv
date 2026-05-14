@@ -26,10 +26,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Bluetoothctl.depends
-      ~Bluetoothctl.name
-      ~Bluetoothctl.value
+   .. autoattribute:: Bluetoothctl.depends
+      :no-index:
+   .. autoattribute:: Bluetoothctl.name
+      :no-index:
+   .. autoattribute:: Bluetoothctl.value
+      :no-index:
    
    

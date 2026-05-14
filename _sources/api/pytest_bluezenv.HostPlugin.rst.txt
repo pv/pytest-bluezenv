@@ -24,10 +24,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~HostPlugin.depends
-      ~HostPlugin.name
-      ~HostPlugin.value
+   .. autoattribute:: HostPlugin.depends
+      :no-index:
+   .. autoattribute:: HostPlugin.name
+      :no-index:
+   .. autoattribute:: HostPlugin.value
+      :no-index:
    
    

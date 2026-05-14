@@ -24,10 +24,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Bluetoothd.depends
-      ~Bluetoothd.name
-      ~Bluetoothd.value
+   .. autoattribute:: Bluetoothd.depends
+      :no-index:
+   .. autoattribute:: Bluetoothd.name
+      :no-index:
+   .. autoattribute:: Bluetoothd.value
+      :no-index:
    
    

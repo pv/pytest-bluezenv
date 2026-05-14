@@ -24,11 +24,14 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~DbusSession.dbus_type
-      ~DbusSession.depends
-      ~DbusSession.name
-      ~DbusSession.value
+   .. autoattribute:: DbusSession.dbus_type
+      :no-index:
+   .. autoattribute:: DbusSession.depends
+      :no-index:
+   .. autoattribute:: DbusSession.name
+      :no-index:
+   .. autoattribute:: DbusSession.value
+      :no-index:
    
    

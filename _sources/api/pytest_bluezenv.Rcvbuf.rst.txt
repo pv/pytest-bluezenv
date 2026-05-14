@@ -24,10 +24,12 @@
    
    .. rubric:: Attributes
 
-   .. autosummary::
    
-      ~Rcvbuf.depends
-      ~Rcvbuf.name
-      ~Rcvbuf.value
+   .. autoattribute:: Rcvbuf.depends
+      :no-index:
+   .. autoattribute:: Rcvbuf.name
+      :no-index:
+   .. autoattribute:: Rcvbuf.value
+      :no-index:
    
    
