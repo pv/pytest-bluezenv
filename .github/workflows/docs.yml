@@ -1,0 +1,33 @@
+name: Documentation
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - name: Install packages
+      run: >-
+        sudo apt-get install libglib2.0-dev make
+    - name: Build
+      run: >-
+        python3 -m pip install --user ".[docs]"
+    - name: Build HTML
+      run: >-
+        make -C doc html
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: html-docs
+        path: doc/_build/html/
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: doc/_build/html/
