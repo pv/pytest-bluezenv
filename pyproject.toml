@@ -25,14 +25,15 @@ dependencies = [
     "dbus-python",
     "PyGObject>=3.40",
 ]
-license-files = ["LICENSE.txt"]
+license-files = ["LICENSE.txt", "subprojects/bluez/COPYING", "subprojects/bluez/COPYING.LIB"]
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://github.com/pv/pytest-bluezenv"
+homepage = "https://github.com/pv/pytest-bluezenv"
+documentation = "https://pv.github.io/pytest-bluezenv/"
 
 [project.optional-dependencies]
-docs = ["Sphinx"]
+docs = ["Sphinx", "pydata-sphinx-theme"]
 
 [tool.meson-python.args]
 dist = ['--include-subprojects']
