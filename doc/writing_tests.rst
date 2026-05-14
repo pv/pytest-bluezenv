@@ -6,7 +6,7 @@ Example: Virtual machines
 
 .. code-block:: python
 
-   from pytest_bluez import host_config, Bluetoothd, Bluetoothctl
+   from pytest_bluezenv import host_config, Bluetoothd, Bluetoothctl
 
    @host_config(
        [Bluetoothd(), Bluetoothctl()],
@@ -69,7 +69,10 @@ The `host.bluetoothctl` implementation used above is as follows:
 
 .. code-block:: python
 
-   from pytest_bluez import HostPlugin, Bluetoothd
+   import logging
+   import pexpect
+
+   from pytest_bluezenv import HostPlugin, Bluetoothd, find_exe, LogStream
 
    class Bluetoothctl(Pexpect):
        # Declare unique plugin name
@@ -81,7 +84,7 @@ The `host.bluetoothctl` implementation used above is as follows:
        # These run on parent host side:
 
        def __init__(self, subdir, name):
-           self.exe = utils.find_exe(subdir, name)
+           self.exe = find_exe(subdir, name)
 
        def presetup(self, config):
            pass
@@ -90,7 +93,7 @@ The `host.bluetoothctl` implementation used above is as follows:
 
        def setup(self, impl):
            self.log = logging.getLogger(self.name)
-           self.log_stream = utils.LogStream(self.name)
+           self.log_stream = LogStream(self.name)
            self.ctl = pexpect.spawn(self.exe, logfile=self.log_stream.stream)
 
        def teardown(self):

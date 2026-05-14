@@ -39,7 +39,7 @@ class RemoteError(Exception):
 
        .. code-block::
 
-          from pytest_bluez import RemoteError
+          from pytest_bluezenv import RemoteError
 
           try:
               host.call(foo)

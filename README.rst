@@ -15,7 +15,7 @@ Example
 
 .. code-block:: python
 
-   from pytest_bluez import host_config, Bluetoothd, Bluetoothctl
+   from pytest_bluezenv import host_config, Bluetoothd, Bluetoothctl
 
    @host_config(
        [Bluetoothd(), Bluetoothctl()],

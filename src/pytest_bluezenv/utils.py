@@ -82,7 +82,7 @@ def find_exe(subdir, name):
 
         .. code-block::
 
-           from pytest_bluez import find_exe
+           from pytest_bluezenv import find_exe
            bluetoothctl = find_exe("client", "bluetoothctl")
 
     """
@@ -370,7 +370,7 @@ class LogStream:
 
        .. code-block::
 
-          from pytest_bluez import LogStream
+          from pytest_bluezenv import LogStream
 
           log_stream = LogStream("bluetoothctl")
           subprocess.run(["bluetoothctl", "show"], stdout=log_stream.stream)
