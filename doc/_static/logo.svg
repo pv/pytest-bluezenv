@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 320 320"
+   width="64"
+   height="64"
+   version="1.1"
+   id="svg18"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   inkscape:export-filename="logo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview18"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="4"
+     inkscape:cx="68.5"
+     inkscape:cy="91.25"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg18" />
+  <defs
+     id="defs6">
+    <linearGradient
+       id="bluez-grad"
+       x1="288"
+       y1="-57.000004"
+       x2="652"
+       y2="306.99997"
+       gradientTransform="matrix(0.5,0,0,2,-174,-89.99999)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#00c6ff"
+         id="stop3" />
+      <stop
+         offset="100%"
+         stop-color="#0072ff"
+         id="stop4" />
+    </linearGradient>
+    <linearGradient
+       id="pytest-grad"
+       x1="103.74904"
+       y1="190.03551"
+       x2="336.69498"
+       y2="422.98145"
+       gradientTransform="matrix(0.73198304,0,0,0.61386236,45.009339,-22.972331)"
+       gradientUnits="userSpaceOnUse">
+      <stop
+         offset="0%"
+         stop-color="#ff9f43"
+         id="stop5" />
+      <stop
+         offset="100%"
+         stop-color="#ff5252"
+         id="stop6" />
+    </linearGradient>
+    <filter
+       id="glow"
+       x="-0.8"
+       y="-0.8"
+       width="2.6"
+       height="2.6">
+      <feGaussianBlur
+         stdDeviation="8"
+         result="blur"
+         id="feGaussianBlur6" />
+      <feComposite
+         in="SourceGraphic"
+         in2="blur"
+         operator="over"
+         id="feComposite6" />
+    </filter>
+  </defs>
+  <path
+     d="M 130.98202,183.99734 181.13276,227.9 281.43422,102.46383"
+     fill="none"
+     stroke="url(#pytest-grad)"
+     stroke-width="28"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     opacity="0.85"
+     id="path11"
+     style="stroke:url(#pytest-grad)" />
+  <path
+     d="M 26.000001,20 V 300 L 96,230 27.419821,159.84797 96,90 Z"
+     fill="none"
+     stroke="url(#bluez-grad)"
+     stroke-width="24"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     filter="url(#glow)"
+     id="path12"
+     sodipodi:nodetypes="cccccc"
+     style="stroke:url(#bluez-grad)" />
+  <circle
+     cx="26.000004"
+     cy="20"
+     fill="#00c6ff"
+     id="circle12"
+     r="10" />
+  <circle
+     cx="26.000004"
+     cy="300"
+     fill="#0072ff"
+     id="circle13"
+     r="10" />
+  <circle
+     cx="95.999992"
+     cy="230"
+     fill="#00c6ff"
+     id="circle14"
+     r="10" />
+  <circle
+     cx="95.999992"
+     cy="90"
+     fill="#00c6ff"
+     id="circle15"
+     r="10" />
+  <circle
+     cx="365.18341"
+     cy="68.16333"
+     r="12"
+     fill="#ff9f43"
+     filter="url(#glow)"
+     id="circle16"
+     transform="matrix(0.71643904,0,0,0.62718085,19.802548,59.71311)"
+     style="stroke-width:1.49181" />
+</svg>

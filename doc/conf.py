@@ -18,6 +18,15 @@ autosummary_generate = True
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_title = f"{project} {release}"
+html_logo = "_static/logo.svg"
+
+html_theme_options = {
+    "logo": {
+        "text": f"pytest-bluezenv {release}",
+        "image_light": "_static/logo.svg",
+        "image_dark": "_static/logo.svg",
+    }
+}
 
 import pytest_bluezenv
 
