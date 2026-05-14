@@ -34,8 +34,6 @@
      inkscape:current-layer="svg18" />
   <defs
      id="defs6">
-    <!-- Taustan liukuväri -->
-    <!-- Bluetooth / BlueZ sähkönsininen liukuväri -->
     <linearGradient
        id="bluez-grad"
        x1="288"
@@ -53,7 +51,6 @@
          stop-color="#0072ff"
          id="stop4" />
     </linearGradient>
-    <!-- Pytest oranssi/keltainen dynaaminen liukuväri -->
     <linearGradient
        id="pytest-grad"
        x1="103.74904"
@@ -71,7 +68,6 @@
          stop-color="#ff5252"
          id="stop6" />
     </linearGradient>
-    <!-- Hehkuefekti elementeille -->
     <filter
        id="glow"
        x="-0.8"
@@ -89,9 +85,6 @@
          id="feComposite6" />
     </filter>
   </defs>
-  <!-- Tumma, moderni taustalevy pyöristetyillä kulmilla -->
-  <!-- Verkkotaustan koristeviivat (Teknologinen teema) -->
-  <!-- Ikoniryhmä (Vasen puoli) -->
   <path
      d="M 130.98202,183.99734 181.13276,227.9 281.43422,102.46383"
      fill="none"
@@ -146,5 +139,4 @@
      id="circle16"
      transform="matrix(0.71643904,0,0,0.62718085,19.802548,59.71311)"
      style="stroke-width:1.49181" />
-  <!-- Tekstiosio (Oikea puoli) -->
 </svg>
