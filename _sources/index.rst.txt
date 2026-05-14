@@ -13,8 +13,8 @@ connected by real or virtual controllers.
    :maxdepth: 2
    :caption: Contents:
 
+   writing_tests
+   examples
    options
    requirements
-   examples
-   writing_tests
    api

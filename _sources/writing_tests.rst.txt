@@ -1,13 +1,6 @@
 Writing tests
 =============
 
-The functional tests are written in files (test modules) names
-`test/functional/test_*.py`.  They are written using standard Pytest
-style.  See https://docs.pytest.org/en/stable/getting-started.html
-
-Use `Black <https://black.readthedocs.io/en/stable/>`__ to autoformat
-Python test code.
-
 Example: Virtual machines
 -------------------------
 
@@ -69,8 +62,8 @@ Generally, the framework automatically orders the tests so that the VM
 setup does not need to be restarted unless needed.
 
 
-Example host plugin
--------------------
+Example: Host plugin
+--------------------
 
 The `host.bluetoothctl` implementation used above is as follows:
 
@@ -90,7 +83,7 @@ The `host.bluetoothctl` implementation used above is as follows:
        def __init__(self, subdir, name):
            self.exe = utils.find_exe(subdir, name)
 
-       def presetup(self):
+       def presetup(self, config):
            pass
 
        # These run on VM side at setup/teardown:
