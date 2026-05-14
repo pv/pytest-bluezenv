@@ -374,7 +374,7 @@
 <h1>Writing tests<a class="headerlink" href="#writing-tests" title="Link to this heading">#</a></h1>
 <section id="example-virtual-machines">
 <h2>Example: Virtual machines<a class="headerlink" href="#example-virtual-machines" title="Link to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytest_bluez</span> <span class="kn">import</span> <span class="n">host_config</span><span class="p">,</span> <span class="n">Bluetoothd</span><span class="p">,</span> <span class="n">Bluetoothctl</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytest_bluezenv</span> <span class="kn">import</span> <span class="n">host_config</span><span class="p">,</span> <span class="n">Bluetoothd</span><span class="p">,</span> <span class="n">Bluetoothctl</span>
 
 <span class="nd">@host_config</span><span class="p">(</span>
     <span class="p">[</span><span class="n">Bluetoothd</span><span class="p">(),</span> <span class="n">Bluetoothctl</span><span class="p">()],</span>
@@ -427,7 +427,10 @@ setup does not need to be restarted unless needed.</p>
 <section id="example-host-plugin">
 <h2>Example: Host plugin<a class="headerlink" href="#example-host-plugin" title="Link to this heading">#</a></h2>
 <p>The <cite>host.bluetoothctl</cite> implementation used above is as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytest_bluez</span> <span class="kn">import</span> <span class="n">HostPlugin</span><span class="p">,</span> <span class="n">Bluetoothd</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pexpect</span>
+
+<span class="kn">from</span> <span class="nn">pytest_bluezenv</span> <span class="kn">import</span> <span class="n">HostPlugin</span><span class="p">,</span> <span class="n">Bluetoothd</span><span class="p">,</span> <span class="n">find_exe</span><span class="p">,</span> <span class="n">LogStream</span>
 
 <span class="k">class</span> <span class="nc">Bluetoothctl</span><span class="p">(</span><span class="n">Pexpect</span><span class="p">):</span>
     <span class="c1"># Declare unique plugin name</span>
@@ -439,7 +442,7 @@ setup does not need to be restarted unless needed.</p>
     <span class="c1"># These run on parent host side:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exe</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">find_exe</span><span class="p">(</span><span class="n">subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exe</span> <span class="o">=</span> <span class="n">find_exe</span><span class="p">(</span><span class="n">subdir</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">presetup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -448,7 +451,7 @@ setup does not need to be restarted unless needed.</p>
 
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">impl</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_stream</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">LogStream</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_stream</span> <span class="o">=</span> <span class="n">LogStream</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ctl</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exe</span><span class="p">,</span> <span class="n">logfile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">log_stream</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

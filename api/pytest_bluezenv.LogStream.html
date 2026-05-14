@@ -433,7 +433,7 @@
 optionally tees to another stream.  The input pipe is in
 <cite>LogStream.stream</cite>.</p>
 <p class="rubric">Example</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytest_bluez</span> <span class="kn">import</span> <span class="n">LogStream</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytest_bluezenv</span> <span class="kn">import</span> <span class="n">LogStream</span>
 
 <span class="n">log_stream</span> <span class="o">=</span> <span class="n">LogStream</span><span class="p">(</span><span class="s2">&quot;bluetoothctl&quot;</span><span class="p">)</span>
 <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;bluetoothctl&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">log_stream</span><span class="o">.</span><span class="n">stream</span><span class="p">)</span>
