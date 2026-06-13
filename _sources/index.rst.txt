@@ -14,7 +14,7 @@ connected by real or virtual controllers.
    :caption: Contents:
 
    writing_tests
-   examples
+   running_tests
    options
    requirements
    api

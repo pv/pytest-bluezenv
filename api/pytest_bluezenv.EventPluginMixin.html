@@ -147,8 +147,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../examples.html">
-    Examples
+  <a class="nav-link nav-internal" href="../running_tests.html">
+    Running tests
   </a>
 </li>
 
@@ -261,8 +261,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../examples.html">
-    Examples
+  <a class="nav-link nav-internal" href="../running_tests.html">
+    Running tests
   </a>
 </li>
 
@@ -442,7 +442,7 @@
 <h1>pytest_bluezenv.EventPluginMixin<a class="headerlink" href="#pytest-bluezenv-eventpluginmixin" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytest_bluezenv.EventPluginMixin">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">EventPluginMixin</span></span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L70-L160"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.EventPluginMixin" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">EventPluginMixin</span></span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L70-L163"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.EventPluginMixin" title="Link to this definition">#</a></dt>
 <dd><p>Simple expect() / reply() pattern for handing async events in
 host plugins.</p>
 <dl class="py method">
@@ -462,13 +462,16 @@ host plugins.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_event</span></code>([block])</p></td>
 <td><p>Get most recent pending Event, blocking optional</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply</span></code>(*value)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">object_method</span></code>(obj, method, *a, **kw)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply</span></code>(*value)</p></td>
 <td><p>Provide DBus reply to the most recent pending Event</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply_error</span></code>([err])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply_error</span></code>([err])</p></td>
 <td><p>Provide DBus error reply to the most recent pending Event</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code>(impl)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code>(impl)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

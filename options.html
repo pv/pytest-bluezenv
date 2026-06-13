@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Requirements" href="requirements.html" />
-    <link rel="prev" title="Examples" href="examples.html" />
+    <link rel="prev" title="Running tests" href="running_tests.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -147,8 +147,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="examples.html">
-    Examples
+  <a class="nav-link nav-internal" href="running_tests.html">
+    Running tests
   </a>
 </li>
 
@@ -261,8 +261,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="examples.html">
-    Examples
+  <a class="nav-link nav-internal" href="running_tests.html">
+    Running tests
   </a>
 </li>
 
@@ -400,19 +400,23 @@ real controllers.</p>
 environment variable is used. If none, all USB controllers
 with suitable permissions are considered.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--btmon</span></code></dt><dd><p>Launch btmon on all hosts to log events, and dump traffic to
-test-bluezenv-*.btsnoop</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">--force-usb</span></code></dt><dd><p>Force tests to use USB controllers instead of <cite>btvirt</cite>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--vm-timeout=&lt;seconds&gt;</span></code></dt><dd><p>Specify timeout for communication with VM hosts.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">--bluez-build-dir=&lt;path&gt;</span></code></dt><dd><p>Path to build directory where to search for BlueZ
+executables.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--bluez-src-dir=&lt;path&gt;</span></code></dt><dd><p>Path to build BlueZ source directory.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">--log-filter=[+-]&lt;pattern&gt;,[+-]&lt;pattern&gt;,...</span></code></dt><dd><p>Allow/deny lists
 for filtering logging output. The pattern is a shell glob matching
 to the logger names.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--build-dir=&lt;path&gt;</span></code></dt><dd><p>Path to build directory where to search for BlueZ
-executables.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">--no-log-reorder</span></code></dt><dd><p>Don’t reorder logs to timestamp order.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--vm-timeout=&lt;seconds&gt;</span></code></dt><dd><p>Specify timeout for communication with VM hosts.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">--btmon</span></code></dt><dd><p>Launch btmon on all hosts to log events, and dump traffic to
+test-bluezenv-*.btsnoop</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">--kernel-build=no/use/auto/force</span></code></dt><dd><p>Build a suitable kernel image from source.</p>
 </dd>
@@ -439,12 +443,12 @@ dumps etc. are copied out from it before test instance is shut down.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="examples.html"
+       href="running_tests.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Examples</p>
+        <p class="prev-next-title">Running tests</p>
       </div>
     </a>
     <a class="right-next"

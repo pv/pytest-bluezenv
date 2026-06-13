@@ -1,5 +1,5 @@
-Examples
-========
+Running tests
+=============
 
 Run all tests
 -------------

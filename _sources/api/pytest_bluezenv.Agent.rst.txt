@@ -21,6 +21,7 @@
       ~Agent.expect
       ~Agent.get_event
       ~Agent.has_device
+      ~Agent.object_method
       ~Agent.presetup
       ~Agent.reply
       ~Agent.reply_error

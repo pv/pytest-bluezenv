@@ -19,24 +19,30 @@ The `pytest-bluezenv` plugin adds the following command-line options:
 	environment variable is used. If none, all USB controllers
 	with suitable permissions are considered.
 
-``--btmon``
-        Launch btmon on all hosts to log events, and dump traffic to
-	test-bluezenv-\*.btsnoop
-
 ``--force-usb``
         Force tests to use USB controllers instead of `btvirt`.
 
-``--vm-timeout=<seconds>``
-        Specify timeout for communication with VM hosts.
+``--bluez-build-dir=<path>``
+        Path to build directory where to search for BlueZ
+        executables.
+
+``--bluez-src-dir=<path>``
+        Path to build BlueZ source directory.
 
 ``--log-filter=[+-]<pattern>,[+-]<pattern>,...``
         Allow/deny lists
 	for filtering logging output. The pattern is a shell glob matching
 	to the logger names.
 
-``--build-dir=<path>``
-        Path to build directory where to search for BlueZ
-        executables.
+``--no-log-reorder``
+	Don't reorder logs to timestamp order.
+
+``--vm-timeout=<seconds>``
+        Specify timeout for communication with VM hosts.
+
+``--btmon``
+        Launch btmon on all hosts to log events, and dump traffic to
+	test-bluezenv-\*.btsnoop
 
 ``--kernel-build=no/use/auto/force``
         Build a suitable kernel image from source.

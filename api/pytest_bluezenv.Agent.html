@@ -147,8 +147,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../examples.html">
-    Examples
+  <a class="nav-link nav-internal" href="../running_tests.html">
+    Running tests
   </a>
 </li>
 
@@ -261,8 +261,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../examples.html">
-    Examples
+  <a class="nav-link nav-internal" href="../running_tests.html">
+    Running tests
   </a>
 </li>
 
@@ -442,7 +442,7 @@
 <h1>pytest_bluezenv.Agent<a class="headerlink" href="#pytest-bluezenv-agent" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pytest_bluezenv.Agent">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KeyboardDisplay'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/agent'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L163-L288"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.Agent" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KeyboardDisplay'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/agent'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L166-L291"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.Agent" title="Link to this definition">#</a></dt>
 <dd><p>Host plugin providing org.bluez.Agent1 test implementation.</p>
 <p>Asynchronous events are handled via expect().</p>
 <p class="rubric">Example</p>
@@ -454,7 +454,7 @@
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pytest_bluezenv.Agent.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KeyboardDisplay'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/agent'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L182-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.Agent.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capability</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'KeyboardDisplay'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/agent'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/agent.py#L185-L187"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.Agent.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Configure plugin (runs on parent host side).  This is
 called at test discovery time, so should mainly store static
 data.</p>
@@ -487,19 +487,22 @@ data.</p>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_device</span></code>(address)</p></td>
 <td><p>Return True if device with given address exists</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">presetup</span></code>(config)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">object_method</span></code>(obj, method, *a, **kw)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">presetup</span></code>(config)</p></td>
 <td><p>Parent host-side setup, before VM environment is started.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply</span></code>(*value)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply</span></code>(*value)</p></td>
 <td><p>Provide DBus reply to the most recent pending Event</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply_error</span></code>([err])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reply_error</span></code>([err])</p></td>
 <td><p>Provide DBus error reply to the most recent pending Event</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code>(impl)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code>(impl)</p></td>
 <td><p>VM-side setup</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown</span></code>()</p></td>
 <td><p>VM-side teardown</p></td>
 </tr>
 </tbody>
