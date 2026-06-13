@@ -159,6 +159,9 @@ class EventPluginMixin:
 
         getattr(obj, method)(*a, **kw, reply_handler=reply, error_handler=error)
 
+    def object_method(self, obj, method, *a, **kw):
+        return self._object_method(obj, method, *a, **kw)
+
 
 class Agent(env.HostPlugin, EventPluginMixin):
     """
