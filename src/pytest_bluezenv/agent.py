@@ -160,6 +160,26 @@ class EventPluginMixin:
         getattr(obj, method)(*a, **kw, reply_handler=reply, error_handler=error)
 
     def object_method(self, obj, method, *a, **kw):
+        """
+        Call DBus method of an object and handle reply as async events.
+
+        The event names are ``{iface}.{method}:reply`` and ``{iface}.{method}:error``.
+
+        Args:
+            obj (dbus.Interface): interface whose method to call
+            method (str): method name
+            *a: method arguments
+            **kw: method arguments
+
+        Example:
+
+            .. code-block:: python
+
+               obj = dbus.Interface(bus.get_object(BUS_NAME, "/"), "org.freedesktop.DBus.ObjectManager")
+               self.object_method(obj, "GetManagedObjects")
+               event = self.expect("org.freedesktop.DBus.ObjectManager.GetManagedObjects:reply")
+
+        """
         return self._object_method(obj, method, *a, **kw)
 
 
