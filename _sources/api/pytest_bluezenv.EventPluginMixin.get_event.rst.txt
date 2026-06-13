@@ -1,0 +1,6 @@
+pytest\_bluezenv.EventPluginMixin.get\_event
+============================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: EventPluginMixin.get_event

@@ -1,0 +1,6 @@
+pytest\_bluezenv.DbusSystem.presetup
+====================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: DbusSystem.presetup

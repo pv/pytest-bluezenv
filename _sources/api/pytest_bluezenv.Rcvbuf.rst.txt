@@ -12,11 +12,19 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Rcvbuf.__init__
+      
+      
       ~Rcvbuf.presetup
+      
+      
       ~Rcvbuf.setup
+      
+      
       ~Rcvbuf.teardown
+      
    
    
 

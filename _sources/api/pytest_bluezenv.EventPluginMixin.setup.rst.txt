@@ -1,0 +1,6 @@
+pytest\_bluezenv.EventPluginMixin.setup
+=======================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: EventPluginMixin.setup

@@ -1,0 +1,6 @@
+pytest\_bluezenv.Btmon.presetup
+===============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Btmon.presetup

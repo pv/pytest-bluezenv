@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.setup
+============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.setup

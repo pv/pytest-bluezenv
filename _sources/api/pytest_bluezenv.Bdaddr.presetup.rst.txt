@@ -1,0 +1,6 @@
+pytest\_bluezenv.Bdaddr.presetup
+================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Bdaddr.presetup

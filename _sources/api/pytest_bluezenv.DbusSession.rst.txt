@@ -12,11 +12,19 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~DbusSession.__init__
+      
+      
       ~DbusSession.presetup
+      
+      
       ~DbusSession.setup
+      
+      
       ~DbusSession.teardown
+      
    
    
 

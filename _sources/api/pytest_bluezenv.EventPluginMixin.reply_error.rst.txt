@@ -1,0 +1,6 @@
+pytest\_bluezenv.EventPluginMixin.reply\_error
+==============================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: EventPluginMixin.reply_error

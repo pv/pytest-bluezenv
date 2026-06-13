@@ -12,14 +12,28 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~EventPluginMixin.__init__
+      
+      
       ~EventPluginMixin.expect
+      
+      
       ~EventPluginMixin.get_event
+      
+      
       ~EventPluginMixin.object_method
+      
+      
       ~EventPluginMixin.reply
+      
+      
       ~EventPluginMixin.reply_error
+      
+      
       ~EventPluginMixin.setup
+      
    
    
 

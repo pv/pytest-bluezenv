@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.adapter\_get
+===================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.adapter_get

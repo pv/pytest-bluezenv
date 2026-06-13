@@ -1,0 +1,6 @@
+pytest\_bluezenv.HostPlugin.presetup
+====================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: HostPlugin.presetup

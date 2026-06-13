@@ -1,0 +1,6 @@
+pytest\_bluezenv.EventPluginMixin.object\_method
+================================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: EventPluginMixin.object_method

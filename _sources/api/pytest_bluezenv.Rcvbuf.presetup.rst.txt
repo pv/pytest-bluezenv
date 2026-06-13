@@ -1,0 +1,6 @@
+pytest\_bluezenv.Rcvbuf.presetup
+================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Rcvbuf.presetup

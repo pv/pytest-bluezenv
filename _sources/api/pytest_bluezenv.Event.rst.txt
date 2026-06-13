@@ -12,8 +12,10 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Event.__init__
+      
    
    
 

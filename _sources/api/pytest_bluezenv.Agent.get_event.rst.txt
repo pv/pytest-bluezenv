@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.get\_event
+=================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.get_event

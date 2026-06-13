@@ -1,0 +1,6 @@
+pytest\_bluezenv.Pexpect.send
+=============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Pexpect.send

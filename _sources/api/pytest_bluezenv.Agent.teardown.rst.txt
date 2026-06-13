@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.teardown
+===============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.teardown

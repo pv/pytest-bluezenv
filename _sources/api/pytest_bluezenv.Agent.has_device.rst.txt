@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.has\_device
+==================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.has_device

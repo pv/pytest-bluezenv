@@ -1,0 +1,6 @@
+pytest\_bluezenv.Pexpect.presetup
+=================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Pexpect.presetup

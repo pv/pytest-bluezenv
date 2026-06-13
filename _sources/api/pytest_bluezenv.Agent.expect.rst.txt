@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.expect
+=============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.expect

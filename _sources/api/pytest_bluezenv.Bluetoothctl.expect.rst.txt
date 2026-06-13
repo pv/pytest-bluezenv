@@ -1,0 +1,6 @@
+pytest\_bluezenv.Bluetoothctl.expect
+====================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Bluetoothctl.expect

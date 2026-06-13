@@ -12,12 +12,22 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Btmon.__init__
+      
+      
       ~Btmon.presetup
+      
+      
       ~Btmon.setup
+      
+      
       ~Btmon.stop
+      
+      
       ~Btmon.teardown
+      
    
    
 

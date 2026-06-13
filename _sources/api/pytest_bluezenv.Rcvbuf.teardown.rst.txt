@@ -1,0 +1,6 @@
+pytest\_bluezenv.Rcvbuf.teardown
+================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Rcvbuf.teardown

@@ -12,15 +12,31 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Pexpect.__init__
+      
+      
       ~Pexpect.close
+      
+      
       ~Pexpect.expect
+      
+      
       ~Pexpect.presetup
+      
+      
       ~Pexpect.send
+      
+      
       ~Pexpect.setup
+      
+      
       ~Pexpect.spawn
+      
+      
       ~Pexpect.teardown
+      
    
    
 

@@ -1,0 +1,6 @@
+pytest\_bluezenv.Pexpect.spawn
+==============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Pexpect.spawn

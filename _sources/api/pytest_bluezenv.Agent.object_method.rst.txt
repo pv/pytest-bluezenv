@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.object\_method
+=====================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.object_method

@@ -1,0 +1,6 @@
+pytest\_bluezenv.PluginProxy.set\_connection
+============================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: PluginProxy.set_connection

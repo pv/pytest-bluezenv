@@ -1,0 +1,6 @@
+pytest\_bluezenv.Call.call\_async
+=================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Call.call_async

@@ -12,9 +12,13 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~LogStream.__init__
+      
+      
       ~LogStream.close
+      
    
    
 

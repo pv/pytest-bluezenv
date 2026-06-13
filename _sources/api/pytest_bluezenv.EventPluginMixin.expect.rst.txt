@@ -1,0 +1,6 @@
+pytest\_bluezenv.EventPluginMixin.expect
+========================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: EventPluginMixin.expect

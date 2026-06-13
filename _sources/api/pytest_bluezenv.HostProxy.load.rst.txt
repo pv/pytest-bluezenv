@@ -1,0 +1,6 @@
+pytest\_bluezenv.HostProxy.load
+===============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: HostProxy.load

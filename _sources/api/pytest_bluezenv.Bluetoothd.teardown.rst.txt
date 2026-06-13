@@ -1,0 +1,6 @@
+pytest\_bluezenv.Bluetoothd.teardown
+====================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Bluetoothd.teardown

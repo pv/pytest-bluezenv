@@ -12,9 +12,13 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~PluginProxy.__init__
+      
+      
       ~PluginProxy.set_connection
+      
    
    
 

@@ -12,13 +12,25 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Bluetoothctl.__init__
+      
+      
       ~Bluetoothctl.expect
+      
+      
       ~Bluetoothctl.presetup
+      
+      
       ~Bluetoothctl.send
+      
+      
       ~Bluetoothctl.setup
+      
+      
       ~Bluetoothctl.teardown
+      
    
    
 

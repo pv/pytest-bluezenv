@@ -12,13 +12,25 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~HostProxy.__init__
+      
+      
       ~HostProxy.close
+      
+      
       ~HostProxy.load
+      
+      
       ~HostProxy.set_instance_name
+      
+      
       ~HostProxy.start_load
+      
+      
       ~HostProxy.wait_load
+      
    
    
 

@@ -1,0 +1,6 @@
+pytest\_bluezenv.Obexd.teardown
+===============================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Obexd.teardown

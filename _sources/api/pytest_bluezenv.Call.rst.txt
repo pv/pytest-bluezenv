@@ -12,13 +12,25 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Call.__init__
+      
+      
       ~Call.call_async
+      
+      
       ~Call.presetup
+      
+      
       ~Call.setup
+      
+      
       ~Call.teardown
+      
+      
       ~Call.wait_async
+      
    
    
 

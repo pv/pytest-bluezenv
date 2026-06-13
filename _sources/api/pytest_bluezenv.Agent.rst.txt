@@ -12,21 +12,49 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~Agent.__init__
+      
+      
       ~Agent.adapter_get
+      
+      
       ~Agent.adapter_method
+      
+      
       ~Agent.adapter_set
+      
+      
       ~Agent.device_method
+      
+      
       ~Agent.expect
+      
+      
       ~Agent.get_event
+      
+      
       ~Agent.has_device
+      
+      
       ~Agent.object_method
+      
+      
       ~Agent.presetup
+      
+      
       ~Agent.reply
+      
+      
       ~Agent.reply_error
+      
+      
       ~Agent.setup
+      
+      
       ~Agent.teardown
+      
    
    
 

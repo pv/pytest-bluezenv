@@ -1,0 +1,6 @@
+pytest\_bluezenv.Agent.reply\_error
+===================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Agent.reply_error

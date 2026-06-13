@@ -1,0 +1,6 @@
+pytest\_bluezenv.Btmon.stop
+===========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Btmon.stop

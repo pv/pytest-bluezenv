@@ -12,11 +12,19 @@
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
-      ~HostPlugin.__init__
+      
+      
       ~HostPlugin.presetup
+      
+      
       ~HostPlugin.setup
+      
+      
       ~HostPlugin.teardown
+      
    
    
 

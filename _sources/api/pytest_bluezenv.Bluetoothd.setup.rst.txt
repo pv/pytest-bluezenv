@@ -1,0 +1,6 @@
+pytest\_bluezenv.Bluetoothd.setup
+=================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: Bluetoothd.setup

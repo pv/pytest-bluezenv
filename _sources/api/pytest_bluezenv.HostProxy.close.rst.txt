@@ -1,0 +1,6 @@
+pytest\_bluezenv.HostProxy.close
+================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: HostProxy.close

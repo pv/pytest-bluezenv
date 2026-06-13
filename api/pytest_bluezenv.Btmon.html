@@ -45,8 +45,8 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pytest_bluezenv.Call" href="pytest_bluezenv.Call.html" />
-    <link rel="prev" title="pytest_bluezenv.Bluetoothd" href="pytest_bluezenv.Bluetoothd.html" />
+    <link rel="next" title="pytest_bluezenv.Btmon.presetup" href="pytest_bluezenv.Btmon.presetup.html" />
+    <link rel="prev" title="pytest_bluezenv.Bluetoothd.teardown" href="pytest_bluezenv.Bluetoothd.teardown.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -337,22 +337,104 @@
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.hosts_once.html">pytest_bluezenv.hosts_once</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.HostPlugin.html">pytest_bluezenv.HostPlugin</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Agent.html">pytest_bluezenv.Agent</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Bdaddr.html">pytest_bluezenv.Bdaddr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.html">pytest_bluezenv.Bluetoothctl</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Bluetoothd.html">pytest_bluezenv.Bluetoothd</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pytest_bluezenv.Btmon</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Call.html">pytest_bluezenv.Call</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.DbusSession.html">pytest_bluezenv.DbusSession</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.DbusSystem.html">pytest_bluezenv.DbusSystem</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Obexd.html">pytest_bluezenv.Obexd</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Pexpect.html">pytest_bluezenv.Pexpect</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Rcvbuf.html">pytest_bluezenv.Rcvbuf</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.HostPlugin.html">pytest_bluezenv.HostPlugin</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostPlugin.presetup.html">pytest_bluezenv.HostPlugin.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostPlugin.setup.html">pytest_bluezenv.HostPlugin.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostPlugin.teardown.html">pytest_bluezenv.HostPlugin.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Agent.html">pytest_bluezenv.Agent</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.adapter_get.html">pytest_bluezenv.Agent.adapter_get</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.adapter_method.html">pytest_bluezenv.Agent.adapter_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.adapter_set.html">pytest_bluezenv.Agent.adapter_set</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.device_method.html">pytest_bluezenv.Agent.device_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.expect.html">pytest_bluezenv.Agent.expect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.get_event.html">pytest_bluezenv.Agent.get_event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.has_device.html">pytest_bluezenv.Agent.has_device</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.object_method.html">pytest_bluezenv.Agent.object_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.presetup.html">pytest_bluezenv.Agent.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.reply.html">pytest_bluezenv.Agent.reply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.reply_error.html">pytest_bluezenv.Agent.reply_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.setup.html">pytest_bluezenv.Agent.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Agent.teardown.html">pytest_bluezenv.Agent.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Bdaddr.html">pytest_bluezenv.Bdaddr</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bdaddr.presetup.html">pytest_bluezenv.Bdaddr.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bdaddr.setup.html">pytest_bluezenv.Bdaddr.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bdaddr.teardown.html">pytest_bluezenv.Bdaddr.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.html">pytest_bluezenv.Bluetoothctl</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.expect.html">pytest_bluezenv.Bluetoothctl.expect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.presetup.html">pytest_bluezenv.Bluetoothctl.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.send.html">pytest_bluezenv.Bluetoothctl.send</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.setup.html">pytest_bluezenv.Bluetoothctl.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothctl.teardown.html">pytest_bluezenv.Bluetoothctl.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Bluetoothd.html">pytest_bluezenv.Bluetoothd</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothd.presetup.html">pytest_bluezenv.Bluetoothd.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothd.setup.html">pytest_bluezenv.Bluetoothd.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Bluetoothd.teardown.html">pytest_bluezenv.Bluetoothd.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">pytest_bluezenv.Btmon</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Btmon.presetup.html">pytest_bluezenv.Btmon.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Btmon.setup.html">pytest_bluezenv.Btmon.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Btmon.stop.html">pytest_bluezenv.Btmon.stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Btmon.teardown.html">pytest_bluezenv.Btmon.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Call.html">pytest_bluezenv.Call</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Call.call_async.html">pytest_bluezenv.Call.call_async</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Call.presetup.html">pytest_bluezenv.Call.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Call.setup.html">pytest_bluezenv.Call.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Call.teardown.html">pytest_bluezenv.Call.teardown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Call.wait_async.html">pytest_bluezenv.Call.wait_async</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.DbusSession.html">pytest_bluezenv.DbusSession</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.DbusSession.presetup.html">pytest_bluezenv.DbusSession.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.DbusSession.setup.html">pytest_bluezenv.DbusSession.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.DbusSession.teardown.html">pytest_bluezenv.DbusSession.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.DbusSystem.html">pytest_bluezenv.DbusSystem</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.DbusSystem.presetup.html">pytest_bluezenv.DbusSystem.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.DbusSystem.setup.html">pytest_bluezenv.DbusSystem.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.DbusSystem.teardown.html">pytest_bluezenv.DbusSystem.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Obexd.html">pytest_bluezenv.Obexd</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Obexd.presetup.html">pytest_bluezenv.Obexd.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Obexd.setup.html">pytest_bluezenv.Obexd.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Obexd.teardown.html">pytest_bluezenv.Obexd.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Pexpect.html">pytest_bluezenv.Pexpect</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.close.html">pytest_bluezenv.Pexpect.close</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.expect.html">pytest_bluezenv.Pexpect.expect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.presetup.html">pytest_bluezenv.Pexpect.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.send.html">pytest_bluezenv.Pexpect.send</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.setup.html">pytest_bluezenv.Pexpect.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.spawn.html">pytest_bluezenv.Pexpect.spawn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Pexpect.teardown.html">pytest_bluezenv.Pexpect.teardown</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.Rcvbuf.html">pytest_bluezenv.Rcvbuf</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Rcvbuf.presetup.html">pytest_bluezenv.Rcvbuf.presetup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Rcvbuf.setup.html">pytest_bluezenv.Rcvbuf.setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.Rcvbuf.teardown.html">pytest_bluezenv.Rcvbuf.teardown</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.RemoteError.html">pytest_bluezenv.RemoteError</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.LogStream.html">pytest_bluezenv.LogStream</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.LogStream.html">pytest_bluezenv.LogStream</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.LogStream.close.html">pytest_bluezenv.LogStream.close</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.get_bdaddr.html">pytest_bluezenv.get_bdaddr</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.find_exe.html">pytest_bluezenv.find_exe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.mainloop_assert.html">pytest_bluezenv.mainloop_assert</a></li>
@@ -364,12 +446,30 @@
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Event.html">pytest_bluezenv.Event</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.html">pytest_bluezenv.EventPluginMixin</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.html">pytest_bluezenv.EventPluginMixin</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.expect.html">pytest_bluezenv.EventPluginMixin.expect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.get_event.html">pytest_bluezenv.EventPluginMixin.get_event</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.object_method.html">pytest_bluezenv.EventPluginMixin.object_method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.reply.html">pytest_bluezenv.EventPluginMixin.reply</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.reply_error.html">pytest_bluezenv.EventPluginMixin.reply_error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.EventPluginMixin.setup.html">pytest_bluezenv.EventPluginMixin.setup</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.dbus_service_event_method.html">pytest_bluezenv.dbus_service_event_method</a></li>
 </ul>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.HostProxy.html">pytest_bluezenv.HostProxy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.PluginProxy.html">pytest_bluezenv.PluginProxy</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.HostProxy.html">pytest_bluezenv.HostProxy</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostProxy.close.html">pytest_bluezenv.HostProxy.close</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostProxy.load.html">pytest_bluezenv.HostProxy.load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostProxy.set_instance_name.html">pytest_bluezenv.HostProxy.set_instance_name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostProxy.start_load.html">pytest_bluezenv.HostProxy.start_load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.HostProxy.wait_load.html">pytest_bluezenv.HostProxy.wait_load</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.PluginProxy.html">pytest_bluezenv.PluginProxy</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.PluginProxy.set_connection.html">pytest_bluezenv.PluginProxy.set_connection</a></li>
+</ul>
+</details></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.host_setup.html">pytest_bluezenv.host_setup</a></li>
@@ -456,19 +556,16 @@ data.</p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pytest_bluezenv.Btmon.__init__" title="pytest_bluezenv.Btmon.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([args])</p></td>
-<td><p>Configure plugin (runs on parent host side).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">presetup</span></code>(config)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pytest_bluezenv.Btmon.presetup.html#pytest_bluezenv.Btmon.presetup" title="pytest_bluezenv.Btmon.presetup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">presetup</span></code></a>(config)</p></td>
 <td><p>Parent host-side setup, before VM environment is started.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code>(impl)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pytest_bluezenv.Btmon.setup.html#pytest_bluezenv.Btmon.setup" title="pytest_bluezenv.Btmon.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>(impl)</p></td>
 <td><p>VM-side setup</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop</span></code>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="pytest_bluezenv.Btmon.stop.html#pytest_bluezenv.Btmon.stop" title="pytest_bluezenv.Btmon.stop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stop</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown</span></code>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="pytest_bluezenv.Btmon.teardown.html#pytest_bluezenv.Btmon.teardown" title="pytest_bluezenv.Btmon.teardown"><code class="xref py py-obj docutils literal notranslate"><span class="pre">teardown</span></code></a>()</p></td>
 <td><p>VM-side teardown</p></td>
 </tr>
 </tbody>
@@ -505,20 +602,20 @@ data.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="pytest_bluezenv.Bluetoothd.html"
+       href="pytest_bluezenv.Bluetoothd.teardown.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pytest_bluezenv.Bluetoothd</p>
+        <p class="prev-next-title">pytest_bluezenv.Bluetoothd.teardown</p>
       </div>
     </a>
     <a class="right-next"
-       href="pytest_bluezenv.Call.html"
+       href="pytest_bluezenv.Btmon.presetup.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pytest_bluezenv.Call</p>
+        <p class="prev-next-title">pytest_bluezenv.Btmon.presetup</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

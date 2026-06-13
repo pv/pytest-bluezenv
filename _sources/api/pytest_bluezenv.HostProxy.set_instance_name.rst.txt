@@ -1,0 +1,6 @@
+pytest\_bluezenv.HostProxy.set\_instance\_name
+==============================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. automethod:: HostProxy.set_instance_name
