@@ -380,7 +380,13 @@ def _main_runner_instance():
     try:
         dev = _find_vport(b"pytest-bluezenv-rpc\n")
         log.info(f"Test RPC server on {dev}")
-        rpc.server_file(dev, Implementation())
+
+        # If no messages were handled from /dev/vport, upper tester is
+        # probably not connected. We can directly retry in this worker
+        # as the tester has done no work yet.
+        while rpc.server_file(dev, Implementation()) == 0:
+            log.info(f"Waiting for upper tester...")
+            time.sleep(0.5)
     finally:
         utils.SIMPLE_LOG_HANDLER.flush()
         loop.quit()

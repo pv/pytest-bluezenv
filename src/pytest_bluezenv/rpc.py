@@ -74,18 +74,25 @@ def server_stream(stream, implementation):
     implementation : object
         Object on which remote methods are called
 
+    Returns
+    -------
+    handled : int
+        Number of requests handled
+
     """
     conn = Connection(stream, None)
+    handled = 0
 
     while True:
         try:
             msg = conn._recv()
         except BrokenPipeError:
             log.info("server: end of input")
-            return
+            break
 
         message = msg["message"]
         ident = msg.get("ident", None)
+        handled += 1
 
         if message in ("call", "call-noreply"):
             log.info(f"server: {msg['method']} {msg['a']} {msg['kw']}")
@@ -119,15 +126,17 @@ def server_stream(stream, implementation):
 
             log.info(f"server: quit")
             conn._send("quit:reply", ident=ident, **exc_info)
-            return
+            break
         else:
             raise RuntimeError(f"unknown {message=}")
+
+    return handled
 
 
 def server_file(filename, implementation):
     """Open given file and run server on it"""
     with open(filename, "r+b", buffering=0) as stream:
-        server_stream(stream, implementation)
+        return server_stream(stream, implementation)
 
 
 def server_unix_socket(socket_path, implementation):
@@ -138,7 +147,7 @@ def server_unix_socket(socket_path, implementation):
 
         s, addr = sock.accept()
         try:
-            server_stream(s, implementation)
+            return server_stream(s, implementation)
         finally:
             s.close()
 

@@ -28,14 +28,16 @@ def test_basic(tmp_path):
 
     def server_1():
         try:
-            rpc.server_unix_socket(socket_1, impl_1)
+            handled = rpc.server_unix_socket(socket_1, impl_1)
+            assert handled >= 1
         except:
             traceback.print_exc()
             raise
 
     def server_2():
         try:
-            rpc.server_unix_socket(socket_2, Impl2())
+            handled = rpc.server_unix_socket(socket_2, Impl2())
+            assert handled >= 1
         except:
             traceback.print_exc()
             raise
