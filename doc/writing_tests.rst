@@ -62,6 +62,30 @@ Generally, the framework automatically orders the tests so that the VM
 setup does not need to be restarted unless needed.
 
 
+Example: Running code on VM host side
+-------------------------------------
+
+Simplest way to invoke code on VM host side, is to use `host.call()`,
+which comes from the :obj:`pytest_bluezenv.Call` host plugin.
+
+.. code-block:: python
+
+   @host_config([Bluetoothd(conf="[General]\nExperimental = true")])
+   def test_adv_monitor_crash(hosts):
+       # This runs on parent tester side
+
+       result = hosts[0].call(check_adv_monitor_crash)
+
+   def check_adv_monitor_crash():
+       # This runs on VM side
+
+       ok = True
+       if not ok:
+           raise AssertionError("didn't work")
+
+       return 123
+
+
 Example: Host plugin
 --------------------
 
@@ -71,35 +95,45 @@ The `host.bluetoothctl` implementation used above is as follows:
 
    import logging
    import pexpect
+   import pytest
 
    from pytest_bluezenv import HostPlugin, Bluetoothd, find_exe, LogStream
 
-   class Bluetoothctl(Pexpect):
-       # Declare unique plugin name
+   class Bluetoothctl(HostPlugin):
        name = "bluetoothctl"
 
-       # Declare plugin dependencies to be loaded first
+       # -- Declare plugin dependencies to be loaded first
+
        depends = [Bluetoothd()]
 
-       # These run on parent host side:
+       # -- These run on parent host side:
 
-       def __init__(self, subdir, name):
-           self.exe = find_exe(subdir, name)
-
-       def presetup(self, config):
+       def __init__(self):
            pass
 
-       # These run on VM side at setup/teardown:
+       def presetup(self, config):
+           try:
+               self.exe = utils.find_exe("client", "bluetoothctl")
+           except FileNotFoundError as exc:
+               pytest.skip(reason=f"Bluetoothctl: {exc!r}")
+
+       # -- These run on VM side at setup/teardown:
 
        def setup(self, impl):
+           from pexpect.popen_spawn import PopenSpawn
+
            self.log = logging.getLogger(self.name)
-           self.log_stream = LogStream(self.name)
-           self.ctl = pexpect.spawn(self.exe, logfile=self.log_stream.stream)
+           self.log_stream = utils.LogStream(self.name)
+
+           self.ctl = pexpect.popen_spawn.PopenSpawn(
+               self.exe, logfile=self.log_stream.stream, timeout=utils.DEFAULT_TIMEOUT
+           )
 
        def teardown(self):
-           self.ctl.terminate()
+           self.ctl.sendeof()
+           self.ctl.kill(signal.SIGTERM)
 
-       # These define custom RPC methods that can be called
+       # -- These define custom RPC methods that can be called
 
        def expect(self, *a, **kw):
            ret = self.ctl.expect(*a, **kw)

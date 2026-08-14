@@ -79,8 +79,8 @@ class Rcvbuf(env.HostPlugin):
 
 class Call(env.HostPlugin):
     """
-    Host plugin providing ``host.call(func, *args, **kw)`` and `call_async`
-    which invoke the given functions on VM host side.  Loaded by default.
+    Host plugin providing ``host.call(func, *args, **kw)``
+    which invokes the given functions on VM host side.  Loaded by default.
 
     Example:
 
