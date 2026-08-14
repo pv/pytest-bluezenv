@@ -27,6 +27,7 @@ import functools
 import importlib.resources
 from pathlib import Path
 
+import dbus
 from gi.repository import GLib
 
 __all__ = [
@@ -34,6 +35,7 @@ __all__ = [
     "find_exe",
     "wait_until",
     "get_bdaddr",
+    "get_dbus",
     "quoted",
     "mainloop_invoke",
     "mainloop_wrap",
@@ -227,7 +229,7 @@ def mainloop_wrap(func):
 
            @mainloop_wrap
            def func():
-               bus = dbus.SystemBus()
+               bus = get_dbus()
     """
 
     @functools.wraps(func)
@@ -251,7 +253,7 @@ def mainloop_assert(func):
 
            @mainloop_assert
            def func():
-               bus = dbus.SystemBus()
+               bus = get_dbus()
     """
 
     @functools.wraps(func)
@@ -262,6 +264,33 @@ def mainloop_assert(func):
         return func(*a, **kw)
 
     return wrapper
+
+
+@mainloop_assert
+def get_dbus(session=False, private=False):
+    """Get DBus system or session bus.
+
+    This should be used instead of dbus.SystemBus(), dbus.SessionBus()
+    as it does additional checks and disables exit-on-disconnect to
+    avoid problems.
+
+    Args:
+        session (bool): get session bus instead of system bus.
+        private (bool): get private bus instance instead of shared.
+
+    Note:
+
+        Only available for VM host side code, not in tester.
+
+    """
+
+    if not session:
+        bus = dbus.SystemBus(private=private)
+    else:
+        bus = dbus.SessionBus(private=private)
+
+    bus.set_exit_on_disconnect(False)
+    return bus
 
 
 class TmpDir(tempfile.TemporaryDirectory):

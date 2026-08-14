@@ -211,8 +211,7 @@ class Agent(env.HostPlugin, EventPluginMixin):
     def setup(self, impl):
         EventPluginMixin.setup(self, impl)
 
-        self.bus = dbus.SystemBus(private=True)
-        self.bus.set_exit_on_disconnect(False)
+        self.bus = utils.get_dbus(private=True)
 
         self.agent = AgentObject(self.bus, self.path, self.events)
 

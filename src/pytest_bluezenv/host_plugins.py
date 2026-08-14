@@ -306,8 +306,7 @@ class Bluetoothd(env.HostPlugin):
 
         # Wait for the adapter to appear powered
         self.log.info("Wait for bluetoothd...")
-        bus = dbus.SystemBus()
-        bus.set_exit_on_disconnect(False)
+        bus = utils.get_dbus()
 
         def cond():
             try:
@@ -367,8 +366,7 @@ class Obexd(env.HostPlugin):
 
         # Wait for the service
         self.log.info("Wait for obexd...")
-        bus = dbus.SystemBus()
-        bus.set_exit_on_disconnect(False)
+        bus = utils.get_dbus()
         adapter = dbus.Interface(
             bus.get_object("org.bluez", "/org/bluez/hci0"),
             "org.freedesktop.DBus.Properties",
