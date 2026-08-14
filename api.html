@@ -437,6 +437,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="api/pytest_bluezenv.get_bdaddr.html">pytest_bluezenv.get_bdaddr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/pytest_bluezenv.get_dbus.html">pytest_bluezenv.get_dbus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/pytest_bluezenv.find_exe.html">pytest_bluezenv.find_exe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/pytest_bluezenv.mainloop_assert.html">pytest_bluezenv.mainloop_assert</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/pytest_bluezenv.mainloop_invoke.html">pytest_bluezenv.mainloop_invoke</a></li>
@@ -623,25 +624,28 @@
 <tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.get_bdaddr.html#pytest_bluezenv.get_bdaddr" title="pytest_bluezenv.get_bdaddr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.get_bdaddr</span></code></a>([index])</p></td>
 <td><p>Get bdaddr of controller with given index</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.find_exe.html#pytest_bluezenv.find_exe" title="pytest_bluezenv.find_exe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.find_exe</span></code></a>(subdir, name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.get_dbus.html#pytest_bluezenv.get_dbus" title="pytest_bluezenv.get_dbus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.get_dbus</span></code></a>([session, private])</p></td>
+<td><p>Get DBus system or session bus.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.find_exe.html#pytest_bluezenv.find_exe" title="pytest_bluezenv.find_exe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.find_exe</span></code></a>(subdir, name)</p></td>
 <td><p>Find absolute path to the given executable, either within BlueZ build directory or on host.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.mainloop_assert.html#pytest_bluezenv.mainloop_assert" title="pytest_bluezenv.mainloop_assert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.mainloop_assert</span></code></a>(func)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.mainloop_assert.html#pytest_bluezenv.mainloop_assert" title="pytest_bluezenv.mainloop_assert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.mainloop_assert</span></code></a>(func)</p></td>
 <td><p>Wrap function to assert it runs from GLib main loop</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.mainloop_invoke.html#pytest_bluezenv.mainloop_invoke" title="pytest_bluezenv.mainloop_invoke"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.mainloop_invoke</span></code></a>(func, *a, **kw)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.mainloop_invoke.html#pytest_bluezenv.mainloop_invoke" title="pytest_bluezenv.mainloop_invoke"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.mainloop_invoke</span></code></a>(func, *a, **kw)</p></td>
 <td><p>Blocking invoke of <cite>func</cite> in GLib main loop.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.mainloop_wrap.html#pytest_bluezenv.mainloop_wrap" title="pytest_bluezenv.mainloop_wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.mainloop_wrap</span></code></a>(func)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.mainloop_wrap.html#pytest_bluezenv.mainloop_wrap" title="pytest_bluezenv.mainloop_wrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.mainloop_wrap</span></code></a>(func)</p></td>
 <td><p>Wrap function to run in GLib main loop thread</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.quoted.html#pytest_bluezenv.quoted" title="pytest_bluezenv.quoted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.quoted</span></code></a>(args)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.quoted.html#pytest_bluezenv.quoted" title="pytest_bluezenv.quoted"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.quoted</span></code></a>(args)</p></td>
 <td><p>Quote shell command</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.run.html#pytest_bluezenv.run" title="pytest_bluezenv.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.run</span></code></a>(*args[, input, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.run.html#pytest_bluezenv.run" title="pytest_bluezenv.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.run</span></code></a>(*args[, input, ...])</p></td>
 <td><p>Same as subprocess.run() but log output while running.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/pytest_bluezenv.wait_until.html#pytest_bluezenv.wait_until" title="pytest_bluezenv.wait_until"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.wait_until</span></code></a>(predicate, *a[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/pytest_bluezenv.wait_until.html#pytest_bluezenv.wait_until" title="pytest_bluezenv.wait_until"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pytest_bluezenv.wait_until</span></code></a>(predicate, *a[, ...])</p></td>
 <td><p></p></td>
 </tr>
 </tbody>

@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.get\_dbus
+==========================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autofunction:: get_dbus

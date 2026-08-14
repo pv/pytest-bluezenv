@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pytest_bluezenv.hosts_once &#8212; pytest-bluezenv 0.1.7.dev0</title>
+    <title>pytest_bluezenv.get_dbus &#8212; pytest-bluezenv 0.1.7.dev0</title>
   
   
   
@@ -41,12 +41,12 @@
     <script src="../_static/documentation_options.js?v=fc704f74"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pytest_bluezenv.hosts_once';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pytest_bluezenv.get_dbus';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pytest_bluezenv.HostPlugin" href="pytest_bluezenv.HostPlugin.html" />
-    <link rel="prev" title="pytest_bluezenv.hosts" href="pytest_bluezenv.hosts.html" />
+    <link rel="next" title="pytest_bluezenv.find_exe" href="pytest_bluezenv.find_exe.html" />
+    <link rel="prev" title="pytest_bluezenv.get_bdaddr" href="pytest_bluezenv.get_bdaddr.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -333,9 +333,9 @@
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.host_config.html">pytest_bluezenv.host_config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.parametrized_host_config.html">pytest_bluezenv.parametrized_host_config</a></li>
 </ul>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.hosts.html">pytest_bluezenv.hosts</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pytest_bluezenv.hosts_once</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.hosts_once.html">pytest_bluezenv.hosts_once</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.HostPlugin.html">pytest_bluezenv.HostPlugin</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -431,13 +431,13 @@
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.RemoteError.html">pytest_bluezenv.RemoteError</a></li>
 </ul>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="pytest_bluezenv.LogStream.html">pytest_bluezenv.LogStream</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="pytest_bluezenv.LogStream.close.html">pytest_bluezenv.LogStream.close</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.get_bdaddr.html">pytest_bluezenv.get_bdaddr</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.get_dbus.html">pytest_bluezenv.get_dbus</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pytest_bluezenv.get_dbus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.find_exe.html">pytest_bluezenv.find_exe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.mainloop_assert.html">pytest_bluezenv.mainloop_assert</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.mainloop_invoke.html">pytest_bluezenv.mainloop_invoke</a></li>
@@ -523,7 +523,7 @@
     
     <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pytest_bluezenv.hosts_once</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pytest_bluezenv.get_dbus</span></li>
   </ul>
 </nav>
 </div>
@@ -540,18 +540,26 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="pytest-bluezenv-hosts-once">
-<h1>pytest_bluezenv.hosts_once<a class="headerlink" href="#pytest-bluezenv-hosts-once" title="Link to this heading">#</a></h1>
+  <section id="pytest-bluezenv-get-dbus">
+<h1>pytest_bluezenv.get_dbus<a class="headerlink" href="#pytest-bluezenv-get-dbus" title="Link to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="pytest_bluezenv.hosts_once">
-<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">hosts_once</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vm_once</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_setup</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/plugin.py#L639-L653"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.hosts_once" title="Link to this definition">#</a></dt>
-<dd><p>Function-scope fixture. Same as <cite>hosts</cite>, but spawn separate VM
-instances for this test only.</p>
-<p class="rubric">Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">test_something</span><span class="p">(</span><span class="n">hosts_once</span><span class="p">):</span>
-    <span class="n">host0</span> <span class="o">=</span> <span class="n">hosts_once</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">host1</span> <span class="o">=</span> <span class="n">hosts_once</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
+<dt class="sig sig-object py" id="pytest_bluezenv.get_dbus">
+<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">get_dbus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/utils.py#L269-L293"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.get_dbus" title="Link to this definition">#</a></dt>
+<dd><p>Get DBus system or session bus.</p>
+<p>This should be used instead of dbus.SystemBus(), dbus.SessionBus()
+as it does additional checks and disables exit-on-disconnect to
+avoid problems.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>bool</em>) – get session bus instead of system bus.</p></li>
+<li><p><strong>private</strong> (<em>bool</em>) – get private bus instance instead of shared.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only available for VM host side code, not in tester.</p>
 </div>
 </dd></dl>
 
@@ -568,20 +576,20 @@ instances for this test only.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="pytest_bluezenv.hosts.html"
+       href="pytest_bluezenv.get_bdaddr.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pytest_bluezenv.hosts</p>
+        <p class="prev-next-title">pytest_bluezenv.get_bdaddr</p>
       </div>
     </a>
     <a class="right-next"
-       href="pytest_bluezenv.HostPlugin.html"
+       href="pytest_bluezenv.find_exe.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pytest_bluezenv.HostPlugin</p>
+        <p class="prev-next-title">pytest_bluezenv.find_exe</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -604,14 +612,14 @@ instances for this test only.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytest_bluezenv.hosts_once"><code class="docutils literal notranslate"><span class="pre">hosts_once()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytest_bluezenv.get_dbus"><code class="docutils literal notranslate"><span class="pre">get_dbus()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../_sources/api/pytest_bluezenv.hosts_once.rst.txt">
+    <a href="../_sources/api/pytest_bluezenv.get_dbus.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

@@ -47,6 +47,7 @@ Utilities
 
    pytest_bluezenv.LogStream
    pytest_bluezenv.get_bdaddr
+   pytest_bluezenv.get_dbus
    pytest_bluezenv.find_exe
    pytest_bluezenv.mainloop_assert
    pytest_bluezenv.mainloop_invoke
