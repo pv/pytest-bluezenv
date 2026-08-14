@@ -4,6 +4,7 @@
 Simple RPC over sockets / character devices
 
 """
+
 import sys
 import os
 import struct

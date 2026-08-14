@@ -8,6 +8,7 @@ Test environment:
 - Python RPC connection to each via unix socket <-> qemu chardev
 
 """
+
 import sys
 import os
 import signal
@@ -402,9 +403,7 @@ def _setup_vm_instance():
 
     # Setup sys.path & defaults
     with open("/run/shared/defaults", "rb") as f:
-        (sys.path, utils.SRC_DIR, utils.BUILD_DIR, utils.DEFAULT_TIMEOUT) = pickle.load(
-            f
-        )
+        sys.path, utils.SRC_DIR, utils.BUILD_DIR, utils.DEFAULT_TIMEOUT = pickle.load(f)
 
     # Set up core dumps: use a pipe since 9p doesn't support user ID
     # maps and core dumping there is refused due to permissions

@@ -13,7 +13,6 @@ import pytest
 from . import utils, env, build_kernel
 from .btmon import Btmon
 
-
 __all__ = [
     # hooks:
     "pytest_addoption",

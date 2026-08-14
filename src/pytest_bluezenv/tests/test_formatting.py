@@ -3,6 +3,7 @@
 """
 Tests for the test suite itself
 """
+
 import sys
 import subprocess
 import warnings
