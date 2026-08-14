@@ -276,8 +276,6 @@ def _wait_core_dumps():
     Wait for core dumping processes.
     """
 
-    exited = {}
-
     # First check for completed child processes. Add 0.5 sec delay in
     # case core dumping started just in teardown and file isn't
     # created yet.
@@ -288,26 +286,28 @@ def _wait_core_dumps():
                 if pid == 0:
                     time.sleep(0.25)
                     break
-                exited[pid] = True
         except ChildProcessError:
             break
 
-    # If something is dumping core, wait for that pid, so that we
-    # don't quit before the core file is complete.
+    # If something is dumping core, wait for 'tee' writing the file
     for core in glob.glob("/run/shared/*.core"):
-        m = re.match(r".*-(\d+).core", core)
-        if not m:
-            continue
+        log.info(f"Wait for core dump {core}")
 
-        pid = int(m.group(1))
-        if pid in exited:
-            continue
+        core_st = os.stat(core)
+        while True:
+            for fn in glob.glob("/proc/*/fd/*"):
+                try:
+                    st = os.stat(fn, follow_symlinks=True)
+                    if (st.st_dev, st.st_ino) == (core_st.st_dev, core_st.st_ino):
+                        found = fn
+                        break
+                except OSError:
+                    pass
+            else:
+                break
 
-        log.info(f"Wait for pid {pid} core dump")
-        try:
-            os.waitpid(pid, 0)
-        except ChildProcessError:
-            pass
+            log.info(f"Waiting for core dump {core} ({found})")
+            time.sleep(1)
 
     subprocess.run(["sync"])
 
