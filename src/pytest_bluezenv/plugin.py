@@ -3,6 +3,7 @@
 import os
 import re
 import shutil
+import subprocess
 import logging
 import warnings
 import traceback
@@ -47,6 +48,8 @@ VM_REQUIRED_EXE = {
     ("tools", "btmgmt"): True,
     ("tools", "test-runner"): True,
 }
+
+CORE_BACKTRACES = True
 
 # For logging test status messages to test-bluezenv.log
 status_log = logging.getLogger("pytest")
@@ -160,8 +163,19 @@ def pytest_addoption(parser):
         default="master",
     )
 
+    # Core dump handling
+    group.addoption(
+        "--no-core-backtraces",
+        action="store_true",
+        help="Don't show backtraces from core files",
+    )
+
 
 def pytest_configure(config):
+    global CORE_BACKTRACES
+
+    CORE_BACKTRACES = not config.option.no_core_backtraces
+
     if config.option.bluez_build_dir is not None:
         utils.BUILD_DIR = config.option.bluez_build_dir.absolute()
     if config.option.bluez_src_dir is not None:
@@ -589,7 +603,47 @@ def _copy_host_files(vm):
                 shutil.copyfile(f, f.name)
                 os.unlink(f)
                 if f.name.endswith(".core"):
-                    warnings.warn(f"Core dump: {f.name}")
+                    backtrace = _core_dump_backtrace(f.name)
+                    backtrace = f"\n{backtrace}" if backtrace else ""
+                    warnings.warn(f"Core dump: {f.name}{backtrace}")
+
+
+def _core_dump_backtrace(core):
+    if not CORE_BACKTRACES:
+        return
+
+    gdb = shutil.which("gdb")
+    if not gdb:
+        return
+
+    res = subprocess.run(
+        [gdb, "-q", "--batch", "-c", core, "-ex", "info auxv"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        stdin=subprocess.DEVNULL,
+        env={"LC_ALL": "C"},
+        encoding="utf-8",
+        errors="surrogate-escape",
+    )
+    if res.returncode != 0:
+        return
+
+    m = re.search(r'AT_EXECFN[^"]+"(.*)"\s*$', res.stdout, flags=re.M)
+    if not m:
+        return
+
+    exe = m.group(1)
+    res = subprocess.run(
+        [gdb, "-q", "--batch", exe, core, "-ex", "thr a a bt full"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        stdin=subprocess.DEVNULL,
+        env={"LC_ALL": "C"},
+        encoding="utf-8",
+        errors="surrogate-escape",
+    )
+
+    return res.stdout
 
 
 @pytest.fixture(scope="package")
