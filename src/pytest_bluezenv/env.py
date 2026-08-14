@@ -276,15 +276,15 @@ def _wait_core_dumps():
     Wait for core dumping processes.
     """
 
-    # First check for completed child processes. Add 0.5 sec delay in
+    # First check for completed child processes. Add 2 sec delay in
     # case core dumping started just in teardown and file isn't
     # created yet.
-    for j in range(2):
+    for j in range(4):
         try:
             while True:
                 pid, status = os.waitpid(-1, os.WNOHANG)
                 if pid == 0:
-                    time.sleep(0.25)
+                    time.sleep(0.5)
                     break
         except ChildProcessError:
             break
