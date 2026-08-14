@@ -625,6 +625,16 @@ class Environment:
             self.path.rmdir()
             self.path = None
 
+    def check_job_errors(self):
+        errors = []
+
+        for job in self.jobs:
+            if job.poll() is not None:
+                cmd = utils.quoted(job.args)
+                errors.append("'{}' terminated unexpectedly".format(cmd))
+
+        return errors
+
     def close_hosts(self):
         try:
             for h in self.hosts:
@@ -639,6 +649,8 @@ class Environment:
                     errors.append(
                         f"{exc}\nError closing {h._name}: Traceback:\n    {tb}"
                     )
+
+            errors += self.check_job_errors()
 
             if errors:
                 errors = "\n".join(errors)

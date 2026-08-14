@@ -548,6 +548,11 @@ def _hosts_impl(request, vm, setup, name, reuse):
 
     if not reuse:
         _close_hosts(request, vm, name)
+    else:
+        errors = vm.check_job_errors()
+        if errors:
+            warnings.warn("\n".join(errors))
+            vm.stop()
 
     vm.reuse_group = name if reuse else None
 
