@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.CoredumpWarning
+================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoexception:: CoredumpWarning

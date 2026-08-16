@@ -445,6 +445,8 @@
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.quoted.html">pytest_bluezenv.quoted</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.run.html">pytest_bluezenv.run</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.wait_until.html">pytest_bluezenv.wait_until</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.CoredumpWarning.html">pytest_bluezenv.CoredumpWarning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.KernelBugWarning.html">pytest_bluezenv.KernelBugWarning</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Event.html">pytest_bluezenv.Event</a></li>
@@ -544,7 +546,7 @@
 <h1>pytest_bluezenv.hosts_once<a class="headerlink" href="#pytest-bluezenv-hosts-once" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="pytest_bluezenv.hosts_once">
-<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">hosts_once</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vm_once</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_setup</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/plugin.py#L639-L653"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.hosts_once" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">hosts_once</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vm_once</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_setup</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/plugin.py#L707-L721"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.hosts_once" title="Link to this definition">#</a></dt>
 <dd><p>Function-scope fixture. Same as <cite>hosts</cite>, but spawn separate VM
 instances for this test only.</p>
 <p class="rubric">Example</p>

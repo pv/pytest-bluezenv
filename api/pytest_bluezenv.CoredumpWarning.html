@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pytest_bluezenv.run &#8212; pytest-bluezenv 0.1.7.dev0</title>
+    <title>pytest_bluezenv.CoredumpWarning &#8212; pytest-bluezenv 0.1.7.dev0</title>
   
   
   
@@ -41,12 +41,12 @@
     <script src="../_static/documentation_options.js?v=fc704f74"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pytest_bluezenv.run';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/pytest_bluezenv.CoredumpWarning';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pytest_bluezenv.wait_until" href="pytest_bluezenv.wait_until.html" />
-    <link rel="prev" title="pytest_bluezenv.quoted" href="pytest_bluezenv.quoted.html" />
+    <link rel="next" title="pytest_bluezenv.KernelBugWarning" href="pytest_bluezenv.KernelBugWarning.html" />
+    <link rel="prev" title="pytest_bluezenv.wait_until" href="pytest_bluezenv.wait_until.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -443,9 +443,9 @@
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.mainloop_invoke.html">pytest_bluezenv.mainloop_invoke</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.mainloop_wrap.html">pytest_bluezenv.mainloop_wrap</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.quoted.html">pytest_bluezenv.quoted</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pytest_bluezenv.run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.run.html">pytest_bluezenv.run</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.wait_until.html">pytest_bluezenv.wait_until</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.CoredumpWarning.html">pytest_bluezenv.CoredumpWarning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pytest_bluezenv.CoredumpWarning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.KernelBugWarning.html">pytest_bluezenv.KernelBugWarning</a></li>
 </ul>
 <ul class="nav bd-sidenav">
@@ -525,7 +525,7 @@
     
     <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pytest_bluezenv.run</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pytest_bluezenv.CoredumpWarning</span></li>
   </ul>
 </nav>
 </div>
@@ -542,12 +542,12 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="pytest-bluezenv-run">
-<h1>pytest_bluezenv.run<a class="headerlink" href="#pytest-bluezenv-run" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="pytest_bluezenv.run">
-<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/utils.py#L312-L390"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.run" title="Link to this definition">#</a></dt>
-<dd><p>Same as subprocess.run() but log output while running.</p>
+  <section id="pytest-bluezenv-coredumpwarning">
+<h1>pytest_bluezenv.CoredumpWarning<a class="headerlink" href="#pytest-bluezenv-coredumpwarning" title="Link to this heading">#</a></h1>
+<dl class="py exception">
+<dt class="sig sig-object py" id="pytest_bluezenv.CoredumpWarning">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">CoredumpWarning</span></span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/plugin.py#L60-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.CoredumpWarning" title="Link to this definition">#</a></dt>
+<dd><p>Warning emitted if some process crashed and dumped core</p>
 </dd></dl>
 
 </section>
@@ -563,20 +563,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="pytest_bluezenv.quoted.html"
+       href="pytest_bluezenv.wait_until.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pytest_bluezenv.quoted</p>
+        <p class="prev-next-title">pytest_bluezenv.wait_until</p>
       </div>
     </a>
     <a class="right-next"
-       href="pytest_bluezenv.wait_until.html"
+       href="pytest_bluezenv.KernelBugWarning.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pytest_bluezenv.wait_until</p>
+        <p class="prev-next-title">pytest_bluezenv.KernelBugWarning</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -599,14 +599,14 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytest_bluezenv.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytest_bluezenv.CoredumpWarning"><code class="docutils literal notranslate"><span class="pre">CoredumpWarning</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../_sources/api/pytest_bluezenv.run.rst.txt">
+    <a href="../_sources/api/pytest_bluezenv.CoredumpWarning.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

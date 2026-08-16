@@ -445,6 +445,8 @@
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.quoted.html">pytest_bluezenv.quoted</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.run.html">pytest_bluezenv.run</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.wait_until.html">pytest_bluezenv.wait_until</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.CoredumpWarning.html">pytest_bluezenv.CoredumpWarning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.KernelBugWarning.html">pytest_bluezenv.KernelBugWarning</a></li>
 </ul>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="pytest_bluezenv.Event.html">pytest_bluezenv.Event</a></li>
@@ -544,7 +546,7 @@
 <h1>pytest_bluezenv.hosts<a class="headerlink" href="#pytest-bluezenv-hosts" title="Link to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="pytest_bluezenv.hosts">
-<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">hosts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_setup</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/plugin.py#L606-L622"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.hosts" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pytest_bluezenv.</span></span><span class="sig-name descname"><span class="pre">hosts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_setup</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/pv/pytest-bluezenv/blob/main/src/pytest_bluezenv/plugin.py#L674-L690"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pytest_bluezenv.hosts" title="Link to this definition">#</a></dt>
 <dd><p>Function-scope fixture that expands to a list of VM host proxies
 (<a class="reference internal" href="pytest_bluezenv.HostProxy.html#pytest_bluezenv.HostProxy" title="pytest_bluezenv.HostProxy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HostProxy</span></code></a>), with configuration as specified in <a class="reference internal" href="pytest_bluezenv.host_config.html#pytest_bluezenv.host_config" title="pytest_bluezenv.host_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">host_config</span></code></a>.
 The VM instances used may be reused by other tests.  The userspace test

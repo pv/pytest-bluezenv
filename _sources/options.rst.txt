@@ -53,6 +53,9 @@ The `pytest-bluezenv` plugin adds the following command-line options:
 ``--kernel-branch=<GIT_BRANCH>``
         Git branch to build from.
 
+``--no-core-backtraces``
+        Don't show backtraces from core files.
+
 Tests that require kernel image or USB controllers are skipped if none
 are available. Normally, tests use `btvirt`.
 

@@ -1,0 +1,6 @@
+﻿pytest\_bluezenv.KernelBugWarning
+=================================
+
+.. currentmodule:: pytest_bluezenv
+
+.. autoexception:: KernelBugWarning

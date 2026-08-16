@@ -55,6 +55,8 @@ Utilities
    pytest_bluezenv.quoted
    pytest_bluezenv.run
    pytest_bluezenv.wait_until
+   pytest_bluezenv.CoredumpWarning
+   pytest_bluezenv.KernelBugWarning
 
 .. autosummary::
    :toctree: api
