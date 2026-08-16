@@ -36,9 +36,15 @@ from gi.repository import GLib
 
 from . import rpc, utils
 
-__all__ = ["HostPlugin", "HostProxy", "PluginProxy"]
+__all__ = ["HostPlugin", "HostProxy", "PluginProxy", "KernelBugWarning"]
 
 log = logging.getLogger("env")
+
+
+class KernelBugWarning(UserWarning):
+    """Warning emitted if kernel prints BUG:/WARNING: messages"""
+
+    pass
 
 
 class HostPlugin:
@@ -560,6 +566,7 @@ class Environment:
         self.reuse_group = None
         self.mem = mem
         self.controller = controller
+        self._warning_list = []
 
         if usb_indices is None:
             self.usb_indices = None
@@ -624,6 +631,13 @@ class Environment:
 
             self.path.rmdir()
             self.path = None
+
+        warning_list = self._warning_list
+        self._warning_list = []
+
+        # Emit warnings last, as this may raise errors
+        for cls, txt in warning_list:
+            warnings.warn(txt, category=cls)
 
     def check_job_errors(self):
         errors = []
@@ -818,7 +832,9 @@ class Environment:
 
             host_names.append(f"host.{ENV_INDEX}.{idx}")
 
-            logger = self._add_log(host_names[-1], cls=_HostLogStream)
+            logger = self._add_log(
+                host_names[-1], cls=_HostLogStream, warning_list=self._warning_list
+            )
             self.jobs.append(Popen(cmd, stdout=logger, stderr=logger, stdin=DEVNULL))
 
             # Start log reader
@@ -864,15 +880,16 @@ class _HostLogStream(utils.LogStream):
     Log streams that parses kernel BUG:/WARNING:
     """
 
-    def __init__(self, name):
+    def __init__(self, name, warning_list):
         super().__init__(name)
         self._warn_re = re.compile(
             rb"^(BUG:|WARNING:|general protection fault|Kernel panic)"
         )
+        self._warning_list = warning_list
 
     def _do_log(self, line, anc):
         super()._do_log(line, anc)
 
         if self._warn_re.match(line):
             fmt_line = line.decode("utf-8", errors="surrogateescape")
-            warnings.warn(fmt_line)
+            self._warning_list.append((KernelBugWarning, fmt_line))

@@ -15,6 +15,7 @@ from . import utils, env, build_kernel
 from .btmon import Btmon
 
 __all__ = [
+    "CoredumpWarning",
     # hooks:
     "pytest_addoption",
     "pytest_configure",
@@ -54,6 +55,12 @@ CORE_BACKTRACES = True
 # For logging test status messages to test-bluezenv.log
 status_log = logging.getLogger("pytest")
 status_log_seen = set()
+
+
+class CoredumpWarning(UserWarning):
+    """Warning emitted if some process crashed and dumped core"""
+
+    pass
 
 
 def pytest_addoption(parser):
@@ -588,14 +595,17 @@ def _close_hosts(request, vm, name):
             success = False
             warnings.warn(traceback.format_exc())
         finally:
-            _copy_host_files(vm)
-
-            # Stop VM if tester is not responding
-            if not success:
-                vm.stop()
+            try:
+                _copy_host_files(vm)
+            finally:
+                # Stop VM if tester is not responding
+                if not success:
+                    vm.stop()
 
 
 def _copy_host_files(vm):
+    warning_list = []
+
     for j, h in enumerate(vm.hosts):
         path = Path(h._path).parent / f"shared-{j}"
         for f in path.iterdir():
@@ -605,7 +615,11 @@ def _copy_host_files(vm):
                 if f.name.endswith(".core"):
                     backtrace = _core_dump_backtrace(f.name)
                     backtrace = f"\n{backtrace}" if backtrace else ""
-                    warnings.warn(f"Core dump: {f.name}{backtrace}")
+                    warning_list.append(f"Core dump: {f.name}{backtrace}")
+
+    # Emit warnings last, as this may raise errors
+    for msg in warning_list:
+        warnings.warn(msg, category=CoredumpWarning)
 
 
 def _core_dump_backtrace(core):
