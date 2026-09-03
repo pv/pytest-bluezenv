@@ -527,9 +527,9 @@ def _expand_plugins(plugins, controller):
     while plugins:
         deps = []
         for dep in plugins[0].depends or ():
-            if type(dep) not in seen:
+            if type(dep).name not in seen:
                 deps.append(dep)
-                seen.add(type(dep))
+                seen.add(type(dep).name)
                 continue
 
         if deps:
