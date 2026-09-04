@@ -632,12 +632,25 @@ class Environment:
             self.path.rmdir()
             self.path = None
 
-        warning_list = self._warning_list
-        self._warning_list = []
+    def add_warning(self, cls, text):
+        self._warning_list.append((cls, text))
 
-        # Emit warnings last, as this may raise errors
-        for cls, txt in warning_list:
-            warnings.warn(txt, category=cls)
+    def process_warning_list(self):
+        warning_list = []
+        while self._warning_list:
+            warning_list.append(self._warning_list.pop(0))
+
+        def emit_warnings(nest=0):
+            while warning_list:
+                cls, txt = warning_list.pop(0)
+                try:
+                    warnings.warn(txt, category=cls)
+                except:
+                    if nest < 6:
+                        emit_warnings(nest + 1)
+                    raise
+
+        emit_warnings()
 
     def check_job_errors(self):
         errors = []

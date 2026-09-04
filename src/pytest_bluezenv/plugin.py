@@ -7,6 +7,7 @@ import subprocess
 import logging
 import warnings
 import traceback
+import textwrap
 from pathlib import Path
 
 import pytest
@@ -567,15 +568,18 @@ def _hosts_impl(request, vm, setup, name, reuse):
 
     yield vm.hosts
 
-    if not reuse:
-        _close_hosts(request, vm, name)
-    else:
-        errors = vm.check_job_errors()
-        if errors:
-            warnings.warn("\n".join(errors))
-            vm.stop()
+    try:
+        if not reuse:
+            _close_hosts(request, vm, name)
+        else:
+            errors = vm.check_job_errors()
+            if errors:
+                warnings.warn("\n".join(errors))
+                vm.stop()
 
-    vm.reuse_group = name if reuse else None
+        vm.reuse_group = name if reuse else None
+    finally:
+        vm.process_warning_list()
 
 
 def _close_hosts(request, vm, name):
@@ -614,12 +618,13 @@ def _copy_host_files(vm):
                 os.unlink(f)
                 if f.name.endswith(".core"):
                     backtrace = _core_dump_backtrace(f.name)
+                    if not backtrace:
+                        backtrace = ""
+                    else:
+                        backtrace = textwrap.indent(textwrap.dedent(backtrace), " " * 4)
                     backtrace = f"\n{backtrace}" if backtrace else ""
-                    warning_list.append(f"Core dump: {f.name}{backtrace}")
 
-    # Emit warnings last, as this may raise errors
-    for msg in warning_list:
-        warnings.warn(msg, category=CoredumpWarning)
+                    vm.add_warning(CoredumpWarning, f"Core dump: {f.name}{backtrace}")
 
 
 def _core_dump_backtrace(core):
