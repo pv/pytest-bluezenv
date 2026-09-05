@@ -688,6 +688,21 @@ class Environment:
         self.log_streams.append(f)
         return f.stream
 
+    def _get_asan_env(self):
+        env = dict(os.environ)
+        env.setdefault(
+            "ASAN_OPTIONS",
+            "detect_leaks=1:leak_check_at_exit=0:print_summary=1:abort_on_error=1:"
+            "use_madv_dontdump=1:disable_coredump=0:unmap_shadow_on_exit=1:"
+            "strict_string_checks=1:detect_stack_use_after_return=1:"
+            "check_initialization_order=1:strict_init_order=1",
+        )
+        env.setdefault(
+            "UBSAN_OPTIONS", "print_stacktrace=1:print_summary=1:abort_on_error=1"
+        )
+        env.setdefault("LSAN_OPTIONS", "exitcode=0:log_threads=1")
+        return env
+
     def _start_btvirt(self):
         exe = utils.find_exe("emulator", "btvirt")
         logger = self._add_log("btvirt")
@@ -696,10 +711,7 @@ class Environment:
         log.info("Starting btvirt: {}".format(utils.quoted(cmd)))
 
         job = Popen(
-            cmd,
-            stdout=logger,
-            stderr=logger,
-            stdin=DEVNULL,
+            cmd, stdout=logger, stderr=logger, stdin=DEVNULL, env=self._get_asan_env()
         )
         self.jobs.append(job)
 
