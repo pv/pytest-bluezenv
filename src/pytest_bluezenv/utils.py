@@ -770,3 +770,83 @@ class LogReorderFilter(logging.Filter):
         while not cls.FLUSH_END.wait(1.0):
             for f in cls.FLUSH_ITEMS:
                 f._flush()
+
+
+class OopsTracker:
+    """
+    Parse kernel / application log messages one by one and detect oops
+    """
+
+    NONE = 0
+    START = 1
+    CONT = 2
+
+    START_RE = re.compile(
+        rb"^(?:WARNING:|KASAN:|BUG:|Oops:|general protection fault|Kernel panic|==[0-9]+==.*Sanitizer:)"
+    )
+    START_2_RE = re.compile(rb"^WARNING: Nested lock was not taken")
+    END_RE = re.compile(rb"^---+\[ (?:end|cut here)|^==================+|^==[0-9]+==")
+
+    STACK_START_RE = re.compile(rb"^stack backtrace:")
+    STACK_END_RE = re.compile(rb"^\s+</")
+
+    def __init__(self, max_lines=50):
+        self.max_lines = max_lines
+        self._count = 0
+        self._oops = False
+        self._expect_stacktrace = 0
+        self._last = False
+
+    def parse_line(self, line):
+        oops = self._parse_line(line)
+        if oops:
+            ret = self.CONT if self._oops else self.START
+        else:
+            ret = self.NONE
+        self._oops = oops
+
+        if ret == self.START:
+            self._count = 1
+        elif ret == self.CONT:
+            self._count += 1
+            if self._count > self.max_lines:
+                ret = self.NONE
+                self._oops = None
+
+        return ret
+
+    def _parse_line(self, line):
+        if self.START_2_RE.match(line):
+            self._expect_stacktrace = 2
+            self._oops = False
+            self._last = False
+            return True
+
+        if self.START_RE.match(line):
+            self._expect_stacktrace = 0
+            self._oops = False
+            self._last = False
+            return True
+
+        if not self._oops:
+            return
+
+        if self.END_RE.match(line):
+            self._last = True
+            return True
+
+        if self.STACK_START_RE.match(line):
+            if not self._expect_stacktrace:
+                self._expect_stacktrace = 1
+            return True
+
+        if self.STACK_END_RE.match(line):
+            self._expect_stacktrace -= 1
+            if self._expect_stacktrace == 0:
+                self._last = True
+            return True
+
+        if self._last:
+            return False
+
+        return True

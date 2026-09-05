@@ -895,14 +895,20 @@ class _HostLogStream(utils.LogStream):
 
     def __init__(self, name, warning_list):
         super().__init__(name)
-        self._warn_re = re.compile(
-            rb"^(BUG:|WARNING:|general protection fault|Kernel panic)"
-        )
+        self._tracker = utils.OopsTracker(max_lines=150)
         self._warning_list = warning_list
+        self._prev_warning = None
 
     def _do_log(self, line, anc):
         super()._do_log(line, anc)
 
-        if self._warn_re.match(line):
-            fmt_line = line.decode("utf-8", errors="surrogateescape")
-            self._warning_list.append((KernelBugWarning, fmt_line))
+        res = self._tracker.parse_line(line)
+        if res == utils.OopsTracker.START:
+            line = line.decode("utf-8", errors="surrogateescape").rstrip()
+            self._prev_warning = [KernelBugWarning, line]
+            self._warning_list.append(self._prev_warning)
+        elif res == utils.OopsTracker.CONT:
+            line = line.decode("utf-8", errors="surrogateescape").rstrip()
+            self._prev_warning[1] += "\n" + line
+            if self._prev_warning not in self._warning_list:
+                self._warning_list.append(self._prev_warning)
