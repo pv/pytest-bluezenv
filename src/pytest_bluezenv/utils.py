@@ -442,10 +442,10 @@ class LogStream:
 
         self._tee = tee
         self._nsec = None
+        self._flush_event = threading.Event()
         self._start_log_thread()
         self._read_thread = threading.Thread(target=self._run_read, daemon=True)
         self._read_thread.start()
-        self._flush_event = threading.Event()
 
     def __enter__(self):
         return self
