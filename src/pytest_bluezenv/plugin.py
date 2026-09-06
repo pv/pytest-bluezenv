@@ -304,9 +304,11 @@ def pytest_collection_modifyitems(session, config, items):
 #
 
 WARNING_LIST = []
+WARNING_HANDLER = utils.OopsLogHandler(WARNING_LIST)
 
 
 def pytest_sessionstart(session):
+    logging.root.addHandler(WARNING_HANDLER)
     _enable_log_filters(session.config)
 
 
@@ -314,7 +316,7 @@ def _enable_log_filters(config, handlers=None):
     if handlers is None:
         handlers = logging.root.handlers
 
-    utils.OopsLogFilter.enable(handlers, WARNING_LIST)
+    handlers = [h for h in handlers if h is not WARNING_HANDLER]
 
     allow = set()
     deny = set()
@@ -341,9 +343,9 @@ def _enable_log_filters(config, handlers=None):
 
 
 def pytest_sessionfinish(session):
+    logging.root.removeHandler(WARNING_HANDLER)
     utils.LogNameFilter.disable(logging.root.handlers)
     utils.LogReorderFilter.disable(logging.root.handlers)
-    utils.OopsLogFilter.disable(logging.root.handlers)
 
 
 @pytest.hookimpl(wrapper=True)
@@ -623,14 +625,17 @@ def _close_hosts(request, vm, name):
 
 
 def process_warning_list(warning_list):
-    def emit_warnings(nest=0):
+    def emit_warnings(failure=0):
         while warning_list:
             cls, txt = warning_list.pop(0)
             try:
                 warnings.warn(txt, category=cls)
             except:
-                if nest < 6:
-                    emit_warnings(nest + 1)
+                if failure < 6:
+                    emit_warnings(failure + 1)
+                else:
+                    # Drop rest
+                    del warning_list[:]
                 raise
 
     emit_warnings()

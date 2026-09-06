@@ -891,12 +891,14 @@ class SanitizerWarning(UserWarning):
     pass
 
 
-class OopsLogFilter(logging.Filter):
+class OopsLogHandler(logging.Handler):
     """
-    Log streams that parses kernel BUG:/WARNING: or ASAN
+    Log handler that parses kernel BUG:/WARNING: or ASAN
     """
 
     def __init__(self, warning_list, kernel_re=None):
+        super().__init__()
+
         if kernel_re is None:
             kernel_re = re.compile(r"^host\.\d+\.\d+$")
 
@@ -905,9 +907,8 @@ class OopsLogFilter(logging.Filter):
         self._trackers = {}
         self._prev_warnings = {}
 
-    def filter(self, record):
+    def emit(self, record):
         self._parse(record)
-        return True
 
     def _parse(self, record):
         if record.levelno != OUT:
@@ -929,30 +930,6 @@ class OopsLogFilter(logging.Filter):
         elif res == OopsTracker.CONT:
             prev_warning = self._prev_warnings[record.name]
             prev_warning[1] += "\n" + record.msg
-            if prev_warning not in self._warning_list:
-                self._warning_list.append(prev_warning)
         elif res == OopsTracker.OVER:
             prev_warning = self._prev_warnings[record.name]
             prev_warning[1] += "\n..."
-
-    @classmethod
-    def enable(cls, filterers, *a, **kw):
-        """
-        Enable filter for all of the filterers
-        """
-        f = cls(*a, **kw)
-
-        for h in filterers:
-            if any(isinstance(f, cls) for f in h.filters):
-                continue
-            h.addFilter(f)
-
-    @classmethod
-    def disable(cls, filterers):
-        """
-        Disable filter for all of the filterers
-        """
-        for h in filterers:
-            for f in list(h.filters):
-                if isinstance(f, cls):
-                    h.removeFilter(f)
