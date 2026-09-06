@@ -19,20 +19,17 @@ def test_log_stream(caplog):
 
 
 def test_oops_tracker():
-    expect_table = {
-        "+ ": utils.OopsTracker.START,
-        ". ": utils.OopsTracker.CONT,
-        "  ": utils.OopsTracker.NONE,
-    }
-
-    for max_lines, lines in _get_oops_cases():
-        tracker = utils.OopsTracker(max_lines=max_lines)
+    for max_lines, kernel, lines in _get_oops_cases():
+        tracker = utils.OopsTracker(kernel=kernel, max_lines=max_lines)
         state = utils.OopsTracker.NONE
         end = False
         for j, line in enumerate(lines):
-            if line[:2] == b"+ ":
+            if line[:2] == "+ ":
                 state = utils.OopsTracker.START
-            elif line[:2] == b"- ":
+            elif line[:2] == "- ":
+                end = True
+            elif line[:2] == "x ":
+                state = utils.OopsTracker.OVER
                 end = True
             elif end:
                 state = utils.OopsTracker.NONE
@@ -41,30 +38,32 @@ def test_oops_tracker():
                 state = utils.OopsTracker.CONT
 
             result = tracker.parse_line(line[2:])
-            assert result == state, (j, result, state, line, b"\n".join(lines))
+            assert result == state, (j, result, state, line, "\n".join(lines))
 
 
 def _get_oops_cases():
     max_lines = None
     in_oops = False
+    kernel = True
     lines = []
 
     for line in OOPS_TESTS.splitlines():
         if in_oops:
-            if line.strip() == b"<END>":
-                yield max_lines, lines
+            if line.strip() == "<END>":
+                yield max_lines, kernel, lines
                 in_oops = False
             else:
                 lines.append(line)
         else:
-            m = re.match(rb"^<START\s+([0-9]+)>$", line.strip())
+            m = re.match(r"^<START\s+([0-9]+) (user)?>$", line.strip())
             if m:
                 in_oops = True
                 max_lines = int(m.group(1))
+                kernel = not bool(m.group(2))
                 lines = []
 
 
-OOPS_TESTS = b"""
+OOPS_TESTS = """
 <START 9999>
   Not yet
   ==================================================================
@@ -108,8 +107,8 @@ OOPS_TESTS = b"""
   Read of size 4 at addr ffff888002425108 by task kworker/u5:0/35
   
   CPU: 0 UID: 0 PID: 35 Comm: kworker/u5:0 Not tainted 7.1.0-rc6-01805-g7f895d421292 #539 PREEMPT(lazy) 
-- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-10.fc44 06/10/2025
-  Workqueue: hci0 hci_cmd_sync_work
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.17.0-10.fc44 06/10/2025
+x Workqueue: hci0 hci_cmd_sync_work
   Call Trace:
    <TASK>
    print_address_description+0x73/0x1f0
@@ -120,7 +119,7 @@ OOPS_TESTS = b"""
   Some other message
 <END>
 
-<START 9999>
+<START 9999 user>
   Not yet
   =================================================================
 + ==284378==ERROR: AddressSanitizer: heap-use-after-free on address

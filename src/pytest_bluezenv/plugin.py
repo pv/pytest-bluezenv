@@ -293,6 +293,8 @@ def pytest_collection_modifyitems(session, config, items):
 # - logging test stages and outcomes to test log file
 #
 
+WARNING_LIST = []
+
 
 def pytest_sessionstart(session):
     _enable_log_filters(session.config)
@@ -301,6 +303,8 @@ def pytest_sessionstart(session):
 def _enable_log_filters(config, handlers=None):
     if handlers is None:
         handlers = logging.root.handlers
+
+    utils.OopsLogFilter.enable(handlers, WARNING_LIST)
 
     allow = set()
     deny = set()
@@ -329,6 +333,7 @@ def _enable_log_filters(config, handlers=None):
 def pytest_sessionfinish(session):
     utils.LogNameFilter.disable(logging.root.handlers)
     utils.LogReorderFilter.disable(logging.root.handlers)
+    utils.OopsLogFilter.disable(logging.root.handlers)
 
 
 @pytest.hookimpl(wrapper=True)
@@ -579,7 +584,7 @@ def _hosts_impl(request, vm, setup, name, reuse):
 
         vm.reuse_group = name if reuse else None
     finally:
-        vm.process_warning_list()
+        process_warning_list(WARNING_LIST)
 
 
 def _close_hosts(request, vm, name):
@@ -607,6 +612,20 @@ def _close_hosts(request, vm, name):
                     vm.stop()
 
 
+def process_warning_list(warning_list):
+    def emit_warnings(nest=0):
+        while warning_list:
+            cls, txt = warning_list.pop(0)
+            try:
+                warnings.warn(txt, category=cls)
+            except:
+                if nest < 6:
+                    emit_warnings(nest + 1)
+                raise
+
+    emit_warnings()
+
+
 def _copy_host_files(vm):
     warning_list = []
 
@@ -624,7 +643,9 @@ def _copy_host_files(vm):
                         backtrace = textwrap.indent(textwrap.dedent(backtrace), " " * 4)
                     backtrace = f"\n{backtrace}" if backtrace else ""
 
-                    vm.add_warning(CoredumpWarning, f"Core dump: {f.name}{backtrace}")
+                    WARNING_LIST.append(
+                        (CoredumpWarning, f"Core dump: {f.name}{backtrace}")
+                    )
 
 
 def _core_dump_backtrace(core):

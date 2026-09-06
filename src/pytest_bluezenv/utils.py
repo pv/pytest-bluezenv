@@ -41,6 +41,8 @@ __all__ = [
     "mainloop_wrap",
     "mainloop_assert",
     "LogStream",
+    "KernelBugWarning",
+    "SanitizerWarning",
 ]
 
 
@@ -784,25 +786,34 @@ class OopsTracker:
     NONE = 0
     START = 1
     CONT = 2
+    OVER = 3
 
     START_RE = re.compile(
-        rb"^(?:WARNING:|KASAN:|BUG:|Oops:|general protection fault|Kernel panic|==[0-9]+==.*Sanitizer:)"
+        r"^(?:WARNING:|KASAN:|BUG:|Oops:|general protection fault|Kernel panic|Thread-.*invoked oom-killer)"
     )
-    START_2_RE = re.compile(rb"^WARNING: Nested lock was not taken")
-    END_RE = re.compile(rb"^---+\[ (?:end|cut here)|^==================+|^==[0-9]+==")
+    START_2_RE = re.compile(r"^WARNING: Nested lock was not taken")
+    END_RE = re.compile(r"^---+\[ (?:end|cut here)|^==================+")
 
-    STACK_START_RE = re.compile(rb"^stack backtrace:")
-    STACK_END_RE = re.compile(rb"^\s+</")
+    STACK_START_RE = re.compile(r"^stack backtrace:")
+    STACK_END_RE = re.compile(r"^\s+</")
 
-    def __init__(self, max_lines=50):
+    USER_START_RE = re.compile(r"^(?:==[0-9]+==.*Sanitizer:)")
+    USER_END_RE = re.compile(r"^==[0-9]+==")
+
+    def __init__(self, kernel=True, max_lines=50):
         self.max_lines = max_lines
         self._count = 0
         self._oops = False
         self._expect_stacktrace = 0
         self._last = False
+        self._kernel = kernel
 
     def parse_line(self, line):
-        oops = self._parse_line(line)
+        if self._kernel:
+            oops = self._parse_line_kernel(line)
+        else:
+            oops = self._parse_line_user(line)
+
         if oops:
             ret = self.CONT if self._oops else self.START
         else:
@@ -814,12 +825,12 @@ class OopsTracker:
         elif ret == self.CONT:
             self._count += 1
             if self._count > self.max_lines:
-                ret = self.NONE
+                ret = self.OVER
                 self._oops = None
 
         return ret
 
-    def _parse_line(self, line):
+    def _parse_line_kernel(self, line):
         if self.START_2_RE.match(line):
             self._expect_stacktrace = 2
             self._oops = False
@@ -833,7 +844,7 @@ class OopsTracker:
             return True
 
         if not self._oops:
-            return
+            return False
 
         if self.END_RE.match(line):
             self._last = True
@@ -850,7 +861,98 @@ class OopsTracker:
                 self._last = True
             return True
 
-        if self._last:
+        return not self._last
+
+    def _parse_line_user(self, line):
+        if self.USER_START_RE.match(line):
+            self._oops = False
+            self._last = False
+            return True
+
+        if not self._oops:
             return False
 
+        if self.USER_END_RE.match(line):
+            self._last = True
+            return True
+
+        return not self._last
+
+
+class KernelBugWarning(UserWarning):
+    """Warning emitted if kernel prints BUG:/WARNING: messages"""
+
+    pass
+
+
+class SanitizerWarning(UserWarning):
+    """Warning emitted if kernel prints BUG:/WARNING: messages"""
+
+    pass
+
+
+class OopsLogFilter(logging.Filter):
+    """
+    Log streams that parses kernel BUG:/WARNING: or ASAN
+    """
+
+    def __init__(self, warning_list, kernel_re=None):
+        if kernel_re is None:
+            kernel_re = re.compile(r"^host\.\d+\.\d+$")
+
+        self._kernel_re = kernel_re
+        self._warning_list = warning_list
+        self._trackers = {}
+        self._prev_warnings = {}
+
+    def filter(self, record):
+        self._parse(record)
         return True
+
+    def _parse(self, record):
+        if record.levelno != OUT:
+            return
+
+        tracker = self._trackers.get(record.name)
+        if tracker is None:
+            tracker = OopsTracker(kernel=self._kernel_re.match(record.name))
+            self._trackers[record.name] = tracker
+
+        res = tracker.parse_line(record.msg)
+        if res == OopsTracker.START:
+            warn_cls = KernelBugWarning if tracker._kernel else SanitizerWarning
+            self._prev_warnings[record.name] = [
+                warn_cls,
+                f"[{record.name}] {record.msg}",
+            ]
+            self._warning_list.append(self._prev_warnings[record.name])
+        elif res == OopsTracker.CONT:
+            prev_warning = self._prev_warnings[record.name]
+            prev_warning[1] += "\n" + record.msg
+            if prev_warning not in self._warning_list:
+                self._warning_list.append(prev_warning)
+        elif res == OopsTracker.OVER:
+            prev_warning = self._prev_warnings[record.name]
+            prev_warning[1] += "\n..."
+
+    @classmethod
+    def enable(cls, filterers, *a, **kw):
+        """
+        Enable filter for all of the filterers
+        """
+        f = cls(*a, **kw)
+
+        for h in filterers:
+            if any(isinstance(f, cls) for f in h.filters):
+                continue
+            h.addFilter(f)
+
+    @classmethod
+    def disable(cls, filterers):
+        """
+        Disable filter for all of the filterers
+        """
+        for h in filterers:
+            for f in list(h.filters):
+                if isinstance(f, cls):
+                    h.removeFilter(f)

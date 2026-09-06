@@ -36,15 +36,9 @@ from gi.repository import GLib
 
 from . import rpc, utils
 
-__all__ = ["HostPlugin", "HostProxy", "PluginProxy", "KernelBugWarning"]
+__all__ = ["HostPlugin", "HostProxy", "PluginProxy"]
 
 log = logging.getLogger("env")
-
-
-class KernelBugWarning(UserWarning):
-    """Warning emitted if kernel prints BUG:/WARNING: messages"""
-
-    pass
 
 
 class HostPlugin:
@@ -566,7 +560,6 @@ class Environment:
         self.reuse_group = None
         self.mem = mem
         self.controller = controller
-        self._warning_list = []
 
         if usb_indices is None:
             self.usb_indices = None
@@ -631,26 +624,6 @@ class Environment:
 
             self.path.rmdir()
             self.path = None
-
-    def add_warning(self, cls, text):
-        self._warning_list.append((cls, text))
-
-    def process_warning_list(self):
-        warning_list = []
-        while self._warning_list:
-            warning_list.append(self._warning_list.pop(0))
-
-        def emit_warnings(nest=0):
-            while warning_list:
-                cls, txt = warning_list.pop(0)
-                try:
-                    warnings.warn(txt, category=cls)
-                except:
-                    if nest < 6:
-                        emit_warnings(nest + 1)
-                    raise
-
-        emit_warnings()
 
     def check_job_errors(self):
         errors = []
@@ -857,9 +830,7 @@ class Environment:
 
             host_names.append(f"host.{ENV_INDEX}.{idx}")
 
-            logger = self._add_log(
-                host_names[-1], cls=_HostLogStream, warning_list=self._warning_list
-            )
+            logger = self._add_log(host_names[-1])
             self.jobs.append(Popen(cmd, stdout=logger, stderr=logger, stdin=DEVNULL))
 
             # Start log reader
@@ -898,29 +869,3 @@ class Environment:
 
     def __exit__(self, type, value, tb):
         self.stop()
-
-
-class _HostLogStream(utils.LogStream):
-    """
-    Log streams that parses kernel BUG:/WARNING:
-    """
-
-    def __init__(self, name, warning_list):
-        super().__init__(name)
-        self._tracker = utils.OopsTracker(max_lines=150)
-        self._warning_list = warning_list
-        self._prev_warning = None
-
-    def _do_log(self, line, anc):
-        super()._do_log(line, anc)
-
-        res = self._tracker.parse_line(line)
-        if res == utils.OopsTracker.START:
-            line = line.decode("utf-8", errors="surrogateescape").rstrip()
-            self._prev_warning = [KernelBugWarning, line]
-            self._warning_list.append(self._prev_warning)
-        elif res == utils.OopsTracker.CONT:
-            line = line.decode("utf-8", errors="surrogateescape").rstrip()
-            self._prev_warning[1] += "\n" + line
-            if self._prev_warning not in self._warning_list:
-                self._warning_list.append(self._prev_warning)
