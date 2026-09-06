@@ -40,6 +40,9 @@ The `pytest-bluezenv` plugin adds the following command-line options:
 ``--vm-timeout=<seconds>``
         Specify timeout for communication with VM hosts.
 
+``--vm-mem=<amount>``
+        Specify default memory for VM hosts. E.g. "512M"
+
 ``--btmon``
         Launch btmon on all hosts to log events, and dump traffic to
 	test-bluezenv-\*.btsnoop

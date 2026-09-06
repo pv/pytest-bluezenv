@@ -543,6 +543,8 @@ ENV_INDEX = -1
 
 
 class Environment:
+    DEFAULT_MEM = None
+
     def __init__(
         self, kernel, num_hosts, usb_indices=None, timeout=20, mem=None, controller=True
     ):
@@ -550,6 +552,9 @@ class Environment:
             self.kernel = str(Path(kernel) / "arch" / "x86" / "boot" / "bzImage")
         else:
             self.kernel = str(kernel)
+
+        if not mem and self.DEFAULT_MEM:
+            mem = self.DEFAULT_MEM
 
         self.num_hosts = operator.index(num_hosts)
         self.jobs = []

@@ -125,6 +125,14 @@ def pytest_addoption(parser):
         "vm_timeout", "Default timeout for communication with VM etc.", default="30"
     )
     group.addoption(
+        "--vm-mem",
+        action="store",
+        default=None,
+        type=str,
+        help="Default memory for VM instances",
+    )
+    parser.addini("vm_mem", "Default memory for VM instances", default=None)
+    group.addoption(
         "--btmon",
         action="store_true",
         help="Launch btmon on all hosts to log events, and dump traffic to test-bluezenv-*.btsnoop",
@@ -192,6 +200,8 @@ def pytest_configure(config):
     utils.DEFAULT_TIMEOUT = config.option.vm_timeout or float(
         config.getini("vm_timeout")
     )
+
+    env.Environment.DEFAULT_MEM = config.option.vm_mem or config.getini("vm_mem")
 
     worker_id = os.environ.get("PYTEST_XDIST_WORKER")
     logfile = config.getini("log_file")
