@@ -817,10 +817,13 @@ class LogReorderFilter(logging.Filter):
             self._records[id(record)] = record
             self._pos = max(self._pos, ts)
 
-        self._delay = max(self._delay, 2 * (time.time_ns() - ts))
+            self._delay = max(self._delay, 2 * (time.time_ns() - ts))
 
-    def _flush(self, force=False):
+    def _flush(self, force=False, now=False):
         with self._lock:
+            if now:
+                self._pos = max(self._pos, time.time_ns())
+
             while self._queue and (
                 self._queue[0][0] + self._delay < self._pos or force
             ):
@@ -869,7 +872,7 @@ class LogReorderFilter(logging.Filter):
                 h.removeFilter(f)
                 f._flush(force=True)
 
-        if cls.FLUSH_THREAD is not None and cls.FLUSH_ITEMS:
+        if cls.FLUSH_THREAD is not None and not cls.FLUSH_ITEMS:
             cls.FLUSH_END.set()
             cls.FLUSH_THREAD.join()
 
@@ -878,7 +881,7 @@ class LogReorderFilter(logging.Filter):
         # Timed flushing
         while not cls.FLUSH_END.wait(1.0):
             for f in cls.FLUSH_ITEMS:
-                f._flush()
+                f._flush(now=True)
 
 
 class OopsTracker:
