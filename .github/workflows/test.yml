@@ -1,0 +1,52 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - name: Install packages
+      run: >-
+        sudo apt-get install -y --no-install-recommends
+        black
+        bluez
+        chrony
+        curl
+        dbus
+        libglib2.0-dev
+        python3-dbus
+        python3-gi
+        python3-pexpect
+        python3-pytest-xdist
+        qemu-system-x86
+    - name: Download kernel
+      run: >-
+        curl -sSfL -o "${RUNNER_TEMP}/bzImage"
+        https://github.com/pv/bluez-test-functional-kernel/releases/download/2026-09-15.1/bzImage-v7.2-cfgc2208dd3
+    - name: Enable KVM
+      run: |-
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+          | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
+        stat /dev/kvm
+    - name: Install
+      run: python3 -m pip install meson-python
+    - name: Build
+      run: python3 -m pip install --user --no-build-isolation -e .
+    - name: Run tests
+      run: >-
+        python3 -mpytest --kernel="${RUNNER_TEMP}/bzImage" -vv -ra
+        -n auto --dist worksteal
+        src/pytest_bluezenv/tests
