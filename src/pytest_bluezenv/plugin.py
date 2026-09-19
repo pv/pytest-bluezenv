@@ -516,7 +516,7 @@ def hw_indices(pytestconfig):
         messages += msg
 
     # Order messages of valid indices to front
-    messages.sort(key=lambda x: x == "")
+    messages.sort(key=lambda x: x != "")
 
     return indices, messages
 
