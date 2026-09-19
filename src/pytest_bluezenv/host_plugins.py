@@ -16,6 +16,7 @@ import queue
 import signal
 import functools
 import threading
+import traceback
 import resource
 import shutil
 from pathlib import Path
@@ -25,7 +26,7 @@ import pexpect
 import dbus
 from gi.repository import GLib
 
-from . import env, utils
+from . import env, utils, rpc
 
 __all__ = [
     "host_config",
@@ -167,14 +168,16 @@ class Call(env.HostPlugin):
             **kw: keyword arguments passed to ``func``.
         """
         value = None
+        tb = None
         try:
             value = func(*a, **kw)
         except BaseException as exc:
             value = exc
+            tb = traceback.format_exc()
             raise
         finally:
             self._id += 1
-            self._results[self._id] = value
+            self._results[self._id] = (value, tb)
 
     def wait_async(self, id_value):
         """
@@ -184,7 +187,9 @@ class Call(env.HostPlugin):
             id_value (int): identifier returned for the asynchronous call.
 
         Returns:
-            object: saved function result.
+            (value, traceback) If traceback is None, value is the function
+            result, and otherwise value is a raised exception.
+
         """
         return self._results.pop(id_value)
 
@@ -247,7 +252,10 @@ class Call(env.HostPlugin):
             Returns:
                 object: return value of the VM-host function.
             """
-            return self.plugin.wait_async(self.id_value)
+            value, tb = self.plugin.wait_async(self.id_value)
+            if tb is not None:
+                raise rpc.RemoteError(value, tb)
+            return value
 
 
 class _Dbus(env.HostPlugin):
