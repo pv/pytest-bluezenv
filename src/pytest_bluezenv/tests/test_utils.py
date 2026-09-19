@@ -2,12 +2,86 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 import os
 import re
-import pytest
 import subprocess
+import sys
 import threading
+from pathlib import Path
+
 import pytest
 
 from .. import utils
+
+
+def test_run_capture_and_check():
+    result = utils.run(
+        [sys.executable, "-c", "print('hi')"], capture_output=True, encoding="utf-8"
+    )
+    assert result.returncode == 0
+    assert result.stdout == "hi\n"
+
+    with pytest.raises(subprocess.CalledProcessError) as excinfo:
+        utils.run([sys.executable, "-c", "import sys; sys.exit(3)"], check=True)
+    assert excinfo.value.returncode == 3
+
+
+def test_find_exe(monkeypatch, tmp_path):
+    # Found on PATH.
+    assert Path(utils.find_exe("", "sh")).is_file()
+
+    # A missing executable raises FileNotFoundError.
+    with pytest.raises(FileNotFoundError):
+        utils.find_exe("subdir", "pytest-bluezenv-no-such-exe")
+
+    # BUILD_DIR takes precedence and resolves <build>/<subdir>/<name>.
+    exe = tmp_path / "subdir" / "prog"
+    exe.parent.mkdir()
+    exe.write_text("#!/bin/sh\n")
+    exe.chmod(0o755)
+    monkeypatch.setattr(utils, "BUILD_DIR", tmp_path)
+    assert utils.find_exe("subdir", "prog") == os.path.normpath(str(exe))
+
+
+def test_wait_until():
+    calls = {"n": 0}
+
+    def predicate():
+        calls["n"] += 1
+        return calls["n"] >= 3
+
+    utils.wait_until(predicate, timeout=1)
+    assert calls["n"] >= 3
+
+    with pytest.raises(TimeoutError):
+        utils.wait_until(lambda: False, timeout=0.3)
+
+
+def test_get_bdaddr(monkeypatch):
+    class Result:
+        def __init__(self, stdout):
+            self.stdout = stdout
+
+    def make_run(btmgmt_out, hciconfig_out):
+        def run(cmd, **kwargs):
+            name = os.path.basename(cmd[0])
+            out = btmgmt_out if name == "btmgmt" else hciconfig_out
+            return Result(out)
+
+        return run
+
+    monkeypatch.setattr(utils, "find_exe", lambda subdir, name: f"/fake/{name}")
+
+    monkeypatch.setattr(
+        utils.subprocess, "run", make_run("addr 11:22:33:44:55:66 version 0x08 ", "")
+    )
+    assert utils.get_bdaddr() == "11:22:33:44:55:66"
+
+    # Falls back to hciconfig when btmgmt output has no address.
+    monkeypatch.setattr(
+        utils.subprocess,
+        "run",
+        make_run("no address here", "BD Address: AA:BB:CC:DD:EE:FF  ACL MTU"),
+    )
+    assert utils.get_bdaddr() == "aa:bb:cc:dd:ee:ff"
 
 
 def test_log_stream(caplog):
