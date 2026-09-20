@@ -421,7 +421,7 @@ class Agent(env.HostPlugin, EventPluginMixin):
             if device["Address"].lower() == address.lower():
                 return dbus.Interface(self.bus.get_object(BUS_NAME, path), interface)
         else:
-            raise ValueError("Device {address=} not found")
+            raise ValueError(f"Device {address=} not found")
 
 
 def dbus_service_event_method(

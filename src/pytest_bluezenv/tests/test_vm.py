@@ -35,7 +35,15 @@ CONTROLLER_FEATURES = r"""
     import operator
     import os
 
-    from pytest_bluezenv import host_config, Agent, Bluetoothctl, wait_until
+    import pytest
+
+    from pytest_bluezenv import (
+        RemoteError,
+        Agent,
+        Bluetoothctl,
+        host_config,
+        wait_until,
+    )
 
     # One setup, reused by all three tests below: the VM boots once.
     base = host_config(
@@ -115,6 +123,11 @@ CONTROLLER_FEATURES = r"""
         # Test device set/get API
         host0.agent.device_set(host1.bdaddr, "Trusted", True)
         assert host0.agent.device_get(host1.bdaddr, "Trusted")
+
+        # Unknown device raises ValueError on the VM host; the queried
+        # address must surface in the RemoteError message.
+        with pytest.raises(RemoteError, match="address='00:11:22:33:44:55'"):
+            host0.agent.device_get("00:11:22:33:44:55", "Trusted")
 """
 
 
