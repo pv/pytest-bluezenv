@@ -30,6 +30,16 @@ class ValuePlugin(HostPlugin):
         self.value = 123
 
 
+class FakeConn:
+    def __init__(self):
+        self.calls = []
+        self.log = type("Log", (), {"debug": lambda *args, **kwargs: None})()
+
+    def call(self, *a, **kw):
+        self.calls.append((a, kw))
+        return "result"
+
+
 class EchoPlugin(HostPlugin):
     name = "echo"
 
@@ -95,3 +105,64 @@ def test_loaded_plugin_without_value_gives_rpc_proxy(host):
 def test_plugin_load_error_surfaces_as_remote_error(host):
     with pytest.raises(RemoteError, match="load failed"):
         host.load(BadPlugin())
+
+
+class ProgressReporter:
+    def __init__(self):
+        self.events = []
+
+    def call_started(self, connection, label, timeout, args=(), kwargs=None):
+        self.events.append(("started", label, timeout, args, kwargs))
+        return label
+
+    def call_finished(self, token):
+        self.events.append(("finished", token))
+
+
+def test_plugin_proxy_reports_labeled_calls():
+    conn = FakeConn()
+    reporter = ProgressReporter()
+    proxy = PluginProxy()
+    proxy.set_connection("agent", conn, reporter)
+
+    assert proxy.expect("event", timeout=3) == "result"
+    assert reporter.events == [
+        ("started", "agent.expect", 3, ("event",), {}),
+        ("finished", "agent.expect"),
+    ]
+
+
+def test_plugin_proxy_reports_failed_call():
+    conn = FakeConn()
+
+    def boom(*a, **kw):
+        raise RuntimeError("boom")
+
+    conn.call = boom
+    reporter = ProgressReporter()
+    proxy = PluginProxy()
+    proxy.set_connection("agent", conn, reporter)
+
+    with pytest.raises(RuntimeError, match="boom"):
+        proxy.expect("event")
+
+    assert reporter.events == [
+        ("started", "agent.expect", None, ("event",), {}),
+        ("finished", "agent.expect"),
+    ]
+
+
+def test_plugin_proxy_call_survives_reporter_error():
+    conn = FakeConn()
+
+    class BrokenReporter:
+        def call_started(self, *args, **kwargs):
+            raise RuntimeError("reporter bug")
+
+        def call_finished(self, token):
+            raise RuntimeError("reporter bug")
+
+    proxy = PluginProxy()
+    proxy.set_connection("agent", conn, BrokenReporter())
+
+    assert proxy.expect("event") == "result"

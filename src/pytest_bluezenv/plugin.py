@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from . import utils, env, build_kernel
+from . import utils, env, build_kernel, progress
 from .btmon import Btmon
 
 __all__ = [
@@ -29,6 +29,7 @@ __all__ = [
     "pytest_runtest_call",
     "pytest_runtest_teardown",
     "pytest_report_teststatus",
+    "pytest_runtest_logreport",
     "pytest_runtest_logfinish",
     # fixtures:
     "kernel",
@@ -72,6 +73,18 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         help=("Kernel image to use"),
+    )
+    group.addoption(
+        "--bluezenv-progress",
+        action="store",
+        choices=("auto", "on", "off"),
+        default=None,
+        help="Show progress for slow RPC calls (default: auto on an interactive terminal)",
+    )
+    parser.addini(
+        "bluezenv_progress",
+        "Show progress for slow RPC calls (auto/on/off)",
+        default="auto",
     )
     group.addoption(
         "--usb",
@@ -317,9 +330,25 @@ def pytest_collection_modifyitems(session, config, items):
 
 WARNING_LIST = []
 WARNING_HANDLER = utils.OopsLogHandler(WARNING_LIST)
+PROGRESS_REPORTER = None
+TERMINAL_REPORTER = None
 
 
 def pytest_sessionstart(session):
+    global PROGRESS_REPORTER, TERMINAL_REPORTER
+
+    TERMINAL_REPORTER = session.config.pluginmanager.get_plugin("terminalreporter")
+
+    if PROGRESS_REPORTER is None:
+        config = session.config
+        option = config.option.bluezenv_progress or config.getini("bluezenv_progress")
+        PROGRESS_REPORTER = progress.ProgressReporter.from_config(config, option)
+
+        if PROGRESS_REPORTER is not None:
+            # Progress reporting annotates the per-test status lines that
+            # the terminal reporter writes only in verbose mode.
+            config.option.verbose = max(int(config.option.verbose), 1)
+
     logging.root.addHandler(WARNING_HANDLER)
     _enable_log_filters(session.config)
 
@@ -355,15 +384,28 @@ def _enable_log_filters(config, handlers=None):
 
 
 def pytest_sessionfinish(session):
+    global PROGRESS_REPORTER
+
     logging.root.removeHandler(WARNING_HANDLER)
     utils.LogNameFilter.disable(logging.root.handlers)
     utils.LogReorderFilter.disable(logging.root.handlers)
+
+    if PROGRESS_REPORTER is not None:
+        PROGRESS_REPORTER.close()
+        PROGRESS_REPORTER = None
 
 
 @pytest.hookimpl(wrapper=True)
 def pytest_runtest_logstart(nodeid, location):
     utils.LogReorderFilter.flush_all()
     yield
+    if PROGRESS_REPORTER is not None:
+        if PROGRESS_REPORTER.rewrite:
+            PROGRESS_REPORTER.set_test(
+                TERMINAL_REPORTER._locationline(nodeid, *location)
+            )
+        else:
+            PROGRESS_REPORTER.set_test(f"{nodeid} ")
 
 
 def status_log_stage(name, stage):
@@ -393,6 +435,18 @@ def pytest_runtest_teardown(item, nextitem):
     utils.LogReorderFilter.flush_all()
 
 
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_logreport(report):
+    # The call phase, or any failed/skipped phase, is a report with a
+    # visible status line that may have been replaced by a status line.
+    if (
+        PROGRESS_REPORTER is not None
+        and isinstance(report, pytest.TestReport)
+        and (report.when == "call" or report.failed or report.skipped)
+    ):
+        PROGRESS_REPORTER.prepare_report()
+
+
 @pytest.hookimpl(wrapper=True)
 def pytest_report_teststatus(report, config):
     if not isinstance(report, pytest.TestReport):
@@ -420,6 +474,8 @@ def pytest_report_teststatus(report, config):
 def pytest_runtest_logfinish(nodeid, location):
     utils.LogReorderFilter.flush_all()
     yield
+    if PROGRESS_REPORTER is not None:
+        PROGRESS_REPORTER.finish_test()
 
 
 #
@@ -599,6 +655,7 @@ def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
         mem=mem,
         controller=controller,
         timeout=utils.DEFAULT_TIMEOUT,
+        progress_reporter=PROGRESS_REPORTER,
     ) as vm:
         yield vm
 

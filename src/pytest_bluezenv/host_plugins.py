@@ -218,9 +218,7 @@ class Call(env.HostPlugin):
                 ``sync=False``.
             """
             if kw.pop("sync", True):
-                return self._conn.call(
-                    "call_plugin", self._name, "__call__", func, *a, **kw
-                )
+                return self._call("__call__", func, *a, **kw)
             else:
                 self._conn.call_noreply(
                     "call_plugin", self._name, "call_async", func, *a, **kw
@@ -693,7 +691,7 @@ class Pexpect(env.HostPlugin):
             Returns:
                 Pexpect.CtlProxy: handle to the spawned process.
             """
-            ctl_id = self._conn.call("call_plugin", self._name, "spawn", cmd)
+            ctl_id = self._call("spawn", cmd)
             return Pexpect.CtlProxy(self, ctl_id)
 
     class CtlProxy:
@@ -715,8 +713,7 @@ class Pexpect(env.HostPlugin):
             self.ctl_id = ctl_id
 
         def __getattr__(self, name):
-            method = getattr(self._plugin, name)
-            return lambda *a, **kw: method(self.ctl_id, *a, **kw)
+            return lambda *a, **kw: self._plugin._call(name, self.ctl_id, *a, **kw)
 
         def __enter__(self):
             return self

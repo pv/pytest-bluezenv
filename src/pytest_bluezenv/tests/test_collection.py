@@ -9,6 +9,8 @@ reused.  With pytest-xdist active, reused host setups also get an
 ``xdist`` stands in for pytest-xdist, which need not be installed.
 """
 
+from pytest_bluezenv import host_plugins
+
 PLUGIN = ["-p", "pytest_bluezenv"]
 
 XDIST_CONFTEST = """
@@ -48,7 +50,11 @@ REUSE_SOURCE = """
 """
 
 
-def test_vm_tests_are_grouped_by_setup(pytester):
+def test_vm_tests_are_grouped_by_setup(pytester, monkeypatch):
+    # The setup names are generated from a module-level counter shared
+    # with other in-process runs, and tests are sorted by that name.
+    # Reset it so the ids are small and in source order.
+    monkeypatch.setattr(host_plugins, "HOST_SETUPS", 0)
     pytester.makepyfile(ORDER_SOURCE)
     result = pytester.runpytest(*PLUGIN, "-v")
     result.assert_outcomes(passed=4)

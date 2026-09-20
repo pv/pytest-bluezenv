@@ -12,6 +12,7 @@ python_sources = files(
   'test_logging.py',
   'test_mainloop.py',
   'test_proxy.py',
+  'test_progress.py',
   'test_rpc.py',
   'test_utils.py',
   'test_vm.py',

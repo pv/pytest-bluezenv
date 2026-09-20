@@ -47,6 +47,11 @@ The pytest-bluezenv plugin adds the following options.
     Run ``btmon`` on all VM hosts and save traffic in
     ``test-bluezenv-*.btsnoop``.
 
+``--bluezenv-progress=auto/on/off``
+    Report slow host RPC calls. ``auto`` (the default) reports only on an
+    interactive terminal; ``on`` also emits periodic lines when there is
+    none. Enabling it forces verbose test-case output.
+
 ``--kernel-build=no/use/auto/force``
     Build a suitable kernel image from source. ``no`` disables builds,
     ``use`` uses a cached image, ``auto`` builds when needed, and ``force``
@@ -67,3 +72,9 @@ skipped. Tests use ``btvirt`` otherwise.
 Each VM host shares ``/run/shared`` with the upper tester. The upper-tester
 directory is normally ``/tmp/pytest-bluezenv-*/shared-*``. Captures and core
 dumps are copied out before the test instance stops.
+
+INI options
+-----------
+
+``bluezenv_progress=auto/on/off``
+    Default value for ``--bluezenv-progress``.

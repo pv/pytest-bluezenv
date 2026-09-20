@@ -109,7 +109,7 @@ class HostProxy:
     Loaded plugins appear as attributes on the host proxy.
     """
 
-    def __init__(self, path, timeout, name):
+    def __init__(self, path, timeout, name, progress_reporter=None):
         """
         Create a VM-host proxy.
 
@@ -123,6 +123,7 @@ class HostProxy:
         self._timeout = timeout
         self._plugins = {}
         self._name = name
+        self._progress_reporter = progress_reporter
 
     def load(self, plugin: HostPlugin):
         """
@@ -170,7 +171,7 @@ class HostProxy:
             if value is None:
                 value = PluginProxy()
             if isinstance(value, PluginProxy):
-                value.set_connection(name, self._active_conn)
+                value.set_connection(name, self._active_conn, self._progress_reporter)
             self._plugins[name] = value
 
     @property
@@ -218,8 +219,9 @@ class PluginProxy:
     def __init__(self):
         self._name = None
         self._conn = None
+        self._progress_reporter = None
 
-    def set_connection(self, name, conn):
+    def set_connection(self, name, conn, progress_reporter=None):
         """
         Bind the proxy to a plugin name and its RPC connection.
 
@@ -230,6 +232,7 @@ class PluginProxy:
         """
         self._name = name
         self._conn = conn
+        self._progress_reporter = progress_reporter
 
     def __call__(self, *a, **kw):
         """
@@ -242,7 +245,7 @@ class PluginProxy:
         Returns:
             object: return value from the VM-host plugin.
         """
-        return self._conn.call("call_plugin", self._name, "__call__", *a, **kw)
+        return self._call("__call__", *a, **kw)
 
     def __getattr__(self, name):
         """
@@ -257,9 +260,33 @@ class PluginProxy:
         """
         if name.startswith("_"):
             raise AttributeError(name)
-        return lambda *a, **kw: self._conn.call(
-            "call_plugin", self._name, name, *a, **kw
-        )
+        return lambda *a, **kw: self._call(name, *a, **kw)
+
+    def _call(self, name, *args, **kwargs):
+        reporter = self._progress_reporter
+        if reporter is None:
+            return self._conn.call("call_plugin", self._name, name, *args, **kwargs)
+        # Progress reporting must never break the RPC call itself.
+        report_kwargs = {k: v for k, v in kwargs.items() if k != "timeout"}
+        token = None
+        try:
+            token = reporter.call_started(
+                self._conn,
+                f"{self._name}.{name}",
+                kwargs.get("timeout"),
+                args,
+                report_kwargs,
+            )
+        except Exception:
+            self._conn.log.debug("Progress reporting failed", exc_info=True)
+        try:
+            return self._conn.call("call_plugin", self._name, name, *args, **kwargs)
+        finally:
+            if token is not None:
+                try:
+                    reporter.call_finished(token)
+                except Exception:
+                    self._conn.log.debug("Progress reporting failed", exc_info=True)
 
     def _call_noreply(self, name, *a, **kw):
         self._conn.call_noreply("call_plugin", self._name, name, *a, **kw)
@@ -602,7 +629,14 @@ class Environment:
     DEFAULT_MEM = None
 
     def __init__(
-        self, kernel, num_hosts, hw_indices=None, timeout=20, mem=None, controller=True
+        self,
+        kernel,
+        num_hosts,
+        hw_indices=None,
+        timeout=20,
+        mem=None,
+        controller=True,
+        progress_reporter=None,
     ):
         if Path(kernel).is_dir():
             self.kernel = str(Path(kernel) / "arch" / "x86" / "boot" / "bzImage")
@@ -621,6 +655,7 @@ class Environment:
         self.reuse_group = None
         self.mem = mem
         self.controller = controller
+        self.progress_reporter = progress_reporter
 
         if hw_indices is None:
             self.hw_indices = None
@@ -968,7 +1003,12 @@ class Environment:
             raise RuntimeError("Wrong number of sockets")
 
         for path, name in zip(socket_paths, host_names):
-            host = HostProxy(path, timeout=self.timeout, name=name)
+            host = HostProxy(
+                path,
+                timeout=self.timeout,
+                name=name,
+                progress_reporter=self.progress_reporter,
+            )
             self.hosts.append(host)
 
     def __del__(self):

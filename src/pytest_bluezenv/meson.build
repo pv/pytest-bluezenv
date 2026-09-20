@@ -8,6 +8,7 @@ python_sources = files(
   'host_plugins.py',
   'le.py',
   'plugin.py',
+  'progress.py',
   'rpc.py',
   'runner.py',
   'utils.py'
