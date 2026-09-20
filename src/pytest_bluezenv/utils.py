@@ -170,6 +170,8 @@ def wait_until(predicate, *a, timeout=None, **kw):
     """
     Call ``predicate(*a, **kw)`` repeatedly until it returns true.
 
+    The predicate is polled at sensible intervals.
+
     Args:
         predicate (callable): condition to poll.
         *a: positional arguments passed to ``predicate``.
@@ -189,13 +191,21 @@ def wait_until(predicate, *a, timeout=None, **kw):
     if timeout is None:
         timeout = DEFAULT_TIMEOUT
 
-    count = max(20, round(timeout))
-    for j in range(count):
+    start = time.monotonic()
+    deadline = start + timeout
+
+    while True:
+        began = time.monotonic()
         if predicate(*a, **kw):
-            break
-        time.sleep(timeout / count)
-    else:
-        raise TimeoutError("Timeout reached")
+            return
+
+        now = time.monotonic()
+        remaining = deadline - now
+        if remaining <= 0:
+            raise TimeoutError("Timeout reached")
+
+        wait = max(0.05, (now - start) / 4, 2 * (now - began))
+        time.sleep(min(1.0, wait, remaining))
 
 
 def get_bdaddr(index=0):

@@ -41,18 +41,79 @@ def test_find_exe(monkeypatch, tmp_path):
     assert utils.find_exe("subdir", "prog") == os.path.normpath(str(exe))
 
 
-def test_wait_until():
-    calls = {"n": 0}
+class FakeTime:
+    """Monotonic clock where time only advances when slept."""
+
+    def __init__(self):
+        self.now = 0.0
+
+    def monotonic(self):
+        return self.now
+
+    def sleep(self, seconds):
+        self.now += seconds
+
+
+@pytest.fixture
+def fake_time(monkeypatch):
+    fake = FakeTime()
+    monkeypatch.setattr(utils, "time", fake)
+    return fake
+
+
+@pytest.mark.parametrize("turn_true", [0.0, 0.05, 0.35, 1.95, 12.0])
+def test_wait_until_notices_shortly_after_true(fake_time, turn_true):
+    polls = []
 
     def predicate():
-        calls["n"] += 1
-        return calls["n"] >= 3
+        polls.append(fake_time.now)
+        return fake_time.now >= turn_true
 
-    utils.wait_until(predicate, timeout=1)
-    assert calls["n"] >= 3
+    utils.wait_until(predicate, timeout=60)
 
+    # The floor of one 50 ms wait covers the shortest waits, 25% the
+    # rest.
+    assert fake_time.now - turn_true <= max(0.25 * turn_true, 0.05) + 1e-9
+
+    # Checks are never closer than the minimum poll interval.
+    assert all(b - a >= 0.05 - 1e-9 for a, b in zip(polls, polls[1:]))
+
+
+def test_wait_until_paces_expensive_predicates(fake_time):
+    polls = []
+
+    def predicate():
+        polls.append(fake_time.now)
+        fake_time.sleep(0.3)
+        return fake_time.now >= 5.0
+
+    utils.wait_until(predicate, timeout=60)
+
+    gaps = [b - a for a, b in zip(polls, polls[1:])]
+
+    # Spacing is at least twice the previous call duration ...
+    assert all(gap >= 0.6 - 1e-9 for gap in gaps)
+
+    # ... but the 1 s cap still limits it.
+    assert all(gap <= 1.3 + 1e-9 for gap in gaps)
+
+
+def test_wait_until_times_out_after_full_timeout(fake_time):
     with pytest.raises(TimeoutError):
-        utils.wait_until(lambda: False, timeout=0.3)
+        utils.wait_until(lambda: False, timeout=20)
+
+    assert fake_time.now == pytest.approx(20)
+
+
+def test_wait_until_passes_arguments():
+    seen = []
+
+    def predicate(*a, **kw):
+        seen.append((a, kw))
+        return True
+
+    utils.wait_until(predicate, 1, b=2)
+    assert seen == [((1,), {"b": 2})]
 
 
 def test_get_bdaddr(monkeypatch):
