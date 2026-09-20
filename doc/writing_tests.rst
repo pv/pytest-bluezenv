@@ -312,3 +312,29 @@ main loop.
 
 :obj:`~pytest_bluezenv.Agent` and the D-Bus plugins already use the main
 loop. A custom plugin that uses D-Bus directly needs the same arrangement.
+
+
+LE advertising
+--------------
+
+In LE-only mode ``bluetoothd`` does not advertise the host by itself.
+Add a :obj:`~pytest_bluezenv.LeAdvertiser` to make a host discoverable
+and connectable by a peer:
+
+.. code-block:: python
+
+   from pytest_bluezenv import Bluetoothd, LeAdvertiser, host_config
+
+   LE_CONF = "[General]\nControllerMode = le\n"
+
+   @host_config(
+       [Bluetoothd(conf=LE_CONF)],
+       [Bluetoothd(conf=LE_CONF), LeAdvertiser(service_uuids=["180d"])],
+   )
+   def test_le_service(hosts):
+       client, server = hosts
+
+:obj:`~pytest_bluezenv.LeAdvertiser` registers a minimal connectable
+``org.bluez.LEAdvertisement1`` object on ``/org/bluez/hci0``. Its
+``service_uuids``, advertisement type, adapter path, object index, and
+discoverability are configurable through its constructor.

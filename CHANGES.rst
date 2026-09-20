@@ -6,6 +6,7 @@ Development:
    - *(Backward incompatible)* For Call ``sync=False`` its `.wait()`
      now raises possible exceptions, instead of returning them.
    - Add PCIe controller passthrough with --pcie and --force-pcie.
+   - Add ``LeAdvertiser`` host plugin for connectable LE advertisements.
 
 v0.1.9:
    - Add configurable default VM memory with --vm-mem.

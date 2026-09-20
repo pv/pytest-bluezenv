@@ -6,6 +6,7 @@ python_sources = files(
   'build_kernel.py',
   'env.py',
   'host_plugins.py',
+  'le.py',
   'plugin.py',
   'rpc.py',
   'runner.py',
