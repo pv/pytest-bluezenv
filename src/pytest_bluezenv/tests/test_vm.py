@@ -111,6 +111,10 @@ CONTROLLER_FEATURES = r"""
             ["org.bluez.Device1.Pair:reply", "org.bluez.Device1.Pair:error"]
         )
         assert event.kind.startswith("org.bluez.Device1.Pair:")
+
+        # Test device set/get API
+        host0.agent.device_set(host1.bdaddr, "Trusted", True)
+        assert host0.agent.device_get(host1.bdaddr, "Trusted")
 """
 
 

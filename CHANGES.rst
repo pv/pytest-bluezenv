@@ -7,6 +7,8 @@ Development:
      now raises possible exceptions, instead of returning them.
    - Add PCIe controller passthrough with --pcie and --force-pcie.
    - Add ``LeAdvertiser`` host plugin for connectable LE advertisements.
+   - Add ``Agent.device_get`` and ``Agent.device_set`` helpers for
+     ``org.bluez.Device1`` properties.
 
 v0.1.9:
    - Add configurable default VM memory with --vm-mem.

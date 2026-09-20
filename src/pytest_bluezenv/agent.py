@@ -379,8 +379,36 @@ class Agent(env.HostPlugin, EventPluginMixin):
         )
         return adapter.Get(ADAPTER_INTERFACE, key)
 
+    @utils.mainloop_wrap
+    def device_set(self, address, key, value):
+        """
+        Set given org.bluez.Device1 property.
+
+        Args:
+            address (str): bdaddr of target device
+            key (str): property name
+            value: property value
+        """
+        properties = self._find_device(address, PROPS_INTERFACE)
+        properties.Set(DEVICE_INTERFACE, key, value)
+
+    @utils.mainloop_wrap
+    def device_get(self, address, key):
+        """
+        Get given org.bluez.Device1 property.
+
+        Args:
+            address (str): bdaddr of target device
+            key (str): property name
+
+        Returns:
+            object: current property value.
+        """
+        properties = self._find_device(address, PROPS_INTERFACE)
+        return properties.Get(DEVICE_INTERFACE, key)
+
     @utils.mainloop_assert
-    def _find_device(self, address):
+    def _find_device(self, address, interface=DEVICE_INTERFACE):
         manager = dbus.Interface(
             self.bus.get_object(BUS_NAME, "/"), "org.freedesktop.DBus.ObjectManager"
         )
@@ -391,9 +419,7 @@ class Agent(env.HostPlugin, EventPluginMixin):
             if device is None:
                 continue
             if device["Address"].lower() == address.lower():
-                return dbus.Interface(
-                    self.bus.get_object(BUS_NAME, path), DEVICE_INTERFACE
-                )
+                return dbus.Interface(self.bus.get_object(BUS_NAME, path), interface)
         else:
             raise ValueError("Device {address=} not found")
 
