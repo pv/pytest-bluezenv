@@ -13,11 +13,11 @@ plugins through RPC proxies.
 Test layout
 -----------
 
-The upper tester is the Pytest process. It collects tests, creates the
-required VM hosts, and drives them. It does not run the Bluetooth software
-under test.
+The Pytest process runs on host system, and is the upper tester. It
+collects tests, creates the required VM hosts, and drives them. It
+does not run the Bluetooth software under test.
 
-A VM host is a QEMU guest running the selected kernel. Its lower
+A VM host is a QEMU virtual machine running the selected kernel. Its lower
 tester loads host plugins and runs their code. Programs such as
 ``bluetoothd``, ``obexd``, and ``bluetoothctl`` remain in the VM host.
 
@@ -26,6 +26,8 @@ A test declares one plugin list for each VM host. The
 :obj:`~pytest_bluezenv.HostProxy` for every declared host:
 
 .. code-block:: python
+
+   from pytest_bluezenv import Bluetoothctl, Bluetoothd, host_config
 
    @host_config([Bluetoothd(), Bluetoothctl()], [Bluetoothd()])
    def test_discovery(hosts):
@@ -38,12 +40,13 @@ body. A lower-tester exception is reported as
 :obj:`~pytest_bluezenv.RemoteError`. :doc:`writing_tests` describes host
 configuration and plugins in detail.
 
-VM-host channels
-----------------
+VM-host communication
+---------------------
 
-The plugin starts VM hosts through BlueZ's ``test-runner`` QEMU
-launcher. pytest-bluezenv adds the following channels between the
-upper tester and each VM host:
+Each VM host has control, log, console, and shared-file channels to
+the upper tester. QEMU is launched using BlueZ's
+``test-runner``. Tests use these channels through the fixtures,
+standard Python logging, and command-line tools described below.
 
 .. image:: _static/channels.svg
    :alt: Four channels between the upper tester and a VM host: control (RPC), log, tty, and a shared directory.
@@ -88,21 +91,17 @@ Tests use ``btvirt`` unless their :obj:`~pytest_bluezenv.host_config`
 requests ``hw=True`` or ``--force-usb`` / ``--force-pcie`` is set. A
 configuration can also omit a controller with ``controller=False``.
 
-After a reset, a controller is powered off. ``bluetoothd`` powers it on
-when it starts. A configuration without ``bluetoothd`` must arrange that
-it is powered on.
-
 Reusing VM hosts
 ----------------
 
-VM hosts are started on demand and Pytest orders tests with matching
+VM hosts are started on demand and pytest-bluezenv orders tests with matching
 VM requirements together. The :obj:`~pytest_bluezenv.hosts` fixture
-can therefore share VM hosts between tests;
+can therefore share VM hosts between tests.
 :obj:`~pytest_bluezenv.hosts_once` reserves VM hosts for one test.
 
 Host plugins are normally torn down after each test, even when the VM
-host is shared. The lower tester also resets the previous process
-group and powers the controller off.  ``reuse=True`` retains plugins
+host is shared. The lower tester also kills the previous process
+group and powers the controller off to reset it.  ``reuse=True`` retains plugins
 for consecutive tests with the same host setup.
 
 Time and log ordering
@@ -126,9 +125,10 @@ Failures and diagnostics
 ------------------------
 
 When a process crashes, its core dump is written to the shared
-directory and copied out before VM shutdown.  Unless
-``--no-core-backtraces`` is set, a backtrace is generated and reported
-as :obj:`~pytest_bluezenv.CoredumpWarning`. Kernel ``BUG`` and
+directory and copied out before VM shutdown to
+``test-bluezenv-*.core`` files.  Unless ``--no-core-backtraces`` is
+set, a backtrace is generated and reported as
+:obj:`~pytest_bluezenv.CoredumpWarning`. Kernel ``BUG`` and
 ``WARNING`` records produce :obj:`~pytest_bluezenv.KernelBugWarning`.
 Sanitizer reports, such as ASan output, produce
 :obj:`~pytest_bluezenv.SanitizerWarning`.

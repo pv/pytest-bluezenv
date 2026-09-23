@@ -418,7 +418,8 @@ def run(*args, input=None, capture_output=False, timeout=None, check=False, **kw
         **kwargs: keyword arguments passed to ``subprocess.run``.
 
     Returns:
-        object: completed command result.
+        subprocess.CompletedProcess: the completed command, with
+        ``stdout`` and ``stderr`` filled when they were captured.
 
     Example:
 

@@ -98,11 +98,11 @@ Internal fixtures, used by :obj:`~pytest_bluezenv.host_config`.
 .. autosummary::
    :toctree: api
 
-   ~pytest_bluezenv.host_setup
    ~pytest_bluezenv.kernel
    ~pytest_bluezenv.hw_indices
    ~pytest_bluezenv.vm
    ~pytest_bluezenv.vm_once
+   ~pytest_bluezenv.host_setup
    ~pytest_bluezenv.vm_setup
 
 .. toctree::

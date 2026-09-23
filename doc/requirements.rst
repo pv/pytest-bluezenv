@@ -8,6 +8,14 @@ pytest-bluezenv requires:
 
 - QEMU for x86_64
 - ``dbus-daemon``
+- The Python dependencies declared by the package
+
+Install the package and its Python dependencies in the environment that
+runs Pytest:
+
+.. code-block:: console
+
+   $ python3 -m pip install pytest-bluezenv
 
 The following are recommended:
 
@@ -21,13 +29,17 @@ Kernel
 VM-host tests require a kernel image. ``--kernel-build`` builds a suitable
 image from sources in ``.pytest_cache`` when needed.
 
-A BlueZ source tree provides a suitable base configuration:
+The BlueZ source tree provides a suitable configuration in
+``doc/tester.config``. To build an image manually:
 
 .. code-block::
 
 	cp ../bluez/doc/tester.config .config
 	make olddefconfig
 	make -j8
+
+pytest-bluezenv bundles a suitable base configuration, used for
+``--kernel-build`` if not BlueZ source tree is provided.
 
 For accurate VM-host log timestamps, the kernel needs these options:
 

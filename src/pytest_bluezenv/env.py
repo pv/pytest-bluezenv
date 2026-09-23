@@ -51,8 +51,8 @@ class HostPlugin:
         value (object): object to appear as HostProxy attribute on parent side.
             If None, the plugin is represented by a proxy object that does RPC
             calls. Otherwise, must be a serializable value. If it is a subclass
-            of :obj:`PluginProxy`, ``set_connection`` is called after plugin
-            load.
+            of :obj:`~pytest_bluezenv.PluginProxy`, ``set_connection`` is
+            called after plugin load.
 
     Example:
 
@@ -90,7 +90,7 @@ class HostPlugin:
         Initialise a plugin in the VM host.
 
         Args:
-            impl (Implementation): plugin host object
+            impl: lower-tester plugin manager.
         """
         pass
 
@@ -103,10 +103,19 @@ class HostProxy:
     """
     Upper-tester representation of one VM host with loadable plugins.
 
-    Plugins are usually loaded by :obj:`host_config`, but may also be
-    loaded during a test.
+    Plugins are usually loaded by :obj:`~pytest_bluezenv.host_config`, but may
+    also be loaded during a test.
 
     Loaded plugins appear as attributes on the host proxy.
+
+    Example:
+
+        .. code-block:: python
+
+           def test_bluetoothctl_show(hosts):
+               host = hosts[0]
+               host.load(Bluetoothctl())
+               host.bluetoothctl.send("show\\n")
     """
 
     def __init__(self, path, timeout, name, progress_reporter=None):

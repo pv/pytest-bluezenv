@@ -45,7 +45,7 @@ __all__ = [
 
 class Bdaddr(env.HostPlugin):
     """
-    Host plugin providing `host.bdaddr`. Loaded by default.
+    Host plugin providing ``host.bdaddr``. Loaded by default.
     """
 
     name = "bdaddr"
@@ -100,9 +100,12 @@ class Rcvbuf(env.HostPlugin):
 
 
 class Call(env.HostPlugin):
-    """
-    Host plugin providing ``host.call(func, *args, **kw)``
-    which invokes the given functions on VM host side.  Loaded by default.
+    """Host plugin providing ``host.call(func, *args, **kw)`` interface.
+
+    Loaded by default.
+
+    The ``host.call`` object is a :obj:`~pytest_bluezenv.Call.Proxy`
+    that invokes the given function on the VM host side.
 
     Args:
         func (callable): function to run on the VM host.  It and its
@@ -113,7 +116,8 @@ class Call(env.HostPlugin):
 
     Returns:
         object: the return value of ``func`` if ``sync`` is true, else a
-        handle whose ``wait()`` returns it later.
+        :obj:`~pytest_bluezenv.Call.ResultProxy` whose ``wait()`` returns it
+        later.
 
     Example:
 
@@ -128,6 +132,7 @@ class Call(env.HostPlugin):
            result_async = host0.call(my_func, 1, 2, 3, sync=False)
            ...
            result = result_async.wait()
+
     """
 
     name = "call"
@@ -195,9 +200,9 @@ class Call(env.HostPlugin):
 
     class Proxy(env.PluginProxy):
         """
-        Parent-side handle returned as ``host.call``.  Calling it
-        (``host.call(...)``) invokes a function on the VM; see
-        :obj:`Call`.
+        Upper-tester handle returned as ``host.call``. Calling it
+        (``host.call(...)``) invokes a function on the VM host. See
+        :obj:`~pytest_bluezenv.Call`.
         """
 
         def __init__(self):
@@ -211,11 +216,12 @@ class Call(env.HostPlugin):
                 func (callable): function to run on the VM.
                 *a: positional arguments to ``func``.
                 ``**kw``: keyword arguments to ``func``; ``sync=False``
-                    returns a :obj:`Call.ResultProxy` instead of blocking.
+                    returns a :obj:`~pytest_bluezenv.Call.ResultProxy`
+                    instead of blocking.
 
             Returns:
-                object: the function result, or a result handle when
-                ``sync=False``.
+                object: the function result, or a
+                :obj:`~pytest_bluezenv.Call.ResultProxy` when ``sync=False``.
             """
             if kw.pop("sync", True):
                 return self._call("__call__", func, *a, **kw)
@@ -228,8 +234,8 @@ class Call(env.HostPlugin):
 
     class ResultProxy:
         """
-        Handle for a ``sync=False`` :obj:`Call`; ``wait()`` collects the
-        result once the VM-side call has finished.
+        Handle for a ``sync=False`` :obj:`~pytest_bluezenv.Call`;
+        ``wait()`` collects the result once the VM-side call has finished.
         """
 
         def __init__(self, plugin, id_value):
@@ -249,6 +255,10 @@ class Call(env.HostPlugin):
 
             Returns:
                 object: return value of the VM-host function.
+
+            Raises:
+                RemoteError: the VM-host function raised. It is raised
+                    here, when the result is collected, not at call time.
             """
             value, tb = self.plugin.wait_async(self.id_value)
             if tb is not None:
@@ -391,7 +401,7 @@ class Bluetoothd(env.HostPlugin):
             or ``Experimental``.
         args (sequence): extra command-line arguments for ``bluetoothd``.
 
-    Depends on :obj:`pytest_bluezenv.DbusSystem`.
+    Depends on :obj:`~pytest_bluezenv.DbusSystem`.
 
     Example:
 
@@ -494,7 +504,8 @@ class Obexd(env.HostPlugin):
     """
     Host plugin starting obexd.
 
-    Depends on :obj:`Bluetoothd` and :obj:`DbusSession`.
+    Depends on :obj:`~pytest_bluezenv.Bluetoothd` and
+    :obj:`~pytest_bluezenv.DbusSession`.
 
     Example:
 
@@ -569,7 +580,10 @@ class Obexd(env.HostPlugin):
 
 class Pexpect(env.HostPlugin):
     r"""
-    Host plugin for starting and controlling processes with pexpect.
+    Host plugin for starting and controlling processes with pexpect,
+    providing ``host.pexpect.spawn(...)`` interface.
+
+    The ``host.pexpect`` object is a :obj:`~pytest_bluezenv.Pexpect.Proxy`.
 
     Example:
 
@@ -579,6 +593,14 @@ class Pexpect(env.HostPlugin):
            btmgmt.send("info\n")
            btmgmt.expect("hci0")
            btmgmt.close()
+
+    Example:
+
+        .. code-block:: python
+
+           with host0.pexpect.spawn(find_exe("tools", "btmgmt")) as btmgmt:
+               btmgmt.send("info\n")
+               btmgmt.expect("hci0")
     """
 
     name = "pexpect"
@@ -601,14 +623,14 @@ class Pexpect(env.HostPlugin):
 
     def spawn(self, cmd):
         """
-        Start a process on the host and return a handle to it.
+        Start a process on the host and record it. (VM side.)
 
         Args:
             cmd (list): command and arguments.
 
         Returns:
-            handle: object with ``send``, ``expect`` and ``close``
-            methods, and usable as a context manager.
+            int: spawned-process identifier. ``send``, ``expect`` and
+            ``close`` take it to address the process.
         """
         from pexpect.popen_spawn import PopenSpawn
 
@@ -677,13 +699,15 @@ class Pexpect(env.HostPlugin):
 
     class Proxy(env.PluginProxy):
         """
-        Parent-side handle returned as ``host.pexpect``.  ``spawn()``
-        starts a process and returns a :obj:`Pexpect.CtlProxy`.
+        Upper-tester handle returned as ``host.pexpect``. ``spawn()``
+        starts a process and returns a
+        :obj:`~pytest_bluezenv.Pexpect.CtlProxy`.
         """
 
         def spawn(self, cmd):
             """
-            Spawn a process on the VM; see :obj:`Pexpect.spawn`.
+            Spawn a process on the VM; see
+            :obj:`~pytest_bluezenv.Pexpect.spawn`.
 
             Args:
                 cmd (sequence): command and arguments.
@@ -696,9 +720,15 @@ class Pexpect(env.HostPlugin):
 
     class CtlProxy:
         """
-        Handle for one process spawned by :obj:`Pexpect`.  Attribute
-        access dispatches over RPC, giving ``send``, ``expect`` and
-        ``close``; usable as a context manager (closes on exit).
+        Handle for one process spawned by :obj:`~pytest_bluezenv.Pexpect`.
+
+        Attribute access dispatches over RPC, giving ``send``, ``expect``
+        and ``close``.  Usable as a context manager (closes on exit).  The
+        return values match the VM-side plugin methods.  ``expect()`` gives
+        an ``(index, groups)`` tuple, see
+        :obj:`~pytest_bluezenv.Pexpect.expect`. ``send()`` gives the number
+        of bytes sent, see :obj:`~pytest_bluezenv.Pexpect.send`. ``close()``
+        returns nothing.
         """
 
         def __init__(self, plugin, ctl_id):

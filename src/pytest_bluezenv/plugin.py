@@ -586,7 +586,15 @@ def host_setup(request):
         request (pytest.FixtureRequest): parametrized fixture request.
 
     Returns:
-        dict: setup plugins, reuse-group name, and reuse setting.
+        dict: host configuration set up by
+        :obj:`~pytest_bluezenv.host_config`. The keys are:
+
+        - ``setup`` (tuple): one entry per VM host, in host order.
+          Each entry is the tuple of plugins that the host loads, with
+          dependencies and the default plugins expanded.
+        - ``name`` (str): name of the reuse group of the configuration.
+        - ``reuse`` (bool): whether the host instances are kept between
+          tests of the group.
     """
     if getattr(request, "param", None) is None:
         raise pytest.fail("host setup not specified")
@@ -607,7 +615,16 @@ def vm_setup(request):
         request (pytest.FixtureRequest): parametrized fixture request.
 
     Returns:
-        dict: VM-host count, controller, memory, and hardware settings.
+        dict: VM-host configuration set up by
+        :obj:`~pytest_bluezenv.host_config`. The keys are:
+
+        - ``num_hosts`` (int): number of VM hosts the test uses.
+        - ``hw`` (bool): whether the hosts require hardware Bluetooth
+          controllers.
+        - ``mem`` (str): memory per VM host, or ``""`` when the default
+          applies.
+        - ``controller`` (bool): whether the hosts get a Bluetooth
+          controller.
     """
     if getattr(request, "param", None) is None:
         raise pytest.fail("env setup not specified")
@@ -812,7 +829,7 @@ def _core_dump_backtrace(core):
 @pytest.fixture(scope="package")
 def vm(request, kernel, vm_setup):
     """
-    Function-scope virtual machine fixture. Used internally by `hosts`.
+    Package-scope virtual machine fixture. Used internally by `hosts`.
 
     Args:
         request (pytest.FixtureRequest): test fixture request.
@@ -875,7 +892,8 @@ def vm_once(request, kernel, vm_setup):
 @pytest.fixture
 def hosts_once(request, vm_once, host_setup):
     """
-    Function-scope fixture like :obj:`hosts`, but creates VM hosts for
+    Function-scope fixture like :obj:`~pytest_bluezenv.hosts`, but
+    creates VM hosts for
     this test only.
 
     Args:
