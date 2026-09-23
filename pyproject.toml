@@ -36,7 +36,7 @@ documentation = "https://pv.github.io/pytest-bluezenv/"
 docs = ["Sphinx", "pydata-sphinx-theme"]
 
 [tool.black]
-target-version = ["py314"]
+target-version = ["py38", "py39", "py310", "py311", "py312", "py313", "py314"]
 
 [tool.meson-python.args]
 dist = ['--include-subprojects']
