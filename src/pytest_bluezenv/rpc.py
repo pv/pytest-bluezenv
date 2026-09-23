@@ -34,10 +34,6 @@ class RemoteError(Exception):
     """
     Exception raised in a VM host and passed through RPC.
 
-    Attributes:
-        exc (BaseException): original VM-host exception.
-        traceback (str): VM-host traceback.
-
     Example:
 
        .. code-block::
@@ -49,6 +45,10 @@ class RemoteError(Exception):
           except RemoteError as exc:
               print(exc.traceback)
               original_exception = exc.exc
+
+    Attributes:
+        exc (BaseException): original VM-host exception.
+        traceback (str): VM-host traceback.
 
     """
 

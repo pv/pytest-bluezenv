@@ -15,6 +15,9 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 autosummary_generate = True
 
+napoleon_use_admonition_for_examples = True
+napoleon_preprocess_types = True
+
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_title = f"{project} {release}"

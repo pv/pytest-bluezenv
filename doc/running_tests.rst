@@ -11,6 +11,18 @@ Running a suite
    $ export FUNCTIONAL_TESTING_KERNEL=/path/to/bzImage
    $ python3 -mpytest
 
+To build a kernel image when needed, use ``--kernel-build``:
+
+.. code-block:: console
+
+   $ python3 -mpytest --kernel-build
+
+To use BlueZ binaries from a given build:
+
+.. code-block:: console
+
+   $ python3 -mpytest --bluez-build-dir=/path/to/bluez/build
+
 Live logging
 ------------
 
@@ -27,8 +39,8 @@ Specific loggers can be selected or excluded with ``--log-filter``:
    $ python3 -mpytest --log-cli-level=0 --log-filter=-host
    $ python3 -mpytest --log-cli-level=0 --log-filter=host,-host.*.1
 
-Show slow RPC calls
--------------------
+Slow RPC calls
+--------------
 
 .. code-block:: console
 
@@ -41,8 +53,11 @@ A slow host RPC call is shown on the line below the test:
    test_bluetoothd.py::test_read_feature                WAITING
    host.0.0: bluetoothd.call("request", timeout=150) [55s, 95s left]
 
-The line is truncated to the terminal width. The default ``auto`` reports
-only on a terminal; ``on`` also emits whole lines when there is none.
+``--vm-timeout`` sets the default timeout for VM-host RPC calls:
+
+.. code-block:: console
+
+   $ python3 -mpytest --vm-timeout=60
 
 Selecting tests
 ---------------

@@ -12,10 +12,10 @@ functional testing of the Linux Bluetooth stack and applications.
 Example
 -------
 
-A test declares the plugins for each VM host. pytest-bluezenv starts the VM
-hosts and exposes them through RPC. VM hosts communicate through emulated
-``btvirt`` controllers by default, or through passed-through USB or PCIe
-controllers.
+A test declares the VM host topology and host plugins. pytest-bluezenv starts the
+VM hosts and exposes them through RPC. By default, their emulated
+``btvirt`` controllers provide a virtual air link. USB or PCIe controllers
+can be passed through for tests using real radios.
 
 .. code-block:: python
 
@@ -49,6 +49,6 @@ controllers.
 
        host0.bluetoothctl.expect("Pairing successful")
 
-The test declares a VM setup with two Qemu instances, where both hosts
+The above test declares a VM setup with two Qemu instances, where both hosts
 run bluetoothd and start a bluetoothctl process.  The Qemu instances
 have `btvirt` virtual BT controllers and can see each other.

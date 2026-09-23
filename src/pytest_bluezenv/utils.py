@@ -445,7 +445,8 @@ def run(*args, input=None, capture_output=False, timeout=None, check=False, **kw
         **kwargs: keyword arguments passed to ``subprocess.run``.
 
     Returns:
-        object: completed command result.
+        subprocess.CompletedProcess: the completed command, with
+        ``stdout`` and ``stderr`` filled when they were captured.
 
     Example:
 
@@ -533,8 +534,7 @@ def run(*args, input=None, capture_output=False, timeout=None, check=False, **kw
 class LogStream:
     """
     Logger that forwards input from a stream to logging, and
-    optionally tees to another stream.  The input pipe is in
-    `LogStream.stream`.
+    optionally tees to another stream.
 
     Args:
         name (str): logger name.
@@ -553,6 +553,11 @@ class LogStream:
 
           log_stream = LogStream("bluetoothctl")
           subprocess.run(["bluetoothctl", "show"], stdout=log_stream.stream)
+
+    Attributes:
+        stream (file): writable file object that the process output is
+            written to, or None when constructed from an existing
+            stream.
 
     """
 

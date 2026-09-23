@@ -1,5 +1,8 @@
+Options
+=======
+
 Command line
-============
+------------
 
 The pytest-bluezenv plugin adds the following options.
 
@@ -28,7 +31,9 @@ The pytest-bluezenv plugin adds the following options.
     BlueZ build directory searched for executables.
 
 ``--bluez-src-dir=<path>``
-    BlueZ source directory.
+    BlueZ source directory. It is searched for executables when no build
+    directory is set, and supplies ``doc/tester.config`` for kernel builds.
+    :obj:`~pytest_bluezenv.bluez_src_dir` returns it in tests.
 
 ``--log-filter=[+-]<pattern>,[+-]<pattern>,...``
     Comma-separated allow and deny patterns for loggers. A pattern is a
@@ -57,8 +62,8 @@ The pytest-bluezenv plugin adds the following options.
 
 ``--kernel-build=no/use/auto/force``
     Build a suitable kernel image from source. ``no`` disables builds,
-    ``use`` uses a cached image, ``auto`` builds when needed, and ``force``
-    rebuilds it.
+    ``use`` uses a cached image (default), ``auto`` builds when needed, and ``force``
+    rebuilds it. A bare ``--kernel-build`` selects ``auto``.
 
 ``--kernel-upstream=<GIT_URL>``
     Kernel source Git URL used by ``--kernel-build``.
@@ -81,3 +86,21 @@ INI options
 
 ``bluezenv_progress=auto/on/off``
     Default value for ``--bluezenv-progress``.
+
+``vm_timeout``
+    Default timeout, in seconds, for RPC calls and wait helpers. The
+    command-line option ``--vm-timeout`` overrides it.
+
+``vm_mem``
+    Default memory assigned to each VM host. The command-line option
+    ``--vm-mem`` overrides it.
+
+``kernel_upstream``
+    Default Git URL used when building a kernel.
+
+``kernel_branch``
+    Default kernel branch or revision used when building a kernel.
+
+``host_plugins.rcvbuf.default``
+    Default receive-buffer size set by :obj:`~pytest_bluezenv.Rcvbuf` on
+    each VM host. An explicit ``Rcvbuf(rcvbuf=...)`` overrides it.

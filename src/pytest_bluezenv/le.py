@@ -95,10 +95,6 @@ class LeAdvertiser(HostPlugin):
         timeout (float): seconds to wait for the advertisement to be
             registered, or None to use the default timeout.
 
-    Attributes:
-        PATH_BASE (str): base D-Bus object path of the advertisements.
-            The instance ``index`` is appended to it.
-
     Example:
 
         .. code-block:: python
@@ -111,6 +107,10 @@ class LeAdvertiser(HostPlugin):
            )
            def test_le_connect(hosts):
                client, server = hosts
+
+    Attributes:
+        PATH_BASE (str): base D-Bus object path of the advertisements.
+            The instance ``index`` is appended to it.
 
     """
 

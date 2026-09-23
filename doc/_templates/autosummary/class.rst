@@ -20,14 +20,3 @@
    {%- endfor %}
    {% endif %}
    {% endblock %}
-
-   {% block attributes %}
-   {% if attributes %}
-   .. rubric:: {{ _('Attributes') }}
-
-   {% for item in attributes %}
-   .. autoattribute:: {{ name }}.{{ item }}
-      :no-index:
-   {%- endfor %}
-   {% endif %}
-   {% endblock %}
