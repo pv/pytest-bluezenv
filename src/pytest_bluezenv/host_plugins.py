@@ -756,6 +756,12 @@ class Bluetoothctl(env.HostPlugin):
     """
     Host plugin for starting and controlling ``bluetoothctl`` with pexpect.
 
+    Args:
+        args (sequence): extra command-line arguments for
+            ``bluetoothctl``.
+
+    Depends on :obj:`~pytest_bluezenv.Bluetoothd`.
+
     Example:
 
         .. code-block:: python
@@ -763,10 +769,24 @@ class Bluetoothctl(env.HostPlugin):
            @host_config([Bluetoothctl()])
            def test_info(hosts):
                hosts[0].bluetoothctl.send("show\\n")
+
+    Example:
+
+        .. code-block:: python
+
+           # Accept pairing and authorize services without prompting
+           @host_config([Bluetoothctl(args=("-a", "auto:NoInputNoOutput"))])
+           def test_pair(hosts):
+               ...
     """
 
     name = "bluetoothctl"
     depends = [Bluetoothd()]
+
+    def __init__(self, args=()):
+        super().__init__()
+
+        self.args = tuple(args)
 
     def presetup(self, config):
         """
@@ -793,7 +813,9 @@ class Bluetoothctl(env.HostPlugin):
         # appears to cause some messages be not received by
         # bluetoothctl
         self.ctl = pexpect.popen_spawn.PopenSpawn(
-            self.exe, logfile=self.log_stream.stream, timeout=utils.DEFAULT_TIMEOUT
+            [self.exe] + list(self.args),
+            logfile=self.log_stream.stream,
+            timeout=utils.DEFAULT_TIMEOUT,
         )
 
     def teardown(self):
