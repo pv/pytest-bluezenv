@@ -41,6 +41,27 @@ def test_find_exe(monkeypatch, tmp_path):
     assert utils.find_exe("subdir", "prog") == os.path.normpath(str(exe))
 
 
+def test_bluez_src_dir(monkeypatch, tmp_path):
+    # Returns the location configured with --bluez-src-dir.
+    monkeypatch.setattr(utils, "SRC_DIR", tmp_path)
+    assert utils.bluez_src_dir() == tmp_path
+
+    # A string location is normalized to a Path.
+    monkeypatch.setattr(utils, "SRC_DIR", str(tmp_path))
+    assert utils.bluez_src_dir() == tmp_path
+
+    # Returns None when the option was not given.
+    monkeypatch.setattr(utils, "SRC_DIR", None)
+    assert utils.bluez_src_dir() is None
+
+
+def test_bluez_src_dir_missing_raises(monkeypatch, tmp_path):
+    monkeypatch.setattr(utils, "SRC_DIR", tmp_path / "does-not-exist")
+
+    with pytest.raises(FileNotFoundError, match="does-not-exist"):
+        utils.bluez_src_dir()
+
+
 class FakeTime:
     """Monotonic clock where time only advances when slept."""
 

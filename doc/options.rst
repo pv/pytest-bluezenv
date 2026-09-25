@@ -33,6 +33,7 @@ The pytest-bluezenv plugin adds the following options.
 ``--bluez-src-dir=<path>``
     BlueZ source directory. It is searched for executables when no build
     directory is set, and supplies ``doc/tester.config`` for kernel builds.
+    :obj:`~pytest_bluezenv.bluez_src_dir` returns it in tests.
 
 ``--log-filter=[+-]<pattern>,[+-]<pattern>,...``
     Comma-separated allow and deny patterns for loggers. A pattern is a

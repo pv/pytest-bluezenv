@@ -11,6 +11,8 @@ Development:
      ``org.bluez.Device1`` properties.
    - Add progress reporting for slow host RPC calls with
      ``--bluezenv-progress``.
+   - Expose ``bluez_src_dir`` for locating files in the BlueZ source
+     tree given by ``--bluez-src-dir``.
 
 v0.1.9:
    - Add configurable default VM memory with --vm-mem.

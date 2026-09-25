@@ -33,6 +33,7 @@ from gi.repository import GLib
 __all__ = [
     "run",
     "find_exe",
+    "bluez_src_dir",
     "wait_until",
     "get_bdaddr",
     "get_dbus",
@@ -82,10 +83,36 @@ def quoted(args):
 
 
 def bluez_src_dir():
-    if SRC_DIR is not None:
-        return SRC_DIR
+    """
+    Location of the BlueZ source tree, as given by ``--bluez-src-dir``.
 
-    return None
+    Use it to reach files that are not executables, such as the
+    ``bluetoothctl`` init scripts in ``client/scripts``.
+
+    Returns:
+        pathlib.Path | None: source tree location, or None if the
+        option was not given.
+
+    Raises:
+        FileNotFoundError: the configured source tree does not exist.
+
+    Example:
+
+        .. code-block:: python
+
+           from pytest_bluezenv import bluez_src_dir
+
+           def script(name):
+               return bluez_src_dir() / "client" / "scripts" / name
+    """
+    if SRC_DIR is None:
+        return None
+
+    path = Path(SRC_DIR)
+    if not path.is_dir():
+        raise FileNotFoundError(f"BlueZ source tree {path} does not exist")
+
+    return path
 
 
 def pkg_bin_dir():
