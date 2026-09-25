@@ -28,7 +28,7 @@ def run_vm(pytester, vm_args, source, *extra):
     )
 
 
-# -- controller group: one 2-host boot shared by three tests ----------------
+# -- controller group: one 2-host boot shared by four tests ------------------
 
 
 CONTROLLER_FEATURES = r"""
@@ -71,6 +71,15 @@ CONTROLLER_FEATURES = r"""
         # Regex group captured on the VM and returned over RPC.
         assert m[0].decode().upper() == host0.bdaddr.upper()
         host0.bluetoothctl.expect("Powered: yes")
+
+        # expect_all waits for all patterns in any order, and returns
+        # the matched groups per pattern in the order given.
+        host0.bluetoothctl.send("show\n")
+        groups = host0.bluetoothctl.expect_all(
+            ["Powered: (yes|no)", r"Controller ([0-9A-F:]{17})"], timeout=60
+        )
+        assert groups[0][0].decode() == "yes"
+        assert groups[1][0].decode().upper() == host0.bdaddr.upper()
 
     @base
     def test_agent_events(hosts):
@@ -128,12 +137,38 @@ CONTROLLER_FEATURES = r"""
         # address must surface in the RemoteError message.
         with pytest.raises(RemoteError, match="address='00:11:22:33:44:55'"):
             host0.agent.device_get("00:11:22:33:44:55", "Trusted")
+
+    @base
+    def test_bluetoothctl_reject(hosts):
+        host0, _ = hosts
+
+        # A reject pattern watched alongside the expected ones does
+        # not disturb a normal match.
+        host0.bluetoothctl.send("show\n")
+        host0.bluetoothctl.expect("Powered:", reject=[r"(Never appears)"], timeout=60)
+
+        # A reject pattern matching aborts the wait, and the matched
+        # output surfaces in the RemoteError message.
+        host0.bluetoothctl.send("show\n")
+        with pytest.raises(RemoteError, match="Powered: yes"):
+            host0.bluetoothctl.expect(
+                "Never appears", reject=[r"(Powered: yes)"], timeout=60
+            )
+
+        # expect_all watches the reject patterns in every round.
+        host0.bluetoothctl.send("show\n")
+        with pytest.raises(RemoteError, match="Powered: yes"):
+            host0.bluetoothctl.expect_all(
+                ["Controller", "Never appears"],
+                reject=[r"(Powered: yes)"],
+                timeout=60,
+            )
 """
 
 
 def test_vm_controller_features(pytester, vm_args):
     result = run_vm(pytester, vm_args, CONTROLLER_FEATURES, "--btmon")
-    result.assert_outcomes(passed=3)
+    result.assert_outcomes(passed=4)
 
     # --btmon / Btmon dump was captured and copied out of the shared dir.
     dumps = [Path(d) for d in glob.glob(str(pytester.path / "test-bluezenv-*.btsnoop"))]
@@ -213,12 +248,33 @@ NO_CONTROLLER = r"""
         assert result.stdout == "hello\n"
 
         # Pexpect drives an interactive process in the guest.  The command
-        # prints a marker then blocks on input, so it stays alive until
+        # prints markers then blocks on input, so it stays alive until
         # close() sends EOF.
-        shell = host.pexpect.spawn(["/bin/sh", "-c", "echo pexpect-ready; read x"])
+        shell = host.pexpect.spawn(
+            ["/bin/sh", "-c", "echo pexpect-ready; echo one 1; echo two 2; read x"]
+        )
         try:
             index, groups = shell.expect("pexpect-ready")
             assert index == 0
+
+            # expect_all waits for all patterns in any order, and
+            # returns the matched groups per pattern in the order
+            # given.
+            groups = shell.expect_all([r"two (\d)", r"one (\d)"], timeout=30)
+            assert [g[0].decode() for g in groups] == ["2", "1"]
+        finally:
+            shell.close()
+
+        # A reject pattern watched alongside the expected ones does
+        # not disturb a normal match, and matching one aborts the
+        # wait with the matched output in the RemoteError message.
+        shell = host.pexpect.spawn(
+            ["/bin/sh", "-c", "echo ready; echo bad news; read x"]
+        )
+        try:
+            shell.expect("ready", reject=[r"(never)"], timeout=30)
+            with pytest.raises(RemoteError, match="bad news"):
+                shell.expect("never", reject=[r"(bad news)"], timeout=30)
         finally:
             shell.close()
 """

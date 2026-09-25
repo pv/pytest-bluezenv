@@ -173,6 +173,27 @@ also be used as a context manager.
            btmgmt.send("info\n")
            btmgmt.expect("hci0")
 
+``expect_all()`` waits for several patterns in any order. It returns
+the matched groups of each pattern in the order the patterns were
+given. When ``timeout`` is set, it is one deadline shared by all the
+patterns, so awaiting many patterns does not multiply the timeout.
+
+.. code-block:: python
+
+   @host_config([Pexpect()])
+   def test_btmgmt_all(hosts):
+       btmgmt = hosts[0].pexpect.spawn([find_exe("tools", "btmgmt")])
+       btmgmt.send("info\n")
+       groups = btmgmt.expect_all([r"(\w+): (yes|no)", "hci0"], timeout=30)
+
+.. code-block:: python
+
+   @host_config([Pexpect()])
+   def test_btmgmt_reject(hosts):
+       btmgmt = hosts[0].pexpect.spawn([find_exe("tools", "btmgmt")])
+       btmgmt.send("info\n")
+       btmgmt.expect("hci0", reject=[r"(Failed to [^\n]*)"])
+
 :obj:`~pytest_bluezenv.Bluetoothctl` plugin wraps ``bluetoothctl`` with
 the same ``send`` / ``expect`` interface.
 

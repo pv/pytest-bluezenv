@@ -11,6 +11,7 @@ python_sources = files(
   'test_lifecycle.py',
   'test_logging.py',
   'test_mainloop.py',
+  'test_pexpect.py',
   'test_proxy.py',
   'test_progress.py',
   'test_rpc.py',
