@@ -229,7 +229,9 @@ def test_progress_reports_from_xdist_worker(tmp_path):
         tmp_path, ["--bluezenv-progress=on", "-n", "1"], True
     )
     _assert_run(returncode, output)
-    assert b"WAITING" in output
+    # A worker cannot rewrite the controller's test line, so it emits
+    # whole prefixed lines and never a WAITING status marker.
+    assert b"WAITING" not in output
     assert b"\n[gw0] host.0.0: slow.wait(1.2) [" in output
     assert b"s left]" in output
 

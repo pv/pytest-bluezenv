@@ -138,6 +138,12 @@ pytest-xdist provides parallel execution:
 
    $ python3 -mpytest -n auto --dist loadgroup
 
+With ``-n auto``, the worker count is limited by the memory available and
+the selected tests' VM configurations. Pytest-bluezenv collects the tests
+once before starting workers to estimate their maximum VM memory. The
+workers collect the tests again as usual. An explicit worker count, such
+as ``-n 4``, is not adjusted.
+
 VM-host console
 ---------------
 

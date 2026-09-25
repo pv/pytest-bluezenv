@@ -1,9 +1,12 @@
 # -*- coding: utf-8; mode: python; eval: (blacken-mode); -*-
 # SPDX-License-Identifier: GPL-2.0-or-later
+import json
 import os
 import re
 import shutil
 import subprocess
+import sys
+import tempfile
 import logging
 import warnings
 import traceback
@@ -22,6 +25,7 @@ __all__ = [
     "pytest_configure",
     "pytest_collectreport",
     "pytest_collection_modifyitems",
+    "pytest_xdist_auto_num_workers",
     "pytest_sessionstart",
     "pytest_sessionfinish",
     "pytest_runtest_logstart",
@@ -318,6 +322,143 @@ def pytest_collection_modifyitems(session, config, items):
 
             xdist_group = "reuse-{}".format(host_setup["name"])
             item.add_marker(pytest.mark.xdist_group(xdist_group))
+
+
+# QEMU process overhead on top of the guest memory, in bytes
+QEMU_OVERHEAD = 150 * 1024 * 1024
+
+# Guest memory of a VM host when the suite does not configure one,
+# matching the default of the test-runner launcher, in bytes
+DEFAULT_VM_MEM = 256 * 1024 * 1024
+
+
+def _mem_available():
+    """
+    Memory available for use, in bytes, or None if unknown.
+    """
+    try:
+        with open("/proc/meminfo") as f:
+            for line in f:
+                if line.startswith("MemAvailable:"):
+                    return int(line.split()[1]) * 1024
+    except (OSError, ValueError, IndexError):
+        pass
+
+    return None
+
+
+def _parse_mem(value):
+    """
+    Parse a memory size such as ``"256M"`` into bytes.  A plain number
+    counts as MiB, as in the QEMU convention.
+
+    Args:
+        value (str): memory size, optionally suffixed with ``K``, ``M``,
+            ``G`` or ``T``.
+
+    Returns:
+        int: size in bytes.
+
+    Raises:
+        ValueError: if the value is not a memory size.
+    """
+    m = re.fullmatch(r"(\d+)\s*([KMGT]?)", value.strip())
+    if m is None:
+        raise ValueError(f"Invalid memory size {value!r}")
+
+    units = {"": 1024**2, "K": 1024, "M": 1024**2, "G": 1024**3, "T": 1024**4}
+    return int(m.group(1)) * units[m.group(2)]
+
+
+def _collected_vm_memory(config):
+    """Collect the selected VM requirements in a separate pytest process."""
+    with tempfile.TemporaryDirectory(prefix="pytest-bluezenv-collect-") as directory:
+        result = Path(directory) / "memory.json"
+        args = list(config.invocation_params.args)
+        cmd = [
+            sys.executable,
+            "-m",
+            "pytest",
+            *args,
+            "--collect-only",
+            "-q",
+            "--kernel-build=no",
+            "--log-file=",
+            "-p",
+            "pytest_bluezenv._precollect",
+        ]
+        if config.pluginmanager.has_plugin("xdist"):
+            cmd += ["-n", "0"]
+        environment = os.environ.copy()
+        environment["PYTEST_BLUEZENV_PRECOLLECT"] = str(result)
+        environment["PYTHONPATH"] = os.pathsep.join(
+            filter(
+                None,
+                [
+                    str(Path(__file__).resolve().parent.parent),
+                    environment.get("PYTHONPATH"),
+                ],
+            )
+        )
+
+        completed = subprocess.run(
+            cmd,
+            cwd=config.invocation_params.dir,
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if completed.returncode not in (0, 5) or not result.exists():
+            raise pytest.UsageError(
+                "pytest-bluezenv: VM pre-collection failed:\n"
+                f"{completed.stdout}{completed.stderr}"
+            )
+        return json.loads(result.read_text())
+
+
+@pytest.hookimpl(optionalhook=True, tryfirst=True)
+def pytest_xdist_auto_num_workers(config):
+    """
+    Limit pytest-xdist ``-n auto`` by the selected tests' VM memory.
+
+    Args:
+        config (pytest.Config): pytest configuration.
+
+    Returns:
+        int: number of workers to start.
+    """
+
+    auto = os.environ.get("PYTEST_XDIST_AUTO_NUM_WORKERS")
+    if auto:
+        try:
+            return max(1, int(auto))
+        except ValueError:
+            pass
+
+    try:
+        cpus = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError):
+        cpus = os.cpu_count()
+
+    cpus = cpus or 1
+    mem = _mem_available()
+    if mem is None:
+        return cpus
+
+    shared, private = _collected_vm_memory(config)
+    per_worker = shared + private
+    if not per_worker:
+        return cpus
+
+    workers = max(1, min(cpus, mem // per_worker))
+
+    sys.stderr.write(
+        f"pytest-bluezenv: using {workers} workers: {cpus} CPUs,"
+        f" {mem >> 20} MiB available, {per_worker >> 20} MiB per worker\n"
+    )
+
+    return int(workers)
 
 
 #

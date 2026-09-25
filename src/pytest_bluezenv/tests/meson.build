@@ -16,6 +16,7 @@ python_sources = files(
   'test_rpc.py',
   'test_utils.py',
   'test_vm.py',
+  'test_xdist.py',
 )
 
 py.install_sources(

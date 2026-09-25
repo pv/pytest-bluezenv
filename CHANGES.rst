@@ -14,6 +14,8 @@ Development:
    - Expose ``bluez_src_dir`` for locating files in the BlueZ source
      tree given by ``--bluez-src-dir``.
    - Add ``args`` to ``Bluetoothctl`` for extra command-line options.
+   - Limit pytest-xdist ``-n auto`` workers using the memory needed by
+     the selected tests' VM configurations.
 
 v0.1.9:
    - Add configurable default VM memory with --vm-mem.

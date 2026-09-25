@@ -1,6 +1,7 @@
 python_sources = files(
   '__init__.py',
   '__main__.py',
+  '_precollect.py',
   'agent.py',
   'btmon.py',
   'build_kernel.py',
