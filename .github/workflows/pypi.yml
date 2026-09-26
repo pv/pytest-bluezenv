@@ -15,6 +15,9 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: "3.x"
+    - name: Update packages
+      run: >-
+        sudo apt-get update
     - name: Install packages
       run: >-
         sudo apt-get install libglib2.0-dev
