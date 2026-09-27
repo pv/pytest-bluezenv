@@ -97,6 +97,9 @@ and explanation.
   documented.
 - At least one example is required in docstrings of main features.
 - `@python.fixture` function return value is documented as `Yields:`, not `Returns:`
+- A public API attribute is meant to be accessed by downstream users, or
+  needed for correct use of other parts of the API. A leading underscore
+  does not always mean the attribute is private.
 - Class public attributes, excluding properties, should be documented in
   `Attributes:` section of the class docstring, and follow the same
   formatting as a function’s `Args:` section.
