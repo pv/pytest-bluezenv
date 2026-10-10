@@ -31,6 +31,9 @@ jobs:
     - name: Build HTML
       run: >-
         make -C doc html
+    - name: Check examples
+      run: >-
+        make -C doc doctest
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:

@@ -70,6 +70,17 @@ the one point being made. The example does not have to be runnable
 code.  If the feature is complex, include multiple examples
 illustrating different points.
 
+Mark examples that must stay runnable with ``.. testcode::`` and use
+``.. code-block:: python`` for non-runnable code or
+pseudocode. Execution covers module-level code only: test functions
+are defined, never called, so no VM starts. Keep examples
+self-contained (imports included), or rely on names bound by an
+earlier ``testcode::`` block in the same documentation section.
+Docstring examples must be self-contained.  Use ``.. code-block::
+python`` pseudocode blocks only for code that is either pseudocode,
+requires live environment, or performs actions that mutate environment
+(create files, monkeypatch symbols, etc.) when run.
+
 ## "Writing tests" documentation
 
 The file ``doc/writing_tests.rst`` must cover all main features of
@@ -134,5 +145,6 @@ If you are asked to make commits:
 - Run a nitpick pass, `sphinx-build -b html . _build -n`, to catch dangling
   `:obj:` and `:doc:` targets. Ignore the pre-existing bare-type-name and
   ambiguous-target warnings.
+- Run `make -C doc doctest` -- all tests must pass.
 - Run `black --check` on changed source files; docstring edits must stay
   formatted.
