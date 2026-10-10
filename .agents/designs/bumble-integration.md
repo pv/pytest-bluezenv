@@ -2,6 +2,32 @@
 
 Feature branch: `bumble-integration` (base `opencode/main`).
 
+## Status
+
+M1-M3 implemented and verified manually (spike + live VM tests under
+`~/tmp/opencode/bumble-spike`). Findings folded into this document.
+Remaining: repo tests (`tests/test_bumble.py`) and documentation.
+
+## M1 spike findings (verified)
+
+- The guest kernel boots with the bumble-served controller and
+  `bluetoothd` starts and runs normally; the assigned public address is
+  reported by the guest (`Controller 00:AA:02:...`).
+- HCI and mgmt paths are byte-correct (`btmon`: `LE Extended
+  Advertising Report` -> `MGMT Device Found`).
+- bluetoothd only creates a device object when the advertising data
+  carries LE General Discoverable Flags
+  (`adapter.c:device_is_discoverable()`); name-only advertising is
+  silently dropped. Therefore a `BumbleDevice` with default
+  `advertising=True` and no explicit `advertising_data` gets
+  `Flags(LE General Discoverable | BR/EDR Not Supported)` prepended to
+  its advertising data automatically.
+- `Device.disconnect()` requires a reason argument.
+- `DeviceConfiguration` `gatt_services` config parsing is rigid
+  (uppercase properties, mandatory `permissions`, no values). Dynamic
+  GATT content is done with the `setup` callback using bumble API
+  (`device.add_service(...)`), which is what the docs show.
+
 ## Goal
 
 Integrate with the `bumble` Python Bluetooth stack
@@ -149,16 +175,19 @@ addresses come from their declared configs.
 
 ## Code changes
 
-1. New `src/pytest_bluezenv/bumble_env.py` — no top-level `import
+1. New `src/pytest_bluezenv/_bumble.py` (private module name, so it
+   cannot shadow or collide with the `bumble` package; public classes
+   are re-exported at the package top level) — no top-level `import
    bumble` (lazy imports inside functions; module import must not
    require bumble). Py3.8-compatible parent-side syntax.
-   - loop thread management (singleton, exception handler recording
-     failures),
-   - `BumbleController` spec (with `name` and id contribution),
-   - `BumbleDevice` dataclass,
-   - `BumbleRuntime` (per `Environment`: link, servers, controllers,
-     `destroy()`, failure capture),
-   - `BumbleEnv` facade incl. per-test declared-device create/teardown.
+   - loop thread management (`_Loop` singleton; exception handler
+     recording failures),
+   - `BumbleController` spec (with `name`, `factories()`, and
+     `parametrize_id()`),
+   - `BumbleDevice` (config / power_on / advertising / setup),
+   - `_BumbleRuntime` (per `Environment`: link, unix servers, VM
+     controllers, per-test devices, logging, failure capture),
+   - `BumbleEnv` facade (run/devices/controllers/link/loop).
 2. `host_plugins.py`: `host_config`/`parametrized_host_config` accept
    `controller: bool | BumbleController`. The spec survives into the
    `vm_setup` dict (drop `bool()` coercion). Parametrize ids: `-noc`

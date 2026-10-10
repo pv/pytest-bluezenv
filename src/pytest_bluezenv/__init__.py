@@ -9,5 +9,6 @@ from .host_plugins import *
 from .btmon import *
 from .agent import *
 from .le import *
+from ._bumble import *
 
 from .plugin import *

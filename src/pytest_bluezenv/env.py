@@ -34,7 +34,7 @@ from subprocess import Popen, DEVNULL, PIPE, run
 
 from gi.repository import GLib
 
-from . import rpc, utils
+from . import rpc, utils, _bumble
 
 __all__ = ["HostPlugin", "HostProxy", "PluginProxy"]
 
@@ -703,6 +703,7 @@ class Environment:
         self.reuse_group = None
         self.mem = mem
         self.controller = controller
+        self.bumble = None
         self.btvirt_debug = btvirt_debug
         self.progress_reporter = progress_reporter
 
@@ -725,7 +726,9 @@ class Environment:
     def start(self):
         self.path = Path(tempfile.mkdtemp(prefix="pytest-bluezenv-"))
 
-        if self.controller:
+        if isinstance(self.controller, _bumble.BumbleController):
+            args = self._start_bumble()
+        elif self.controller:
             if self.hw_indices is None:
                 args = self._start_btvirt()
             else:
@@ -747,6 +750,11 @@ class Environment:
             if job.poll() is None:
                 job.wait()
 
+        if self.bumble is not None:
+            runtime = self.bumble._runtime
+            self.bumble = None
+            runtime.stop()
+
         while self.log_streams:
             self.log_streams.pop().close()
 
@@ -757,10 +765,12 @@ class Environment:
                 # error already logged
                 pass
 
-        # Clean up tmpdir (btvirt, own sockets, rmdir)
+        # Clean up tmpdir (btvirt, bumble, own sockets, rmdir)
         if self.path is not None:
             for f in list(self.path.iterdir()):
                 if f.name.startswith("bt-server-"):
+                    f.unlink()
+                if f.name.startswith("bumble-"):
                     f.unlink()
                 if f.name.startswith("shared-"):
                     shutil.rmtree(f.resolve(), ignore_errors=True)
@@ -778,6 +788,9 @@ class Environment:
             if job.poll() is not None:
                 cmd = utils.quoted(job.args)
                 errors.append("'{}' terminated unexpectedly".format(cmd))
+
+        if self.bumble is not None:
+            errors += self.bumble._runtime.check_errors()
 
         return errors
 
@@ -839,6 +852,19 @@ class Environment:
         socket = self.path / "bt-server-bredrle"
         utils.wait_files([job], [socket])
         return [[f"-u{socket}"]] * self.num_hosts
+
+    def _start_bumble(self):
+        runtime = _bumble._BumbleRuntime(
+            self.controller,
+            self.num_hosts,
+            self.path,
+            timeout=self.timeout,
+            add_log=self._add_log,
+        )
+        log.info("Starting bumble controllers")
+        runtime.start()
+        self.bumble = runtime.env
+        return [[f"-u{socket}"] for socket in runtime.socket_paths]
 
     @classmethod
     def controller_bus(cls, name):

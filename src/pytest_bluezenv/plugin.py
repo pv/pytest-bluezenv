@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from . import utils, env, build_kernel, progress
+from . import utils, env, build_kernel, progress, _bumble
 from .btmon import Btmon
 
 __all__ = [
@@ -44,6 +44,7 @@ __all__ = [
     "hosts",
     "vm_once",
     "hosts_once",
+    "bumble_env",
 ]
 
 VM_REQUIRED_EXE = {
@@ -769,8 +770,10 @@ def vm_setup(request):
           controllers.
         - ``mem`` (str): memory per VM host, or ``""`` when the default
           applies.
-        - ``controller`` (bool): whether the hosts get a Bluetooth
-          controller.
+        - ``controller`` (bool | BumbleController): whether the hosts
+          get a Bluetooth controller; a
+          :obj:`~pytest_bluezenv.BumbleController` selects
+          bumble-emulated controllers.
     """
     if getattr(request, "param", None) is None:
         raise pytest.fail("env setup not specified")
@@ -778,10 +781,15 @@ def vm_setup(request):
     return request.param
 
 
-def _check_requirements():
+def _check_requirements(controller=None):
     error = []
 
+    is_bumble = isinstance(controller, _bumble.BumbleController)
+
     for (path, name), required in sorted(VM_REQUIRED_EXE.items()):
+        if is_bumble and (path, name) == ("emulator", "btvirt"):
+            # bumble environments do not use btvirt
+            continue
         try:
             utils.find_exe(path, name)
         except FileNotFoundError:
@@ -798,7 +806,14 @@ def _check_requirements():
 def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     config = request.session.config
 
-    err = _check_requirements()
+    if isinstance(controller, _bumble.BumbleController):
+        if not _bumble.bumble_available():
+            pytest.skip(
+                reason="bumble package not installed"
+                " (pip install pytest-bluezenv[bumble])"
+            )
+
+    err = _check_requirements(controller)
     if err:
         pytest.skip(reason=err)
         return
@@ -1060,3 +1075,61 @@ def hosts_once(request, vm_once, host_setup):
                host1 = hosts_once[1]
     """
     yield from _hosts_impl(request, vm_once, **host_setup)
+
+
+@pytest.fixture
+def bumble_env(request):
+    """
+    Bumble environment for tests using ``controller=BumbleController()``.
+
+    Provides synchronous access to the bumble objects of the test
+    configuration: the emulated peer devices declared in the
+    :obj:`~pytest_bluezenv.BumbleController`, the emulated controllers
+    serving the VM hosts, and the virtual radio they share.  Plain
+    bumble API is used by passing coroutines to
+    :obj:`~pytest_bluezenv.BumbleEnv.run`.  The declared peer devices
+    exist only for the duration of the test.
+
+    Args:
+        request (pytest.FixtureRequest): test fixture request.
+
+    Yields:
+        pytest_bluezenv.BumbleEnv: the bumble environment of the test.
+
+    Example:
+
+        .. code-block:: python
+
+           @host_config([Bluetoothd()], controller=BumbleController(
+               devices={"sensor": {"name": "BumbleSensor"}}))
+           def test_sensor(hosts, bumble_env):
+               host0, = hosts
+               sensor = bumble_env.devices["sensor"]
+               host0.bluetoothctl.send("scan on\\n")
+               host0.bluetoothctl.expect("BumbleSensor")
+               bumble_env.run(sensor.power_off())
+    """
+    vm = None
+
+    for name in ("vm", "vm_once"):
+        if name in request.fixturenames:
+            vm = request.getfixturevalue(name)
+            break
+
+    if vm is None:
+        raise pytest.fail(
+            "bumble_env requires a test using the hosts or hosts_once "
+            "fixture with controller=BumbleController()"
+        )
+
+    if vm.bumble is None:
+        raise pytest.fail(
+            "bumble_env requires host_config(controller=BumbleController())"
+        )
+
+    bumble = vm.bumble
+    bumble._start_test_devices()
+    try:
+        yield bumble
+    finally:
+        bumble._stop_test_devices()
