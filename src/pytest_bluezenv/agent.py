@@ -111,6 +111,8 @@ class EventPluginMixin:
         .. code-block:: python
 
            class MyPlugin(HostPlugin, EventPluginMixin):
+               name = "myplugin"
+
                def setup(self, impl):
                    EventPluginMixin.setup(self, impl)
 

@@ -617,7 +617,7 @@ class Pexpect(env.HostPlugin):
 
         .. code-block:: python
 
-           btmgmt = host0.pexpect.spawn(find_exe("tools", "btmgmt"))
+           btmgmt = host0.pexpect.spawn([find_exe("tools", "btmgmt")])
            btmgmt.send("info\n")
            btmgmt.expect("hci0")
            btmgmt.close()
@@ -626,7 +626,7 @@ class Pexpect(env.HostPlugin):
 
         .. code-block:: python
 
-           with host0.pexpect.spawn(find_exe("tools", "btmgmt")) as btmgmt:
+           with host0.pexpect.spawn([find_exe("tools", "btmgmt")]) as btmgmt:
                btmgmt.send("info\n")
                btmgmt.expect("hci0")
     """

@@ -282,6 +282,8 @@ with the fixtures.
 
 .. testcode::
 
+   import pytest
+
    def test_broadcast(hosts, vm_setup):
        if vm_setup["num_hosts"] < 3:
            pytest.skip("needs three VM hosts")
