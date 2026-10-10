@@ -1008,7 +1008,7 @@ def hosts(request, vm, host_setup):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            def test_something(hosts):
                host0 = hosts[0]
@@ -1053,7 +1053,7 @@ def hosts_once(request, vm_once, host_setup):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            def test_something(hosts_once):
                host0 = hosts_once[0]

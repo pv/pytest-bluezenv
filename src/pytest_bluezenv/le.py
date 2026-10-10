@@ -97,7 +97,9 @@ class LeAdvertiser(HostPlugin):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothd, LeAdvertiser, host_config
 
            LE_CONF = "[General]\\nControllerMode = le\\n"
 

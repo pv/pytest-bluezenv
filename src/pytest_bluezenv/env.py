@@ -47,7 +47,9 @@ class HostPlugin:
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import HostPlugin
 
            class Ready(HostPlugin):
                name = "ready"
@@ -111,7 +113,9 @@ class HostProxy:
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothctl
 
            def test_bluetoothctl_show(hosts):
                host = hosts[0]

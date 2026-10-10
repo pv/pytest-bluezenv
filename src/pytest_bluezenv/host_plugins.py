@@ -413,7 +413,9 @@ class Bluetoothd(env.HostPlugin):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothd, host_config
 
            @host_config([Bluetoothd(conf="[General]\\nExperimental = true")])
            def test_experimental(hosts):
@@ -527,7 +529,9 @@ class Obexd(env.HostPlugin):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Obexd, host_config
 
            @host_config([Obexd()])
            def test_obex(hosts):
@@ -858,7 +862,9 @@ class Bluetoothctl(env.HostPlugin):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothctl, host_config
 
            @host_config([Bluetoothctl()])
            def test_info(hosts):
@@ -866,7 +872,7 @@ class Bluetoothctl(env.HostPlugin):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            # Accept pairing and authorize services without prompting
            @host_config([Bluetoothctl(args=("-a", "auto:NoInputNoOutput"))])
@@ -1022,7 +1028,9 @@ def parametrized_host_config(
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothd, parametrized_host_config
 
            bredr = [Bluetoothd()]
            le = [Bluetoothd(conf="[General]\\nControllerMode = le")]
@@ -1107,7 +1115,9 @@ def host_config(*host_setup, hw=False, mem=None, controller=True, reuse=False):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothd, host_config
 
            @host_config([Bluetoothd()], [Bluetoothd()])
            def test_something(hosts):
@@ -1115,7 +1125,7 @@ def host_config(*host_setup, hw=False, mem=None, controller=True, reuse=False):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            # Allow not restarting Bluetoothd between tests sharing this configuration
            base_config = host_config([Bluetoothd()], reuse=True)

@@ -9,7 +9,7 @@ execution model.
 Declaring a test
 ----------------
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import host_config, Bluetoothd, Bluetoothctl
 
@@ -62,7 +62,7 @@ configuration.
 The :obj:`~pytest_bluezenv.hosts_once` fixture instead reserves a
 separate VM host for the test.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import host_config
 
@@ -97,7 +97,7 @@ The built-in plugins cover common BlueZ test setups:
 * :obj:`~pytest_bluezenv.DbusSystem` and
   :obj:`~pytest_bluezenv.DbusSession` start D-Bus system and session buses.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Obexd, host_config
 
@@ -117,7 +117,7 @@ Running code on a host
 :obj:`~pytest_bluezenv.Call` plugin, loaded by default) runs a function
 inside the VM and returns its result.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothd, host_config
 
@@ -134,7 +134,7 @@ Pass ``sync=False`` to start the call without waiting. ``.wait()``
 collects the result later. The function must be importable on the VM.
 Arguments and return values must be picklable.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Call, host_config
 
@@ -152,7 +152,7 @@ and reads its output with ``expect``.  ``spawn()`` returns a
 :obj:`~pytest_bluezenv.Pexpect.CtlProxy` for the process. The handle can
 also be used as a context manager.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Pexpect, find_exe, host_config
 
@@ -163,7 +163,7 @@ also be used as a context manager.
        btmgmt.expect("hci0")
        btmgmt.close()
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Pexpect, find_exe, host_config
 
@@ -178,7 +178,7 @@ the matched groups of each pattern in the order the patterns were
 given. When ``timeout`` is set, it is one deadline shared by all the
 patterns, so awaiting many patterns does not multiply the timeout.
 
-.. code-block:: python
+.. testcode::
 
    @host_config([Pexpect()])
    def test_btmgmt_all(hosts):
@@ -186,7 +186,7 @@ patterns, so awaiting many patterns does not multiply the timeout.
        btmgmt.send("info\n")
        groups = btmgmt.expect_all([r"(\w+): (yes|no)", "hci0"], timeout=30)
 
-.. code-block:: python
+.. testcode::
 
    @host_config([Pexpect()])
    def test_btmgmt_reject(hosts):
@@ -206,7 +206,7 @@ non-lifecycle method on that proxy becomes an RPC call to the VM-host
 plugin. Arguments, results, and exceptions cross the RPC connection by
 pickling.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothctl, host_config
 
@@ -224,7 +224,7 @@ as ``host.call``.
 :obj:`~pytest_bluezenv.Pexpect` exposes a
 :obj:`~pytest_bluezenv.Pexpect.Proxy` as ``host.pexpect``.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Call, Pexpect, find_exe, host_config
 
@@ -246,7 +246,7 @@ userspace programs such as ``bluetoothd`` remain running between tests
 using the same configuration. This is useful when tests do not perturb
 the host state.
 
-.. code-block:: python
+.. testcode::
 
    config = host_config([Bluetoothd()], reuse=True)
 
@@ -261,7 +261,7 @@ the host state.
 :obj:`~pytest_bluezenv.parametrized_host_config` runs one test over
 several configurations, like ``pytest.mark.parametrize``:
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothd, parametrized_host_config
 
@@ -280,7 +280,7 @@ the :obj:`~pytest_bluezenv.host_setup` and
 :obj:`~pytest_bluezenv.vm_setup` fixtures. Their keys are documented
 with the fixtures.
 
-.. code-block:: python
+.. testcode::
 
    def test_broadcast(hosts, vm_setup):
        if vm_setup["num_hosts"] < 3:
@@ -293,7 +293,7 @@ Tests use the emulated ``btvirt`` controller, shared between the
 VM hosts, unless they ask otherwise. Request a real controller with
 ``hw=True``. Omit a controller entirely with ``controller=False``.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothd, host_config
 
@@ -316,7 +316,7 @@ Host plugins run code on the VM side.  A plugin is a subclass of
 :obj:`~pytest_bluezenv.HostPlugin`. Its non-lifecycle methods are callable
 over RPC.  ``bluetoothctl`` is implemented as:
 
-.. code-block:: python
+.. testcode::
 
    import logging
    import signal
@@ -390,7 +390,7 @@ tester. :obj:`~pytest_bluezenv.Agent` turns this into an ``expect`` /
 :obj:`~pytest_bluezenv.Event` whose kind is the D-Bus method name, and
 whose attributes are the method arguments.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Agent, host_config, wait_until
 
@@ -427,7 +427,7 @@ The same pattern is available for your own plugins through
 call its ``setup`` from the plugin's ``setup``, and declare service
 methods that push :obj:`~pytest_bluezenv.Event` instances:
 
-.. code-block:: python
+.. testcode::
 
    import dbus.service
 
@@ -438,6 +438,7 @@ methods that push :obj:`~pytest_bluezenv.Event` instances:
        host_config,
        dbus_service_event_method,
        mainloop_assert,
+       mainloop_wrap,
        get_dbus,
    )
 
@@ -470,7 +471,7 @@ For an asynchronous D-Bus service method, another client can invoke
 ``DoWork`` on the private bus. Answer the pending call from the upper
 tester:
 
-.. code-block:: python
+.. testcode::
 
    @host_config([MyPlugin()])
    def test_reply(hosts):
@@ -487,7 +488,7 @@ such methods with :obj:`~pytest_bluezenv.mainloop_wrap` (or call them via
 :obj:`~pytest_bluezenv.mainloop_invoke`) so they are dispatched onto the
 main loop.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import HostPlugin, get_dbus, mainloop_wrap
 
@@ -512,7 +513,7 @@ In LE-only mode ``bluetoothd`` does not advertise the host by itself.
 Add a :obj:`~pytest_bluezenv.LeAdvertiser` on the advertising VM host to
 make it discoverable and connectable by a peer:
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothd, LeAdvertiser, host_config
 
@@ -534,7 +535,7 @@ access for both the local adapter and a discovered remote device. Device
 operations take the remote device address, which is resolved to its
 current BlueZ object path:
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Agent, host_config
 

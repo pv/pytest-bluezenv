@@ -29,7 +29,9 @@ class Btmon(env.HostPlugin):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Btmon, host_config
 
            @host_config([Btmon()])
            def test_trace(hosts):

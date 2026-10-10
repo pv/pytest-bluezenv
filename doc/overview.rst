@@ -25,7 +25,7 @@ A test declares one plugin list for each VM host. The
 :obj:`~pytest_bluezenv.hosts` fixture supplies a
 :obj:`~pytest_bluezenv.HostProxy` for every declared host:
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothctl, Bluetoothd, host_config
 

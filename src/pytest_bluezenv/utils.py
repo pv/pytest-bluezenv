@@ -98,7 +98,7 @@ def bluez_src_dir():
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            from pytest_bluezenv import bluez_src_dir
 
@@ -339,7 +339,9 @@ def mainloop_wrap(func):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import get_dbus, mainloop_wrap
 
            @mainloop_wrap
            def func():
@@ -369,7 +371,9 @@ def mainloop_assert(func):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import get_dbus, mainloop_assert
 
            @mainloop_assert
            def func():
