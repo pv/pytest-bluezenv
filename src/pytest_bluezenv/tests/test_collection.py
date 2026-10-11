@@ -74,6 +74,30 @@ def test_vm_tests_are_grouped_by_setup(pytester, monkeypatch):
     ]
 
 
+MIXED_CONTROLLER_SOURCE = """
+    from pytest_bluezenv import host_config, BumbleController
+
+    @host_config([], controller=False)
+    def test_no_controller(host_setup, vm_setup):
+        pass
+
+    @host_config([])
+    def test_default(host_setup, vm_setup):
+        pass
+
+    @host_config([], controller=BumbleController())
+    def test_bumble(host_setup, vm_setup):
+        pass
+"""
+
+
+def test_setup_sort_handles_controller_specs(pytester):
+    # Sorting groups compares vm_setup values: a spec, its default and
+    # the None of controller=False must all be orderable together.
+    pytester.makepyfile(MIXED_CONTROLLER_SOURCE)
+    pytester.runpytest(*PLUGIN).assert_outcomes(passed=3)
+
+
 def test_xdist_group_added_for_reuse_setups(pytester):
     pytester.makeconftest(XDIST_CONFTEST)
     pytester.makepyfile(REUSE_SOURCE)

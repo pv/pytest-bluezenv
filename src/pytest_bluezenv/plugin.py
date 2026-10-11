@@ -18,7 +18,7 @@ import pytest
 from . import utils, env, build_kernel, progress
 from ._bumble import bumble_env
 from .btmon import Btmon
-from .controller import BtvirtController, HwController
+from .controller import BtvirtController, ControllerBase, HwController
 
 __all__ = [
     "CoredumpWarning",
@@ -305,11 +305,18 @@ def _get_item_vm_host_setup(item):
 @pytest.hookimpl(tryfirst=True)
 def pytest_collection_modifyitems(session, config, items):
     # Sort VM-using tests to minimize VM setup/teardown
+    def sort_value(value):
+        # ControllerBase specs and the None of no-controller setups
+        # need a shared ordering.
+        if isinstance(value, ControllerBase):
+            return (1, value._sort_key())
+        return (0, value)
+
     def sort_key(item):
         vm_setup, host_setup = _get_item_vm_host_setup(item)
         key = ()
         if vm_setup:
-            key += tuple(sorted(vm_setup.items()))
+            key += tuple((k, sort_value(v)) for k, v in sorted(vm_setup.items()))
         if host_setup:
             key += (host_setup["name"],)
         return key
