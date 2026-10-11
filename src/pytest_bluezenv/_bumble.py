@@ -234,9 +234,6 @@ class BumbleController(ControllerBase):
                     device = BumbleDevice(config=device)
                 self.devices[str(device_name)] = device
 
-    def validate(self, num_hosts):
-        self.factories(num_hosts)
-
     def check_available(self):
         if bumble_available():
             return None

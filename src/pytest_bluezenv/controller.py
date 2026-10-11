@@ -57,18 +57,6 @@ class ControllerBase(abc.ABC):
                    return MyBackend
     """
 
-    def validate(self, num_hosts):
-        """
-        Check the specification against a host count.  Called at
-        decoration time and when an environment is constructed.
-
-        Args:
-            num_hosts (int): number of VM hosts.
-
-        Raises:
-            ValueError: if the specification does not fit the hosts.
-        """
-
     def parametrize_id(self):
         """
         Parametrize id fragment identifying this configuration.  The
@@ -292,25 +280,17 @@ class HwController(ControllerBase):
     Selected automatically in place of the default
     :obj:`BtvirtController` when ``host_config(hw=True)``,
     ``--force-usb`` or ``--force-pcie`` request hardware.
+    :obj:`~pytest_bluezenv.HwController.select` probes the host for
+    usable candidates.  Starting an environment with fewer
+    controllers than hosts errors out at test setup.
 
     Args:
         indices (sequence): controller names, such as ``"hci0"``, at
             least one per VM host.
-
-    Raises:
-        ValueError: if ``validate`` finds fewer controllers than
-            hosts.
     """
 
     def __init__(self, indices):
         self.indices = tuple(indices)
-
-    def validate(self, num_hosts):
-        if num_hosts > len(self.indices):
-            raise ValueError(
-                "Controller passthrough enabled, but not enough controllers"
-                " for each host"
-            )
 
     def parametrize_id(self):
         return "hw"
@@ -481,6 +461,12 @@ class HwController(ControllerBase):
 
 class _HwBackend(ControllerBackend):
     def __init__(self, controller, path, num_hosts, timeout=None, debug=False):
+        if num_hosts > len(controller.indices):
+            raise ValueError(
+                "Controller passthrough enabled, but not enough controllers"
+                " for each host"
+            )
+
         super().__init__(controller, path, num_hosts, timeout=timeout, debug=debug)
 
         self._runner_args = [

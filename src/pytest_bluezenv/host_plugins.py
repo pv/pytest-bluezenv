@@ -1073,9 +1073,6 @@ def parametrized_host_config(
     if hw and controller is not None and not isinstance(controller, BtvirtController):
         raise ValueError(f"hw=True cannot be combined with {type(controller).__name__}")
 
-    if controller is not None:
-        controller.validate(num_hosts)
-
     for host_setup in param_host_setups:
         setup = tuple(_expand_plugins(plugins, controller) for plugins in host_setup)
 

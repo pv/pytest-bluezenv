@@ -48,10 +48,9 @@ def test_controllers_type_validated():
         BumbleController(controllers=[3])
 
 
-def test_controllers_length_validated_at_decoration():
+def test_controllers_length_checked_at_setup():
     spec = BumbleController(controllers=[None, None])
-    with pytest.raises(ValueError, match="controllers for 1 hosts"):
-        host_config([], controller=spec)
+    host_config([], controller=spec)
     spec.factories(2)
 
 
@@ -105,6 +104,13 @@ def test_parametrize_ids(pytester):
 
 
 # -- runtime bridge (bumble needed, no VM) -----------------------------------
+
+
+@requires_bumble
+def test_controllers_length_error_at_setup(tmp_path):
+    spec = BumbleController(controllers=[None, None])
+    with pytest.raises(ValueError, match="controllers for 1 hosts"):
+        bumble_mod._BumbleRuntime(spec, tmp_path, 1, timeout=60)
 
 
 @requires_bumble

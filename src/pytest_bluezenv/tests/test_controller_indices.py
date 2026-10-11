@@ -74,3 +74,9 @@ def test_select(
     config = FakeConfig(**options)
 
     assert controller.HwController.select(config) == (indices, messages)
+
+
+def test_too_few_indices_for_hosts(tmp_path):
+    spec = controller.HwController(["hci0"])
+    with pytest.raises(ValueError, match="not enough controllers"):
+        controller._HwBackend(spec, tmp_path, 2)

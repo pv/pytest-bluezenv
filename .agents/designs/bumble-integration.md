@@ -136,8 +136,9 @@ callable references (lambdas unsupported, documented).
   - single callable: used for every host.
   - sequence: one entry per VM host, matched positionally with the
     `host_config` host declarations; `None` entry means stock
-    `Controller` for that host. Length validated against `num_hosts`
-    in `parametrized_host_config` at decoration time.
+    `Controller` for that host. Length checked against `num_hosts`
+    when the environment starts the backend, so a mismatch errors at
+    test setup.
 - Factory contract equals the bumble `Controller.__init__` signature,
   so any subclass is itself a valid factory:
   `factory(name=, host_source=, host_sink=, link=, public_address=)`.

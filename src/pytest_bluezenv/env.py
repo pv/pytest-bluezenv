@@ -701,8 +701,6 @@ class Environment:
         self.reuse_group = None
         self.mem = mem
         self.controller = controller
-        if controller is not None:
-            controller.validate(self.num_hosts)
         self.controller_backend = None
         self.debug = debug
         self.progress_reporter = progress_reporter
