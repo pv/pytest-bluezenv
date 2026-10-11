@@ -1101,7 +1101,9 @@ def bumble_env(request):
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothd, BumbleController, host_config
 
            @host_config([Bluetoothd()], controller=BumbleController(
                devices={"sensor": {"name": "BumbleSensor"}}))

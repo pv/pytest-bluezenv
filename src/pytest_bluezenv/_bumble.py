@@ -140,9 +140,10 @@ class BumbleDevice:
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            from bumble.profiles.battery_service import BatteryService
+           from pytest_bluezenv import BumbleDevice
 
 
            def add_battery(device):
@@ -190,7 +191,7 @@ class BumbleController:
 
     Example:
 
-        .. code-block:: python
+        .. testcode::
 
            from pytest_bluezenv import BumbleController, host_config, Bluetoothd
 

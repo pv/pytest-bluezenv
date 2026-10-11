@@ -322,7 +322,7 @@ and emulated peer devices declared in the same statement become
 reachable over the shared virtual air link. The test accesses the
 bumble objects through the :obj:`~pytest_bluezenv.bumble_env` fixture.
 
-.. code-block:: python
+.. testcode::
 
    from pytest_bluezenv import Bluetoothctl, BumbleController, host_config
 
@@ -346,10 +346,15 @@ names, wrapped in :obj:`~pytest_bluezenv.BumbleDevice`. Its ``setup``
 callback runs on the bumble event loop before the device is powered
 on, and is the place to attach GATT services:
 
-.. code-block:: python
+.. testcode::
 
    from bumble.profiles.battery_service import BatteryService
-   from pytest_bluezenv import BumbleController, BumbleDevice
+   from pytest_bluezenv import (
+       Bluetoothctl,
+       BumbleController,
+       BumbleDevice,
+       host_config,
+   )
 
    def add_battery(device):
        device.add_service(BatteryService(lambda connection: 80))

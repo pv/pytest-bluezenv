@@ -108,3 +108,20 @@ def linkcode_resolve(domain, info):
             )
     else:
         return None
+
+
+# The bumble package is optional and absent from the documentation build
+# environment, but runnable examples import it.  Register a stub so the
+# doctest builder can execute those examples.
+import importlib.util
+from unittest.mock import MagicMock
+
+if importlib.util.find_spec("bumble") is None:
+
+    _bumble_stub = MagicMock()
+    for _submodule in (
+        "bumble",
+        "bumble.profiles",
+        "bumble.profiles.battery_service",
+    ):
+        sys.modules[_submodule] = _bumble_stub
