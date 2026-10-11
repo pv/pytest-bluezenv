@@ -320,6 +320,81 @@ class HwController(ControllerBase):
         return _HwBackend
 
     @classmethod
+    def select(cls, config):
+        """
+        Select controllers for pass-through to the VM hosts.
+
+        Controller names come from the ``--usb`` and ``--pcie``
+        options, falling back to the ``FUNCTIONAL_TESTING_CONTROLLERS``
+        environment variable and then to all controllers present on
+        the system.  Only the buses requested with those options or
+        with ``--force-usb`` and ``--force-pcie`` are considered.
+        Every candidate is probed with
+        :obj:`~pytest_bluezenv.HwController.check_controller`.
+
+        Args:
+            config (pytest.Config): pytest configuration.
+
+        Returns:
+            tuple: list of usable controller names, and list of
+            availability messages of the rejected controllers.  The
+            usable ones come first, so a skip reason can show one
+            message per missing controller.
+        """
+        kinds = []
+
+        # If command line option given, use only that kind
+        if config.getoption("pcie") or config.getoption("force_pcie"):
+            kinds.append("pcie")
+        if config.getoption("usb") or config.getoption("force_usb"):
+            kinds.append("usb")
+        if not kinds:
+            kinds = ["usb", "pcie"]
+
+        indices = []
+        messages = []
+        for kind in kinds:
+            kind_indices, kind_messages = cls._select_kind(config, kind)
+            indices += kind_indices
+            messages += kind_messages
+
+        # Order messages of valid indices to front
+        messages.sort(key=lambda x: x != "")
+
+        return indices, messages
+
+    @classmethod
+    def _select_kind(cls, config, option):
+        """
+        Controllers on the given bus that can be passed through.
+        """
+        bus = {"usb": "usb", "pcie": "pci"}[option]
+        indices = config.getoption(option)
+
+        if indices is None:
+            indices = os.environ.get("FUNCTIONAL_TESTING_CONTROLLERS")
+
+        if indices is None:
+            indices = [item.name for item in Path("/sys/class/bluetooth").iterdir()]
+        else:
+            indices = indices.replace(",", " ").split()
+
+        messages = []
+        for name in list(indices):
+            if cls.controller_bus(name) != bus:
+                indices.remove(name)
+                continue
+
+            try:
+                cls.check_controller(name)
+                messages.append("")
+            except ValueError as exc:
+                indices.remove(name)
+                messages.append(str(exc))
+
+        return indices, messages
+
+    @classmethod
     def controller_bus(cls, name):
         """
         Bus a controller is attached to.

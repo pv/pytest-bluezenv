@@ -8,6 +8,8 @@ Development:
    - Add the ``ControllerBase`` and ``ControllerBackend`` interface
      for controller implementations, with ``BtvirtController`` and
      ``HwController`` as the built-in ones.
+   - *(Backward incompatible)* Drop the ``hw_indices`` fixture.
+     Hardware selection is now ``HwController.select()``.
    - *(Backward incompatible)* ``vm_setup["controller"]`` is now a
      ``ControllerBase`` instance, or ``None`` without controllers.
      ``host_config`` itself still accepts ``True`` and ``False``.

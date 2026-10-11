@@ -39,7 +39,6 @@ __all__ = [
     "pytest_runtest_logfinish",
     # fixtures:
     "kernel",
-    "hw_indices",
     "host_setup",
     "vm_setup",
     "vm",
@@ -659,72 +658,6 @@ def kernel(pytestconfig):
     return kernel
 
 
-def _controller_indices(pytestconfig, option):
-    """
-    Controllers on the given bus that can be passed through to a VM host.
-    """
-    bus = {"usb": "usb", "pcie": "pci"}[option]
-    indices = pytestconfig.getoption(option)
-
-    if indices is None:
-        indices = os.environ.get("FUNCTIONAL_TESTING_CONTROLLERS")
-
-    if indices is None:
-        indices = [item.name for item in Path("/sys/class/bluetooth").iterdir()]
-    else:
-        indices = indices.replace(",", " ").split()
-
-    messages = []
-    for name in list(indices):
-        if HwController.controller_bus(name) != bus:
-            indices.remove(name)
-            continue
-
-        try:
-            HwController.check_controller(name)
-            messages.append("")
-        except ValueError as exc:
-            indices.remove(name)
-            messages.append(str(exc))
-
-    return indices, messages
-
-
-@pytest.fixture(scope="session")
-def hw_indices(pytestconfig):
-    """
-    Fixture for available HW USB controllers. Skips tests if not available.
-
-    Args:
-        pytestconfig (pytest.Config): pytest configuration.
-
-    Returns:
-        tuple[list[str], list[str]]: controller names and associated
-        availability messages.
-    """
-    kinds = []
-
-    # If command line option given, use only that kind
-    if pytestconfig.getoption("pcie") or pytestconfig.getoption("force_pcie"):
-        kinds.append("pcie")
-    if pytestconfig.getoption("usb") or pytestconfig.getoption("force_usb"):
-        kinds.append("usb")
-    if not kinds:
-        kinds = ["usb", "pcie"]
-
-    indices = []
-    messages = []
-    for kind in kinds:
-        ind, msg = _controller_indices(pytestconfig, kind)
-        indices += ind
-        messages += msg
-
-    # Order messages of valid indices to front
-    messages.sort(key=lambda x: x != "")
-
-    return indices, messages
-
-
 @pytest.fixture(scope="session")
 def host_setup(request):
     """
@@ -818,7 +751,7 @@ def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
         return
 
     if hw or config.option.force_usb or config.option.force_pcie:
-        hw_indices, messages = request.getfixturevalue("hw_indices")
+        hw_indices, messages = HwController.select(config)
         if len(hw_indices) < num_hosts:
             message = "\n".join(m for m in messages[:num_hosts] if m)
             pytest.skip(reason=f"Not enough HW controllers: {message}")
