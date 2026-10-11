@@ -5,6 +5,14 @@ Development:
      ``bumble_env`` fixture. Install with the ``bumble`` extra.
    - Enable debug output from bumble controllers with
      ``--btvirt-debug``.
+   - Add the ``ControllerBase`` and ``ControllerBackend`` interface
+     for controller implementations, with ``BtvirtController`` and
+     ``HwController`` as the built-in ones.
+   - *(Backward incompatible)* ``vm_setup["controller"]`` is now a
+     ``ControllerBase`` instance, or ``None`` without controllers.
+     ``host_config`` itself still accepts ``True`` and ``False``.
+   - *(Backward incompatible)* Move ``Environment.controller_bus``
+     and ``Environment.check_controller`` to ``HwController``.
 
 
 v0.1.10:

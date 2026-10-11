@@ -40,6 +40,21 @@ Host plugins
    ~pytest_bluezenv.Pexpect
    ~pytest_bluezenv.Rcvbuf
 
+Controllers
+-----------
+
+Sources of Bluetooth controllers for the VM hosts.  A controller
+specification is selected with the ``controller`` argument of
+:obj:`~pytest_bluezenv.host_config`.
+
+.. autosummary::
+   :toctree: api
+
+   ~pytest_bluezenv.ControllerBase
+   ~pytest_bluezenv.ControllerBackend
+   ~pytest_bluezenv.BtvirtController
+   ~pytest_bluezenv.HwController
+
 Bumble emulated controllers
 ---------------------------
 

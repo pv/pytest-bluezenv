@@ -4,9 +4,27 @@ Feature branch: `bumble-integration` (base `opencode/main`).
 
 ## Status
 
-M1-M3 implemented and verified manually (spike + live VM tests under
-`~/tmp/opencode/bumble-spike`). Findings folded into this document.
-Remaining: repo tests (`tests/test_bumble.py`) and documentation.
+M1-M3 implemented: repo tests (`tests/test_bumble.py`) and
+documentation done, VM-tested. The controller plumbing was
+generalized into `controller.py` (see Controller backends below).
+
+## Controller backends
+
+`src/pytest_bluezenv/controller.py` hosts the shared interface.
+`ControllerBase` subclasses are the decoration-time specs kept in
+`vm_setup["controller"]`; they are shared and stateless. The
+`backend` property names the `ControllerBackend` subclass that
+`Environment.start()` constructs per environment; constructor
+arguments are `(controller, path, num_hosts, timeout=None,
+debug=False)` and the constructor starts the service.
+`ControllerBackend` exposes `runner_args`, `stop()`,
+`check_errors()`, `start_devices()`, `stop_devices()` and
+`cleanup(path)`. Built-ins: `BtvirtController` (default, id "") and
+`HwController` (passthrough). `BumbleController` lives in `_bumble.py`
+and its runtime is the backend. `Environment` holds `self.controller`
+and `self.controller_backend`; it no longer references btvirt, hw
+probing or bumble directly. `host_config` still accepts `True`/`False`
+for `controller`, mapped at decoration to `BtvirtController()`/`None`.
 
 ## M1 spike findings (verified)
 

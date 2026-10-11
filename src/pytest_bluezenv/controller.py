@@ -41,9 +41,8 @@ class ControllerBase(abc.ABC):
 
     A specification is shared by all tests of its configuration.  It
     must hold no per-environment state; started controllers belong to
-    the :obj:`ControllerBackend` of each environment, constructed by
-    :obj:`~pytest_bluezenv.Environment` from the class given by
-    :obj:`~pytest_bluezenv.ControllerBase.backend`.
+    the per-environment :obj:`ControllerBackend`, constructed from
+    the class named by its ``backend`` property.
 
     Example:
 
@@ -129,13 +128,11 @@ class ControllerBase(abc.ABC):
 
 class ControllerBackend(abc.ABC):
     """
-    Started controller service of one
-    :obj:`~pytest_bluezenv.env.Environment`.
+    Started controller service of one test environment.
 
     Subclasses start the controllers in their constructor, with the
-    standard arguments below; the environment attaches the
-    controllers to the VM hosts using
-    :obj:`~pytest_bluezenv.ControllerBackend.runner_args`, keeps the
+    standard arguments below; the test environment attaches the
+    controllers to the VM hosts using ``runner_args``, keeps the
     service alive between tests with the host plugins, and calls
     :obj:`~pytest_bluezenv.ControllerBackend.stop` when the
     environment goes away.
