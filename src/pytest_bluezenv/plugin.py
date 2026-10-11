@@ -15,9 +15,10 @@ from pathlib import Path
 
 import pytest
 
-from . import utils, env, build_kernel, progress, _bumble
+from . import utils, env, build_kernel, progress
 from ._bumble import bumble_env
 from .btmon import Btmon
+from .controller import BtvirtController, HwController
 
 __all__ = [
     "CoredumpWarning",
@@ -53,7 +54,6 @@ VM_REQUIRED_EXE = {
     ("", "chronyd"): False,
     ("", "dbus-daemon"): False,
     ("", "setsid"): False,
-    ("emulator", "btvirt"): True,
     ("tools", "btmgmt"): True,
     ("tools", "test-runner"): True,
 }
@@ -676,12 +676,12 @@ def _controller_indices(pytestconfig, option):
 
     messages = []
     for name in list(indices):
-        if env.Environment.controller_bus(name) != bus:
+        if HwController.controller_bus(name) != bus:
             indices.remove(name)
             continue
 
         try:
-            env.Environment.check_controller(name)
+            HwController.check_controller(name)
             messages.append("")
         except ValueError as exc:
             indices.remove(name)
@@ -771,9 +771,9 @@ def vm_setup(request):
           controllers.
         - ``mem`` (str): memory per VM host, or ``""`` when the default
           applies.
-        - ``controller`` (bool | BumbleController): whether the hosts
-          get a Bluetooth controller; a
-          :obj:`~pytest_bluezenv.BumbleController` selects
+        - ``controller`` (ControllerBase | None): the controller
+          backend of the hosts, ``None`` omitting controllers;
+          e.g. a :obj:`~pytest_bluezenv.BumbleController` selects
           bumble-emulated controllers.
     """
     if getattr(request, "param", None) is None:
@@ -783,14 +783,13 @@ def vm_setup(request):
 
 
 def _check_requirements(controller=None):
+    executables = dict(VM_REQUIRED_EXE)
+    if controller is not None:
+        executables.update(controller.executables())
+
     error = []
 
-    is_bumble = isinstance(controller, _bumble.BumbleController)
-
-    for (path, name), required in sorted(VM_REQUIRED_EXE.items()):
-        if is_bumble and (path, name) == ("emulator", "btvirt"):
-            # bumble environments do not use btvirt
-            continue
+    for (path, name), required in sorted(executables.items()):
         try:
             utils.find_exe(path, name)
         except FileNotFoundError:
@@ -807,12 +806,11 @@ def _check_requirements(controller=None):
 def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     config = request.session.config
 
-    if isinstance(controller, _bumble.BumbleController):
-        if not _bumble.bumble_available():
-            pytest.skip(
-                reason="bumble package not installed"
-                " (pip install pytest-bluezenv[bumble])"
-            )
+    if controller is not None:
+        reason = controller.skip_reason()
+        if reason:
+            pytest.skip(reason=reason)
+            return
 
     err = _check_requirements(controller)
     if err:
@@ -824,16 +822,15 @@ def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
         if len(hw_indices) < num_hosts:
             message = "\n".join(m for m in messages[:num_hosts] if m)
             pytest.skip(reason=f"Not enough HW controllers: {message}")
-    else:
-        hw_indices = None
+        if isinstance(controller, BtvirtController):
+            controller = HwController(hw_indices)
 
     with env.Environment(
         kernel,
         num_hosts,
-        hw_indices=hw_indices,
         mem=mem,
         controller=controller,
-        btvirt_debug=config.option.btvirt_debug,
+        debug=config.option.btvirt_debug,
         timeout=utils.DEFAULT_TIMEOUT,
         progress_reporter=PROGRESS_REPORTER,
     ) as vm:
@@ -853,8 +850,8 @@ def _hosts_impl(request, vm, setup, name, reuse):
     if vm.path is None:
         vm.start()
 
-    if vm.bumble is not None:
-        vm.bumble._start_devices()
+    if vm.controller_backend is not None:
+        vm.controller_backend.start_devices()
 
     try:
         for idx, (h, plugins) in enumerate(zip(vm.hosts, setup)):

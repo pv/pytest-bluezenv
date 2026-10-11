@@ -110,8 +110,7 @@ def test_parametrize_ids(pytester):
 @requires_bumble
 def test_runtime_device_lifecycle(tmp_path):
     spec = BumbleController(devices={"sensor": {"name": "S"}})
-    runtime = bumble_mod._BumbleRuntime(spec, 1, tmp_path, timeout=60)
-    runtime.start()
+    runtime = bumble_mod._BumbleRuntime(spec, tmp_path, 1, timeout=60)
     try:
         runtime.start_devices()
         sensor = runtime.env.devices["sensor"]
@@ -156,8 +155,7 @@ def test_runtime_gatt_roundtrip(tmp_path):
             )
         }
     )
-    runtime = bumble_mod._BumbleRuntime(spec, 1, tmp_path, timeout=60)
-    runtime.start()
+    runtime = bumble_mod._BumbleRuntime(spec, tmp_path, 1, timeout=60)
     try:
         runtime.start_devices()
         sensor = runtime.env.devices["sensor"]

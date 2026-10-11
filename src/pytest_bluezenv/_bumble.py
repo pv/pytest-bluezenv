@@ -31,6 +31,7 @@ import threading
 import pytest
 
 from . import utils
+from .controller import ControllerBackend, ControllerBase
 
 __all__ = ["BumbleController", "BumbleDevice", "BumbleEnv"]
 
@@ -162,7 +163,7 @@ class BumbleDevice:
         self.setup = setup
 
 
-class BumbleController:
+class BumbleController(ControllerBase):
     """
     Bumble-emulated HCI controllers for the VM hosts.
 
@@ -233,6 +234,18 @@ class BumbleController:
                     device = BumbleDevice(config=device)
                 self.devices[str(device_name)] = device
 
+    def validate(self, num_hosts):
+        self.factories(num_hosts)
+
+    def skip_reason(self):
+        if bumble_available():
+            return None
+        return "bumble package not installed (pip install pytest-bluezenv[bumble])"
+
+    @property
+    def backend(self):
+        return _BumbleRuntime
+
     def factories(self, num_hosts):
         """
         Resolve per-host controller factories.
@@ -281,7 +294,7 @@ class BumbleController:
         return self.name + "-" + "+".join(names)
 
 
-class _BumbleRuntime:
+class _BumbleRuntime(ControllerBackend):
     """
     Bumble objects of one :obj:`~pytest_bluezenv.env.Environment`.
 
@@ -290,12 +303,14 @@ class _BumbleRuntime:
     devices, which live as long as the test host plugins.
     """
 
-    def __init__(self, spec, num_hosts, path, timeout=None, debug=False):
-        self.spec = spec
-        self.num_hosts = num_hosts
-        self.path = path
-        self.timeout = timeout
-        self.debug = debug
+    def __init__(self, controller, path, num_hosts, timeout=None, debug=False):
+        super().__init__(controller, path, num_hosts, timeout=timeout, debug=debug)
+
+        if not bumble_available():
+            raise RuntimeError(
+                "bumble package not installed (pip install pytest-bluezenv[bumble])"
+            )
+
         self.env_index = next(_ENV_COUNTER)
         self.socket_paths = [path / f"bumble-{i}" for i in range(self.num_hosts)]
         self.env = BumbleEnv(self)
@@ -309,11 +324,7 @@ class _BumbleRuntime:
         self._logging_saved = None
         self._errors_base = 0
 
-    def start(self):
-        if not bumble_available():
-            raise RuntimeError(
-                "bumble package not installed (pip install pytest-bluezenv[bumble])"
-            )
+        log.info("Starting bumble controllers")
         self._configure_logging()
         try:
             _Loop.submit(self._async_start(), self.timeout)
@@ -325,6 +336,10 @@ class _BumbleRuntime:
             self._restore_logging()
             raise
         self._errors_base = len(_Loop.ERRORS)
+
+    @property
+    def runner_args(self):
+        return [[f"-u{socket}"] for socket in self.socket_paths]
 
     def stop(self):
         try:
@@ -358,7 +373,7 @@ class _BumbleRuntime:
     def start_devices(self):
         if self._devices_started:
             return
-        for device_name, device_spec in self.spec.devices.items():
+        for device_name, device_spec in self.controller.devices.items():
             device = _Loop.submit(
                 self._async_add_device(device_name, device_spec), self.timeout
             )
@@ -391,7 +406,7 @@ class _BumbleRuntime:
 
         self.link = LocalLink()
 
-        factories = self.spec.factories(self.num_hosts)
+        factories = self.controller.factories(self.num_hosts)
         for i, socket_path in enumerate(self.socket_paths):
             transport = await open_unix_server_transport(str(socket_path))
             self._transports.append(transport)
@@ -542,12 +557,6 @@ class BumbleEnv:
     def __init__(self, runtime):
         self._runtime = runtime
 
-    def _start_devices(self):
-        self._runtime.start_devices()
-
-    def _stop_devices(self):
-        self._runtime.stop_devices()
-
     @property
     def devices(self):
         return {
@@ -636,9 +645,10 @@ def bumble_env(request):
             "fixture with controller=BumbleController()"
         )
 
-    if vm.bumble is None:
+    backend = getattr(vm, "controller_backend", None)
+    if not isinstance(backend, _BumbleRuntime):
         raise pytest.fail(
             "bumble_env requires host_config(controller=BumbleController())"
         )
 
-    yield vm.bumble
+    yield backend.env

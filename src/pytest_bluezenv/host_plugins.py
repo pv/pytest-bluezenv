@@ -27,7 +27,7 @@ import dbus
 from gi.repository import GLib
 
 from . import env, utils, rpc
-from ._bumble import BumbleController
+from .controller import BtvirtController, ControllerBase
 
 __all__ = [
     "host_config",
@@ -1018,10 +1018,12 @@ def parametrized_host_config(
         param_host_setups (list): list of host setups
         hw (bool): whether to require hardware BT controller
         mem (str): amount of memory for the VM instances
-        controller (bool | BumbleController): whether to add controller
-            to the host.  A :obj:`~pytest_bluezenv.BumbleController`
-            provides the VM-host controllers with bumble instead of
-            btvirt.
+        controller (bool | ControllerBase): whether to add controller
+            to the host.  True (default) emulates the controllers with
+            btvirt, False omits controllers, and a
+            :obj:`~pytest_bluezenv.ControllerBase` such as
+            :obj:`~pytest_bluezenv.BumbleController` selects another
+            controller backend.
         ids (sequence): parameter IDs. Default: generated setup names.
         reuse (bool): whether to define a setup where the test host processes
             are not required to be torn down between tests. This is only useful
@@ -1061,12 +1063,18 @@ def parametrized_host_config(
         raise ValueError("Parametrized host setups must have same host count")
     num_hosts = num_hosts.pop()
 
-    if not isinstance(controller, (bool, BumbleController)):
-        raise TypeError("controller must be True, False, or a BumbleController")
-    if hw and isinstance(controller, BumbleController):
-        raise ValueError("hw=True cannot be combined with a BumbleController")
-    if isinstance(controller, BumbleController):
-        controller.factories(num_hosts)
+    if controller is True:
+        controller = BtvirtController()
+    elif controller is False:
+        controller = None
+    elif not isinstance(controller, ControllerBase):
+        raise TypeError("controller must be True, False, or a ControllerBase")
+
+    if hw and controller is not None and not isinstance(controller, BtvirtController):
+        raise ValueError(f"hw=True cannot be combined with {type(controller).__name__}")
+
+    if controller is not None:
+        controller.validate(num_hosts)
 
     for host_setup in param_host_setups:
         setup = tuple(_expand_plugins(plugins, controller) for plugins in host_setup)
@@ -1086,12 +1094,11 @@ def parametrized_host_config(
         mem=str(mem) if mem else "",
         controller=controller,
     )
-    if controller is False:
+    if controller is None:
         controller_id = "-noc"
-    elif controller is True:
-        controller_id = ""
     else:
-        controller_id = f"-{controller.parametrize_id()}"
+        param_id = controller.parametrize_id()
+        controller_id = f"-{param_id}" if param_id else ""
     vm_ids = [
         "vm{}{}{}{}".format(
             len(setup),
@@ -1122,10 +1129,12 @@ def host_config(*host_setup, hw=False, mem=None, controller=True, reuse=False):
             The number of arguments specifies the number of hosts.
         hw (bool): whether to require hardware BT controller
         mem (str): amount of memory for the VM instances
-        controller (bool | BumbleController): whether to add controller
-            to the host.  A :obj:`~pytest_bluezenv.BumbleController`
-            provides the VM-host controllers with bumble instead of
-            btvirt.
+        controller (bool | ControllerBase): whether to add controller
+            to the host.  True (default) emulates the controllers with
+            btvirt, False omits controllers, and a
+            :obj:`~pytest_bluezenv.ControllerBase` such as
+            :obj:`~pytest_bluezenv.BumbleController` selects another
+            controller backend.
         reuse (bool): whether to define a setup where the test host processes
             are not required to be torn down between tests. This is only useful
             for tests that do not perturb e.g. bluetoothd state too much.

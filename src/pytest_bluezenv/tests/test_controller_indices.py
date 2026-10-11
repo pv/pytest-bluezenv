@@ -3,14 +3,14 @@
 """
 HW controller selection through the hw_indices fixture.
 
-``Environment.controller_bus`` and ``Environment.check_controller`` probe
+``HwController.controller_bus`` and ``HwController.check_controller``
 host hardware under ``/sys``.  The tests replace them with a fixed
 synthetic controller set.
 """
 
 import pytest
 
-from pytest_bluezenv import env
+from pytest_bluezenv import controller
 
 BUSES = {"hci0": "usb", "hci1": "usb", "hci2": "pci"}
 
@@ -32,12 +32,12 @@ def fake_controllers(monkeypatch, broken):
         return ["-U", name]
 
     monkeypatch.setattr(
-        env.Environment,
+        controller.HwController,
         "controller_bus",
         classmethod(lambda cls, name: BUSES.get(name)),
     )
     monkeypatch.setattr(
-        env.Environment, "check_controller", classmethod(check_controller)
+        controller.HwController, "check_controller", classmethod(check_controller)
     )
 
 
