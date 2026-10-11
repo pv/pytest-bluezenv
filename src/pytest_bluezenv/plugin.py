@@ -852,6 +852,9 @@ def _hosts_impl(request, vm, setup, name, reuse):
     if vm.path is None:
         vm.start()
 
+    if vm.bumble is not None:
+        vm.bumble._start_devices()
+
     try:
         for idx, (h, plugins) in enumerate(zip(vm.hosts, setup)):
             timeout = max(vm_timeout * len(plugins) ** 0.5, timeout)
@@ -1088,7 +1091,7 @@ def bumble_env(request):
     serving the VM hosts, and the virtual radio they share.  Plain
     bumble API is used by passing coroutines to
     :obj:`~pytest_bluezenv.BumbleEnv.run`.  The declared peer devices
-    exist only for the duration of the test.
+    live as long as the test host plugins.
 
     Args:
         request (pytest.FixtureRequest): test fixture request.
@@ -1127,9 +1130,4 @@ def bumble_env(request):
             "bumble_env requires host_config(controller=BumbleController())"
         )
 
-    bumble = vm.bumble
-    bumble._start_test_devices()
-    try:
-        yield bumble
-    finally:
-        bumble._stop_test_devices()
+    yield vm.bumble

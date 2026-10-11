@@ -146,7 +146,7 @@ class BumbleDevice:
 
 
            def add_battery(device):
-               device.add_service(BatteryService(level=80))
+               device.add_service(BatteryService(lambda connection: 80))
 
 
            BumbleDevice(config={"name": "Sensor"}, setup=add_battery)
@@ -183,7 +183,10 @@ class BumbleController:
             valid factory.
         devices (dict): emulated peer devices on the same virtual
             radio, by name; values are :obj:`BumbleDevice` or plain
-            bumble device config dicts.
+            bumble device config dicts.  Their lifetime follows the
+            test host plugins: with ``reuse=False`` they are torn
+            down after every test, with ``reuse=True`` they are kept
+            until the reuse group changes.
 
     Example:
 
@@ -281,7 +284,7 @@ class _BumbleRuntime:
 
     Internal.  Holds the virtual radio and the VM-host controllers,
     which live as long as the environment, and the declared peer
-    devices, which live as long as a test.
+    devices, which live as long as the test host plugins.
     """
 
     def __init__(self, spec, num_hosts, path, timeout=None, debug=False):
@@ -298,6 +301,7 @@ class _BumbleRuntime:
         self._transports = []
         self._vm_controllers = []
         self._test_devices = {}
+        self._devices_started = False
         self._device_index = 0
         self._logging_saved = None
         self._errors_base = 0
@@ -348,20 +352,31 @@ class _BumbleRuntime:
 
         return errors
 
-    def start_test_devices(self):
+    def start_devices(self):
+        if self._devices_started:
+            return
         for device_name, device_spec in self.spec.devices.items():
             device = _Loop.submit(
                 self._async_add_device(device_name, device_spec), self.timeout
             )
             self._test_devices[device_name] = device
+        self._devices_started = True
 
-    def stop_test_devices(self):
+    def stop_devices(self):
+        if not self._devices_started:
+            return
         devices = self._test_devices
         self._test_devices = {}
-        for device, controller in devices.values():
+        self._devices_started = False
+        for name, (device, controller) in devices.items():
             try:
                 _Loop.submit(
                     self._async_remove_device(device, controller), self.timeout
+                )
+                log.info(
+                    "bumble device %s removed, link: %s",
+                    name,
+                    sorted(c.name for c in self.link.controllers),
                 )
             except Exception:
                 log.exception("failed to remove bumble device")
@@ -393,6 +408,7 @@ class _BumbleRuntime:
         for device, controller in self._test_devices.values():
             self.link.remove_controller(controller)
         self._test_devices = {}
+        self._devices_started = False
         for controller in self._vm_controllers:
             self.link.remove_controller(controller)
         self._vm_controllers = []
@@ -458,11 +474,11 @@ class _BumbleRuntime:
                     hci.HCI_ErrorCode.REMOTE_USER_TERMINATED_CONNECTION_ERROR,
                 )
             except Exception:
-                pass
+                log.debug("bumble device %s: disconnect failed", controller.name)
         try:
             await device.power_off()
         except Exception:
-            pass
+            log.debug("bumble device %s: power off failed", controller.name)
         self.link.remove_controller(controller)
 
     def _vm_address(self, host_index):
@@ -509,7 +525,9 @@ class BumbleEnv:
 
     Attributes:
         devices (dict): ``bumble.device.Device`` of the emulated peer
-            devices declared for this test, by name.
+            devices, by name.  Present for as long as the test host
+            plugins: per-test, or across the tests of one reuse
+            group with ``reuse=True``.
         controllers (tuple): ``bumble.controller.Controller`` serving
             each VM host, in host order.  ``public_address`` is the
             address the VM host kernel reports.
@@ -521,11 +539,11 @@ class BumbleEnv:
     def __init__(self, runtime):
         self._runtime = runtime
 
-    def _start_test_devices(self):
-        self._runtime.start_test_devices()
+    def _start_devices(self):
+        self._runtime.start_devices()
 
-    def _stop_test_devices(self):
-        self._runtime.stop_test_devices()
+    def _stop_devices(self):
+        self._runtime.stop_devices()
 
     @property
     def devices(self):

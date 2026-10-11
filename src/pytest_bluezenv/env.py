@@ -811,6 +811,9 @@ class Environment:
 
             errors += self.check_job_errors()
 
+            if self.bumble is not None:
+                self.bumble._stop_devices()
+
             if errors:
                 errors = "\n".join(errors)
                 raise RuntimeError(f"Errors closing hosts:\n{errors}")
