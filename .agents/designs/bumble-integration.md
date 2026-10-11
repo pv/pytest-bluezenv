@@ -83,7 +83,7 @@ from pytest_bluezenv import BumbleController, BumbleDevice
     [Bluetoothd(), Bluetoothctl()],
     controller=BumbleController(
         controllers=None,   # None | callable | sequence[callable | None]
-        devices={           # declarative emulated peers, per-test lifecycle
+        devices={           # declarative emulated peers, host-plugin lifetime
             "sensor": {     # plain bumble device-config dict
                 "name": "BumbleSensor",
                 "address": "F1:23:00:00:00:01",
@@ -158,10 +158,13 @@ handler overrides (`getattr(self, f"on_{command.name.lower()}")`,
   unix-server `Controller` instances (`BumbleRuntime`), before the
   runners are launched; per-host sockets named `bumble-<idx>` under
   the environment tmpdir.
-- Declared devices: created at `bumble_env` fixture setup, destroyed at
-  teardown (disconnect + remove from `LocalLink`). Per-test isolation
-  holds even when the VM is reused. Controller instances live with the
-  `Environment`.
+- Declared devices: created when the test hosts are set up
+  (`_hosts_impl()`, idempotent: existing devices are kept) and
+  destroyed by `Environment.close_hosts()` (disconnect + remove from
+  `LocalLink`).  Their lifetime follows the test host plugins: torn
+  down after every test with `reuse=False`, kept until the reuse
+  group changes with `reuse=True`.  Controller instances live with
+  the `Environment`.
 - Missing `bumble` package: tests using the spec are skipped
   (`importlib.util.find_spec` check in `_vm_impl`, guarded for Python
   < 3.10 where bumble cannot even be imported).
@@ -186,7 +189,7 @@ addresses come from their declared configs.
      `parametrize_id()`),
    - `BumbleDevice` (config / power_on / advertising / setup),
    - `_BumbleRuntime` (per `Environment`: link, unix servers, VM
-     controllers, per-test devices, logging, failure capture),
+     controllers, peer devices, logging, failure capture),
    - `BumbleEnv` facade (run/devices/controllers/link/loop).
 2. `host_plugins.py`: `host_config`/`parametrized_host_config` accept
    `controller: bool | BumbleController`. The spec survives into the
@@ -201,7 +204,8 @@ addresses come from their declared configs.
    `check_job_errors()` reports bumble runtime/loop failures.
 4. `plugin.py`: `bumble_env` fixture resolving the active environment
    (`vm` or `vm_once` via `request.getfixturevalue`); skip in
-   `_vm_impl` when bumble is not importable.
+   `_vm_impl` when bumble is not importable; `_hosts_impl()` starts
+   the peer devices and `Environment.close_hosts()` stops them.
 5. Packaging: `pyproject.toml` extra
    `bumble = ["bumble; python_version >= '3.10'"]`; source and test
    file lists in `meson.build`.
@@ -225,8 +229,8 @@ addresses come from their declared configs.
     device name (bidirectionality);
   - custom `controllers=` factory/ subclass behavior observed from the
     guest (e.g. overridden `Read Local Version Information`);
-  - per-test isolation: declared devices gone for the next test on a
-    reused VM.
+  - device lifecycle: declared devices recreated for the next test on
+    a shared VM with `reuse=False`.
 
 ## Documentation
 
