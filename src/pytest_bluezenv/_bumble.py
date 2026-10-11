@@ -28,6 +28,8 @@ import logging
 import sys
 import threading
 
+import pytest
+
 from . import utils
 
 __all__ = ["BumbleController", "BumbleDevice", "BumbleEnv"]
@@ -585,3 +587,58 @@ class BumbleEnv:
         if timeout is None:
             timeout = self._runtime.timeout or utils.DEFAULT_TIMEOUT
         return _Loop.submit(awaitable, timeout)
+
+
+@pytest.fixture
+def bumble_env(request):
+    """
+    Bumble environment for tests using ``controller=BumbleController()``.
+
+    Provides synchronous access to the bumble objects of the test
+    configuration: the emulated peer devices declared in the
+    :obj:`~pytest_bluezenv.BumbleController`, the emulated controllers
+    serving the VM hosts, and the virtual radio they share.  Plain
+    bumble API is used by passing coroutines to
+    :obj:`~pytest_bluezenv.BumbleEnv.run`.  The declared peer devices
+    live as long as the test host plugins.
+
+    Args:
+        request (pytest.FixtureRequest): test fixture request.
+
+    Yields:
+        pytest_bluezenv.BumbleEnv: the bumble environment of the test.
+
+    Example:
+
+        .. testcode::
+
+           from pytest_bluezenv import Bluetoothd, BumbleController, host_config
+
+           @host_config([Bluetoothd()], controller=BumbleController(
+               devices={"sensor": {"name": "BumbleSensor"}}))
+           def test_sensor(hosts, bumble_env):
+               host0, = hosts
+               sensor = bumble_env.devices["sensor"]
+               host0.bluetoothctl.send("scan on\\n")
+               host0.bluetoothctl.expect("BumbleSensor")
+               bumble_env.run(sensor.power_off())
+    """
+    vm = None
+
+    for name in ("vm", "vm_once"):
+        if name in request.fixturenames:
+            vm = request.getfixturevalue(name)
+            break
+
+    if vm is None:
+        raise pytest.fail(
+            "bumble_env requires a test using the hosts or hosts_once "
+            "fixture with controller=BumbleController()"
+        )
+
+    if vm.bumble is None:
+        raise pytest.fail(
+            "bumble_env requires host_config(controller=BumbleController())"
+        )
+
+    yield vm.bumble
