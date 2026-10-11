@@ -1,5 +1,6 @@
 python_sources = files(
   '__init__.py',
+  'test_bumble.py',
   'test_collection.py',
   'test_controller_indices.py',
   'test_events.py',
