@@ -17,6 +17,14 @@ runs Pytest:
 
    $ python3 -m pip install pytest-bluezenv
 
+Bumble-emulated controllers require the `bumble
+<https://github.com/google/bumble/>`_ package, which needs Python 3.10
+or newer:
+
+.. code-block:: console
+
+   $ python3 -m pip install pytest-bluezenv[bumble]
+
 The following are recommended:
 
 - An x86_64 host with KVM enabled

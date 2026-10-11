@@ -1,4 +1,10 @@
 Development:
+   - Add ``BumbleController`` for serving the VM hosts bumble
+     emulated HCI controllers, with emulated peer devices declared
+     in the test configuration and accessed through the
+     ``bumble_env`` fixture. Install with the ``bumble`` extra.
+   - Enable debug output from bumble controllers with
+     ``--btvirt-debug``.
 
 
 v0.1.10:

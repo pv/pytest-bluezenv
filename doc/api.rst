@@ -18,6 +18,7 @@ Fixtures
 
    ~pytest_bluezenv.hosts
    ~pytest_bluezenv.hosts_once
+   ~pytest_bluezenv.bumble_env
 
 Host plugins
 ------------
@@ -38,6 +39,20 @@ Host plugins
    ~pytest_bluezenv.Obexd
    ~pytest_bluezenv.Pexpect
    ~pytest_bluezenv.Rcvbuf
+
+Bumble emulated controllers
+---------------------------
+
+Controller specifications for
+:obj:`~pytest_bluezenv.host_config` and the test-side access to the
+bumble objects.
+
+.. autosummary::
+   :toctree: api
+
+   ~pytest_bluezenv.BumbleController
+   ~pytest_bluezenv.BumbleDevice
+   ~pytest_bluezenv.BumbleEnv
 
 Exceptions
 ----------

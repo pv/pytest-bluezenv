@@ -311,6 +311,74 @@ the controller **powered off**. ``Bluetoothd`` turns it on,
 but tests that run without it must power it on themselves, e.g. ``btmgmt
 power on``.
 
+Bumble-emulated controllers
+---------------------------
+
+:obj:`~pytest_bluezenv.host_config` also accepts a
+:obj:`~pytest_bluezenv.BumbleController` as its ``controller``. The VM
+hosts are then served by HCI controllers emulated by the `bumble
+<https://github.com/google/bumble/>`_ package instead of ``btvirt``,
+and emulated peer devices declared in the same statement become
+reachable over the shared virtual air link. The test accesses the
+bumble objects through the :obj:`~pytest_bluezenv.bumble_env` fixture.
+
+.. code-block:: python
+
+   from pytest_bluezenv import Bluetoothctl, BumbleController, host_config
+
+   @host_config(
+       [Bluetoothctl()],
+       controller=BumbleController(
+           devices={"sensor": {"name": "BumbleSensor"}},
+       ),
+   )
+   def test_connect_sensor(hosts, bumble_env):
+       host0, = hosts
+       address = bumble_env.devices["sensor"].static_address.to_string(False)
+
+       host0.bluetoothctl.send("scan on\n")
+       host0.bluetoothctl.expect(f"Device {address} BumbleSensor")
+       host0.bluetoothctl.send(f"connect {address}\n")
+       host0.bluetoothctl.expect("Connection successful")
+
+Device configurations use bumble's own ``DeviceConfiguration`` field
+names, wrapped in :obj:`~pytest_bluezenv.BumbleDevice`. Its ``setup``
+callback runs on the bumble event loop before the device is powered
+on, and is the place to attach GATT services:
+
+.. code-block:: python
+
+   from bumble.profiles.battery_service import BatteryService
+   from pytest_bluezenv import BumbleController, BumbleDevice
+
+   def add_battery(device):
+       device.add_service(BatteryService(lambda connection: 80))
+
+   @host_config(
+       [Bluetoothctl()],
+       controller=BumbleController(
+           devices={
+               "sensor": BumbleDevice(
+                   config={"name": "BumbleSensor"},
+                   setup=add_battery,
+               )
+           },
+       ),
+   )
+   def test_sensor(hosts, bumble_env): ...
+
+Bumble API is asynchronous while tests are synchronous. Pass
+coroutines to :obj:`~pytest_bluezenv.BumbleEnv.run` instead of
+awaiting them on a test-local loop. The ``controllers`` argument
+replaces the stock ``bumble.controller.Controller`` of one or all VM
+hosts with a subclass or other factory, which lets a test emulate
+controller-specific behavior.
+
+Peer devices follow the lifetime of the host plugins: they are re-created
+for every test, and kept between tests that share a ``reuse=True``
+host setup. Bumble comes from an optional package. Install it as
+described in :doc:`requirements`.
+
 Writing a host plugin
 ---------------------
 

@@ -32,7 +32,7 @@ from . import utils
 
 __all__ = ["BumbleController", "BumbleDevice", "BumbleEnv"]
 
-log = logging.getLogger("bumble_env")
+log = logging.getLogger(__name__)
 
 # Public addresses of VM-host controllers.  btvirt uses 00:AA:01:...,
 # keep a clearly separate range.
@@ -190,7 +190,7 @@ class BumbleController:
 
     Example:
 
-        .. testcode::
+        .. code-block:: python
 
            from pytest_bluezenv import BumbleController, host_config, Bluetoothd
 

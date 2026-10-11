@@ -15,7 +15,10 @@ Example
 A test declares the VM host topology and host plugins. pytest-bluezenv starts the
 VM hosts and exposes them through RPC. By default, their emulated
 ``btvirt`` controllers provide a virtual air link. USB or PCIe controllers
-can be passed through for tests using real radios.
+can be passed through for tests using real radios. The `bumble
+<https://github.com/google/bumble/>`_ package can instead emulate the
+controllers together with extra peer devices that the VM hosts see over
+the same virtual air link.
 
 .. code-block:: python
 
