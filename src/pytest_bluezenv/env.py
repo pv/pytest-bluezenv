@@ -859,7 +859,7 @@ class Environment:
             self.num_hosts,
             self.path,
             timeout=self.timeout,
-            add_log=self._add_log,
+            debug=self.btvirt_debug,
         )
         log.info("Starting bumble controllers")
         runtime.start()

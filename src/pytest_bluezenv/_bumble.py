@@ -284,12 +284,12 @@ class _BumbleRuntime:
     devices, which live as long as a test.
     """
 
-    def __init__(self, spec, num_hosts, path, timeout=None, add_log=None):
+    def __init__(self, spec, num_hosts, path, timeout=None, debug=False):
         self.spec = spec
         self.num_hosts = num_hosts
         self.path = path
         self.timeout = timeout
-        self.add_log = add_log
+        self.debug = debug
         self.env_index = next(_ENV_COUNTER)
         self.socket_paths = [path / f"bumble-{i}" for i in range(self.num_hosts)]
         self.env = BumbleEnv(self)
@@ -299,7 +299,7 @@ class _BumbleRuntime:
         self._vm_controllers = []
         self._test_devices = {}
         self._device_index = 0
-        self._loggers = []
+        self._logging_saved = None
         self._errors_base = 0
 
     def start(self):
@@ -307,7 +307,7 @@ class _BumbleRuntime:
             raise RuntimeError(
                 "bumble package not installed (pip install pytest-bluezenv[bumble])"
             )
-        self._attach_logging()
+        self._configure_logging()
         try:
             _Loop.submit(self._async_start(), self.timeout)
         except Exception:
@@ -315,7 +315,7 @@ class _BumbleRuntime:
                 _Loop.submit(self._async_stop(), self.timeout)
             except Exception:
                 pass
-            self._detach_logging()
+            self._restore_logging()
             raise
         self._errors_base = len(_Loop.ERRORS)
 
@@ -325,7 +325,7 @@ class _BumbleRuntime:
         except Exception:
             log.exception("bumble runtime teardown failed")
         finally:
-            self._detach_logging()
+            self._restore_logging()
             for path in self.socket_paths:
                 try:
                     path.unlink()
@@ -477,32 +477,23 @@ class _BumbleRuntime:
         self._device_index += 1
         return address
 
-    def _attach_logging(self):
-        # bumble logs HCI traffic and protocol events at debug level.
-        # Send everything to a file in the environment directory, and
-        # warnings onward to the test log.
-        file_handler = logging.FileHandler(self.path / "pytest-bluezenv-bumble.log")
-        file_handler.setLevel(logging.DEBUG)
-        handlers = [file_handler]
-
-        if self.add_log is not None:
-            stream_handler = logging.StreamHandler(self.add_log("bumble"))
-            stream_handler.setLevel(logging.WARNING)
-            handlers.append(stream_handler)
-
+    def _configure_logging(self):
+        # bumble logs HCI traffic and protocol events at debug level.  Let
+        # them reach the standard test log, but keep them suppressed unless
+        # debugging is enabled.
         logger = logging.getLogger("bumble")
-        logger.setLevel(logging.DEBUG)
-        logger.propagate = False
-        for handler in handlers:
-            logger.addHandler(handler)
-        self._loggers.append((logger, handlers))
+        self._logging_saved = (logger.level, logger.propagate)
+        logger.propagate = True
+        logger.setLevel(logging.DEBUG if self.debug else logging.CRITICAL)
 
-    def _detach_logging(self):
-        for logger, handlers in self._loggers:
-            for handler in handlers:
-                logger.removeHandler(handler)
-                handler.close()
-        self._loggers = []
+    def _restore_logging(self):
+        if self._logging_saved is None:
+            return
+        level, propagate = self._logging_saved
+        logger = logging.getLogger("bumble")
+        logger.setLevel(level)
+        logger.propagate = propagate
+        self._logging_saved = None
 
 
 class BumbleEnv:

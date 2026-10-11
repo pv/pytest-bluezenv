@@ -170,7 +170,7 @@ def pytest_addoption(parser):
     group.addoption(
         "--btvirt-debug",
         action="store_true",
-        help="Enable debug output from btvirt",
+        help="Enable debug output from btvirt and bumble controllers",
     )
 
     # host_plugins.Rcvbuf:
