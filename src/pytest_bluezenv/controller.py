@@ -79,13 +79,13 @@ class ControllerBase(abc.ABC):
         """
         raise NotImplementedError
 
-    def skip_reason(self):
+    def check_available(self):
         """
-        Reason why tests using this controller cannot run, if any.
+        Check the controller can be used in this environment.
 
         Returns:
-            str | None: skip reason, or None if the controller is
-            available.
+            str | None: reason to skip the tests, or None when the
+            controller is available.
         """
         return None
 

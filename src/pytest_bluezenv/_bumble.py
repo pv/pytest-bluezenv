@@ -237,7 +237,7 @@ class BumbleController(ControllerBase):
     def validate(self, num_hosts):
         self.factories(num_hosts)
 
-    def skip_reason(self):
+    def check_available(self):
         if bumble_available():
             return None
         return "bumble package not installed (pip install pytest-bluezenv[bumble])"

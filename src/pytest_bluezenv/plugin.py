@@ -807,7 +807,7 @@ def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     config = request.session.config
 
     if controller is not None:
-        reason = controller.skip_reason()
+        reason = controller.check_available()
         if reason:
             pytest.skip(reason=reason)
             return
