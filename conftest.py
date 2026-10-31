@@ -45,8 +45,8 @@ def vm_args(request, monkeypatch):
     """
     CLI arguments to forward into a pytester run that boots VM hosts.
 
-    Skips unless a kernel, QEMU and a BlueZ tree with the needed binaries are
-    available, so VM tests are strict (assert passed) when they do run.
+    Skips unless a kernel and the VM-host binaries are available, so
+    VM tests are strict (assert passed) when they do run.
     """
     from pytest_bluezenv import utils
 
@@ -78,6 +78,16 @@ def vm_args(request, monkeypatch):
         args += ["--bluez-build-dir", str(utils.BUILD_DIR)]
 
     return args
+
+
+def pytest_collection_modifyitems(items):
+    """
+    Mark VM-using tests: they request the vm_args fixture. Run them
+    with -m vm, e.g. to select the tests a kernel image is needed for.
+    """
+    for item in items:
+        if "vm_args" in item.fixturenames:
+            item.add_marker(pytest.mark.vm)
 
 
 def pkg_bin_dir():

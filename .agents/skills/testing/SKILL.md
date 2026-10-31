@@ -15,9 +15,11 @@ is broken.
 
 - `python3 -mpytest src/pytest_bluezenv -vv` to run basic tests
 - `python3 -mpytest src/pytest_bluezenv --kernel /pathto/bzImage --bluez-build-dir /pathto/bluez-build -vv` to run VM tests.
-  `--kernel` takes a suitable Linux kernel bzImage or kernel source
-  tree. `--bluez-build-dir` points to a built BlueZ tree that provides
-  the binaries the guests run.
+  `--kernel` takes a suitable Linux kernel bzImage, User Mode Linux
+  binary, or kernel source tree. `--bluez-build-dir` points to a built
+  BlueZ tree that provides the binaries the guests run.
+- VM-using tests are auto-marked `vm`; select them with `-m vm` and
+  exclude them with `-m "not vm"`.
   If you cannot find these, ask user to provide it.
 - Pytest makes sure that the code in `src/pytest_bluezenv` is used in the testing.
   Usually you do not need to know how this works.
