@@ -27,6 +27,12 @@ tar cf "tmpdist.tar" \
     subprojects/bluez/emulator/smp.c \
     subprojects/bluez/emulator/phy.c \
     subprojects/bluez/emulator/le.c \
+    subprojects/bluez/emulator/vhost.c \
+    subprojects/bluez/emulator/virtio.c \
+    subprojects/bluez/emulator/timetravel.c \
+    subprojects/bluez/emulator/vconsole.c \
+    subprojects/bluez/emulator/ttclient.c \
+    subprojects/bluez/emulator/timeout.c \
     subprojects/bluez/monitor/*.h \
     subprojects/bluez/src/eir.h \
     subprojects/bluez/src/shared/ad.c \
@@ -44,7 +50,6 @@ tar cf "tmpdist.tar" \
     subprojects/bluez/src/shared/io-mainloop.c \
     subprojects/bluez/src/shared/io.h \
     subprojects/bluez/src/shared/tester.h \
-    subprojects/bluez/src/shared/timeout-mainloop.c \
     subprojects/bluez/src/shared/timeout.h \
     subprojects/bluez/src/shared/mainloop.c \
     subprojects/bluez/src/shared/mainloop.h \

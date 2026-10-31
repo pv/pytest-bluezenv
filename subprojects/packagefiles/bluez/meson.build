@@ -1,7 +1,7 @@
 project(
   'bluez',
   'c',
-  version: '5.86',
+  version: '5.87',
   meson_version: '>= 1.3.0'
 )
 
@@ -56,6 +56,12 @@ btvirt = executable(
     'emulator/smp.c',
     'emulator/phy.c',
     'emulator/le.c',
+    'emulator/vhost.c',
+    'emulator/virtio.c',
+    'emulator/timetravel.c',
+    'emulator/vconsole.c',
+    'emulator/ttclient.c',
+    'emulator/timeout.c',
     'src/shared/ad.c',
     'src/shared/crypto.c',
     'src/shared/ecc.c',
@@ -63,7 +69,6 @@ btvirt = executable(
     'src/shared/log.c',
     'src/shared/util.c',
     'src/shared/io-mainloop.c',
-    'src/shared/timeout-mainloop.c',
     'src/shared/mainloop.c',
     'src/shared/mainloop-notify.c',
     'lib/bluetooth/bluetooth.c',

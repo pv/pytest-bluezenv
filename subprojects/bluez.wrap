@@ -1,5 +1,5 @@
 [wrap-git]
 url = https://github.com/bluez/bluez.git
-revision = 12f5eb726c6e9674093223d139a3fadc4937df9f
+revision = 14bd6ab65f4a647302edbd6df27f6faa91bee8a8
 patch_directory = bluez
 diff_files = 0001-no-debug-kernel.patch
