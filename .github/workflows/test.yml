@@ -33,10 +33,19 @@ jobs:
         python3-pexpect
         python3-pytest-xdist
         qemu-system-x86
+        zstd
     - name: Download kernel
       run: >-
         curl -sSfL -o "${RUNNER_TEMP}/bzImage"
         https://github.com/pv/bluez-test-functional-kernel/releases/download/2026-09-15.1/bzImage-v7.2-cfgc2208dd3
+    - name: Download User Mode Linux kernel
+      run: >-
+        curl -sSfL -o "${RUNNER_TEMP}/linux.zst"
+        https://github.com/pv/bluez-test-functional-kernel/releases/download/2026-10-31.4/linux-uml-v7.3-1094-g36aad21d5-cfg6d02b610.zst
+    - name: Unpack kernel
+      run: |
+        zstd -d -q -o "${RUNNER_TEMP}/linux" "${RUNNER_TEMP}/linux.zst"
+        chmod +x "${RUNNER_TEMP}/linux"
     - name: Enable KVM
       run: |-
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
@@ -53,3 +62,12 @@ jobs:
         python3 -mpytest --kernel="${RUNNER_TEMP}/bzImage" -vv -ra
         -n auto --dist worksteal
         src/pytest_bluezenv/tests
+    - name: Run VM tests on User Mode Linux
+      run: >-
+        python3 -mpytest --kernel="${RUNNER_TEMP}/linux" -m vm -vv -ra
+        -n auto --dist worksteal --junitxml="${RUNNER_TEMP}/uml-junit.xml"
+        src/pytest_bluezenv/tests
+    - name: Verify UML VM test passed
+      run: >-
+        grep -q 'skipped="0"' "${RUNNER_TEMP}/uml-junit.xml" &&
+        grep -q 'name="test_vm_no_controller"' "${RUNNER_TEMP}/uml-junit.xml"
