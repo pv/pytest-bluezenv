@@ -57,11 +57,18 @@ jobs:
       run: python3 -m pip install meson-python
     - name: Build
       run: python3 -m pip install --user --no-build-isolation -e .
+    - name: Install bumble
+      run: python3 -m pip install --user bumble
     - name: Run tests
       run: >-
         python3 -mpytest --kernel="${RUNNER_TEMP}/bzImage" -vv -ra
         -n auto --dist worksteal
         src/pytest_bluezenv/tests
+    - name: Run documentation examples
+      run: >-
+        python3 -mpytest -p pytest_bluezenv --confcutdir=doc/examples
+        --kernel="${RUNNER_TEMP}/bzImage" -vv -ra
+        doc/examples
     - name: Run VM tests on User Mode Linux
       run: >-
         python3 -mpytest --kernel="${RUNNER_TEMP}/linux" -m "vm and not bumble"
