@@ -311,6 +311,70 @@ the controller **powered off**. ``Bluetoothd`` turns it on,
 but tests that run without it must power it on themselves, e.g. ``btmgmt
 power on``.
 
+Bumble-emulated controllers
+---------------------------
+
+:obj:`~pytest_bluezenv.host_config` also accepts a
+:obj:`~pytest_bluezenv.BumbleController` as its ``controller``. The VM
+hosts are then served by HCI controllers emulated by the `bumble
+<https://github.com/google/bumble/>`_ package instead of ``btvirt``,
+and emulated peer devices declared in the same statement become
+reachable over the shared virtual air link. The test accesses the
+bumble objects through the :obj:`~pytest_bluezenv.bumble_env` fixture.
+
+The bumble package is optional, installed as described in
+:doc:`requirements`.
+
+A modified controller
+~~~~~~~~~~~~~~~~~~~~~
+
+The ``controllers`` argument of
+:obj:`~pytest_bluezenv.BumbleController` replaces the default
+``bumble.controller.Controller`` of one or all VM hosts. Its value is a
+per-host controller factory, called with the arguments of
+``Controller.__init__``, so a ``Controller`` subclass is itself a valid
+factory. This example overrides the handler of the Read BD ADDR HCI
+command, giving the VM host a fixed address:
+
+.. literalinclude:: examples/test_bumble_controller.py
+   :language: python
+
+A declared peer device
+~~~~~~~~~~~~~~~~~~~~~~
+
+This example uses the stock bumble controller and declares a peer
+device. Device configurations use bumble's own ``DeviceConfiguration``
+field names, wrapped in :obj:`~pytest_bluezenv.BumbleDevice`. Its
+``setup`` callback runs on the bumble event loop before the device is
+powered on, and is the place to attach GATT services:
+
+.. literalinclude:: examples/test_bumble_device.py
+   :language: python
+
+The test also uses :obj:`~pytest_bluezenv.BumbleEnv.run` to change the
+advertised name, which ``host0`` observes while scanning.
+
+The bumble API is asynchronous while tests are synchronous. Pass
+coroutines to :obj:`~pytest_bluezenv.BumbleEnv.run` instead of
+awaiting them on a test-local loop.
+
+Peer devices follow the lifetime of the host plugins: they are re-created
+for every test, and kept between tests that share a ``reuse=True``
+host setup.
+
+An LE Audio unicast server
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This example adapts bumble's ``run_unicast_server.py``. It declares a
+unicast sink with CSIS, PACS and ASCS services. The test registers a
+local BAP source endpoint on ``host0``, pairs with the bumble device,
+and checks that BlueZ creates the BAP transport for it.
+
+.. literalinclude:: examples/test_bumble_unicast_server.py
+   :language: python
+
+:download:`Download the example <examples/test_bumble_unicast_server.py>`
+
 Writing a host plugin
 ---------------------
 

@@ -18,6 +18,7 @@ Fixtures
 
    ~pytest_bluezenv.hosts
    ~pytest_bluezenv.hosts_once
+   ~pytest_bluezenv.bumble_env
 
 Host plugins
 ------------
@@ -38,6 +39,33 @@ Host plugins
    ~pytest_bluezenv.Obexd
    ~pytest_bluezenv.Pexpect
    ~pytest_bluezenv.Rcvbuf
+
+Controllers
+-----------
+
+Sources of Bluetooth controllers for the VM hosts.  A controller
+specification is selected with the ``controller`` argument of
+:obj:`~pytest_bluezenv.host_config`.
+
+.. autosummary::
+   :toctree: api
+
+   ~pytest_bluezenv.BtvirtController
+   ~pytest_bluezenv.HwController
+
+Bumble-emulated controllers
+---------------------------
+
+Controller specifications for
+:obj:`~pytest_bluezenv.host_config` and the test-side access to the
+bumble objects.
+
+.. autosummary::
+   :toctree: api
+
+   ~pytest_bluezenv.BumbleController
+   ~pytest_bluezenv.BumbleDevice
+   ~pytest_bluezenv.BumbleEnv
 
 Exceptions
 ----------
@@ -100,7 +128,6 @@ Internal fixtures, used by :obj:`~pytest_bluezenv.host_config`.
    :toctree: api
 
    ~pytest_bluezenv.kernel
-   ~pytest_bluezenv.hw_indices
    ~pytest_bluezenv.vm
    ~pytest_bluezenv.vm_once
    ~pytest_bluezenv.host_setup

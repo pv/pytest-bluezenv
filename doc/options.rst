@@ -54,7 +54,7 @@ The pytest-bluezenv plugin adds the following options.
     ``test-bluezenv-*.btsnoop``.
 
 ``--btvirt-debug``
-    Enable debug output from ``btvirt``.
+    Enable debug output from ``btvirt`` and bumble-emulated controllers.
 
 ``--bluezenv-progress=auto/on/off/yes/no``
     Report slow host RPC calls. ``auto`` reports only on an interactive

@@ -1,4 +1,11 @@
 Development:
+   - Add ``BumbleController`` for bumble-emulated VM host controllers
+     and peer devices, installed with the ``bumble`` extra.
+   - Add pluggable controller backends, with ``BtvirtController`` and
+     ``HwController`` built in.
+   - *(Backward incompatible)* Replace the ``hw_indices`` fixture and
+     the ``controller`` entry of ``vm_setup`` with controller
+     specifications.
 
 
 v0.1.10:

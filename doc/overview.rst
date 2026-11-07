@@ -90,6 +90,9 @@ isolated IOMMU group.
 Tests use ``btvirt`` unless their :obj:`~pytest_bluezenv.host_config`
 requests ``hw=True`` or ``--force-usb`` / ``--force-pcie`` is set. A
 configuration can also omit a controller with ``controller=False``.
+A :obj:`~pytest_bluezenv.BumbleController` serves the VM hosts with
+controllers emulated by the bumble package instead, and declares
+emulated peer devices that the VM hosts can reach.
 
 Reusing VM hosts
 ----------------
