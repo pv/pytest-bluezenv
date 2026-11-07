@@ -15,7 +15,8 @@ from pathlib import Path
 
 import pytest
 
-from . import utils, env, build_kernel, progress
+from . import utils, env, build_kernel, progress, _bumble
+from ._bumble import bumble_env
 from .btmon import Btmon
 
 __all__ = [
@@ -44,6 +45,7 @@ __all__ = [
     "hosts",
     "vm_once",
     "hosts_once",
+    "bumble_env",
 ]
 
 VM_REQUIRED_EXE = {
@@ -169,7 +171,7 @@ def pytest_addoption(parser):
     group.addoption(
         "--btvirt-debug",
         action="store_true",
-        help="Enable debug output from btvirt",
+        help="Enable debug output from btvirt and bumble controllers",
     )
 
     # host_plugins.Rcvbuf:
@@ -768,8 +770,10 @@ def vm_setup(request):
           controllers.
         - ``mem`` (str): memory per VM host, or ``""`` when the default
           applies.
-        - ``controller`` (bool): whether the hosts get a Bluetooth
-          controller.
+        - ``controller`` (bool | BumbleController): whether the hosts
+          get a Bluetooth controller; a
+          :obj:`~pytest_bluezenv.BumbleController` selects
+          bumble-emulated controllers.
     """
     if getattr(request, "param", None) is None:
         raise pytest.fail("env setup not specified")
@@ -777,10 +781,15 @@ def vm_setup(request):
     return request.param
 
 
-def _check_requirements():
+def _check_requirements(controller=None):
     error = []
 
+    is_bumble = isinstance(controller, _bumble.BumbleController)
+
     for (path, name), required in sorted(VM_REQUIRED_EXE.items()):
+        if is_bumble and (path, name) == ("emulator", "btvirt"):
+            # bumble environments do not use btvirt
+            continue
         try:
             utils.find_exe(path, name)
         except FileNotFoundError:
@@ -797,13 +806,32 @@ def _check_requirements():
 def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     config = request.session.config
 
-    err = _check_requirements()
+    # User Mode Linux hosts take their controllers from btvirt only
+    uml = env.Environment.is_uml_kernel(kernel)
+
+    if isinstance(controller, _bumble.BumbleController):
+        if uml:
+            pytest.skip(reason="BumbleController needs QEMU, not User Mode Linux")
+            return
+        if not _bumble.bumble_available():
+            pytest.skip(
+                reason="bumble package not installed"
+                " (pip install pytest-bluezenv[bumble])"
+            )
+            return
+
+    err = _check_requirements(controller)
     if err:
         pytest.skip(reason=err)
         return
 
-    if hw or config.option.force_usb or config.option.force_pcie:
-        if env.Environment.is_uml_kernel(kernel):
+    # hardware is selected only for tests that could use it: an
+    # explicit spec, e.g. BumbleController, is never replaced
+    hw_controllers = (hw or config.option.force_usb or config.option.force_pcie) and (
+        not isinstance(controller, _bumble.BumbleController)
+    )
+    if hw_controllers:
+        if uml:
             pytest.skip(reason="controller passthrough needs QEMU, not User Mode Linux")
             return
 
@@ -839,6 +867,9 @@ def _hosts_impl(request, vm, setup, name, reuse):
     # Start VM if it was stopped
     if vm.path is None:
         vm.start()
+
+    if vm.bumble is not None:
+        vm.bumble._start_devices()
 
     try:
         for idx, (h, plugins) in enumerate(zip(vm.hosts, setup)):

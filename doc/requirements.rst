@@ -59,8 +59,9 @@ User Mode Linux
 A User Mode Linux (UML) kernel can be used instead of QEMU, e.g. on
 machines without KVM support. The VM hosts are then run as UML processes
 by ``test-runner``, with a single ``btvirt`` serving their controllers and
-control and log channels as vhost-user devices. Controller pass-through is
-not available. The kernel is built with ``ARCH=um`` from the same
+control and log channels as vhost-user devices. Controller pass-through
+and bumble-emulated controllers are not available; tests using them are
+skipped. The kernel is built with ``ARCH=um`` from the same
 configuration, with in addition:
 
 .. code-block::

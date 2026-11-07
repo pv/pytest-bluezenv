@@ -5,6 +5,7 @@ python_sources = files(
   'agent.py',
   'btmon.py',
   'build_kernel.py',
+  '_bumble.py',
   'env.py',
   'host_plugins.py',
   'le.py',
