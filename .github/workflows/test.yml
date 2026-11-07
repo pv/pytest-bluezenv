@@ -64,8 +64,9 @@ jobs:
         src/pytest_bluezenv/tests
     - name: Run VM tests on User Mode Linux
       run: >-
-        python3 -mpytest --kernel="${RUNNER_TEMP}/linux" -m vm -vv -ra
-        -n auto --dist worksteal --junitxml="${RUNNER_TEMP}/uml-junit.xml"
+        python3 -mpytest --kernel="${RUNNER_TEMP}/linux" -m "vm and not bumble"
+        -vv -ra -n auto --dist worksteal
+        --junitxml="${RUNNER_TEMP}/uml-junit.xml"
         src/pytest_bluezenv/tests
     - name: Verify UML VM test passed
       run: >-

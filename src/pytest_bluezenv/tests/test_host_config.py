@@ -81,7 +81,7 @@ def test_host_config_vm_setup_flags(pytester):
                 "num_hosts": 2,
                 "hw": True,
                 "mem": "512M",
-                "controller": False,
+                "controller": None,
             }
     """)
     pytester.runpytest(*PLUGIN).assert_outcomes(passed=1)

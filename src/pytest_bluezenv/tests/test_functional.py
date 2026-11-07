@@ -245,3 +245,73 @@ def test_uml_kernel_detection_truncated_sections(tmp_path):
         path.write_bytes(data)
 
         assert not Environment.is_uml_kernel(path)
+
+
+OTHER_CONTROLLER_TEST = """
+    from pytest_bluezenv import BumbleController, Call, host_config
+
+    @host_config([Call()], controller=BumbleController())
+    def test_controller(hosts):
+        pass
+"""
+
+
+def test_uml_skips_tests_on_other_controllers(pytester, tmp_path):
+    # A User Mode Linux guest takes its controller from btvirt, so tests
+    # on other backends must skip, not fail when the environment starts
+    _elf(tmp_path / "linux", [".text", ".uml.setup.init"])
+    pytester.makepyfile(OTHER_CONTROLLER_TEST)
+    result = pytester.runpytest(
+        *PLUGIN,
+        "--kernel-build=no",
+        "--kernel",
+        str(tmp_path / "linux"),
+        "-rs",
+    )
+    result.assert_outcomes(skipped=1)
+    result.stdout.fnmatch_lines(["*BumbleController needs QEMU, not User Mode Linux*"])
+
+
+NO_CONTROLLER_TEST = """
+    from pytest_bluezenv import Call, host_config
+
+    @host_config([Call()], controller=False)
+    def test_no_controller(hosts):
+        pass
+"""
+
+
+def test_uml_requires_btvirt_without_controllers(pytester, tmp_path, monkeypatch):
+    # User Mode Linux relays the host consoles through btvirt even when
+    # the tests use no controllers, so a missing btvirt must skip
+    from pytest_bluezenv import utils
+
+    bluez = tmp_path / "bluez"
+    for exe in ("tools/btmgmt", "tools/test-runner"):
+        f = bluez / exe
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(b"#!/bin/sh\n")
+        f.chmod(0o755)
+    _elf(tmp_path / "linux", [".text", ".uml.setup.init"])
+
+    real_find_exe = utils.find_exe
+
+    def find_exe(subdir, name):
+        if name == "btvirt":
+            raise FileNotFoundError(name)
+        return real_find_exe(subdir, name)
+
+    monkeypatch.setattr(utils, "find_exe", find_exe)
+
+    pytester.makepyfile(NO_CONTROLLER_TEST)
+    result = pytester.runpytest(
+        *PLUGIN,
+        "--kernel-build=no",
+        "--kernel",
+        str(tmp_path / "linux"),
+        "--bluez-build-dir",
+        str(bluez),
+        "-rs",
+    )
+    result.assert_outcomes(skipped=1)
+    result.stdout.fnmatch_lines(["*Required executable 'btvirt' not found*"])
