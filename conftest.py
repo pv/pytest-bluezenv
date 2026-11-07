@@ -103,11 +103,21 @@ def restore_plugin_state():
     """
     Keep plugin globals from leaking between tests: an in-process
     pytester session runs the plugin's pytest_configure, overwriting
-    utils.DEFAULT_TIMEOUT and Environment.DEFAULT_MEM for the outer
-    session.
+    utils.DEFAULT_TIMEOUT, Environment.DEFAULT_MEM and the BlueZ tree
+    locations for the outer session.
     """
     from pytest_bluezenv import env, utils
 
-    original = (utils.DEFAULT_TIMEOUT, env.Environment.DEFAULT_MEM)
+    original = (
+        utils.DEFAULT_TIMEOUT,
+        env.Environment.DEFAULT_MEM,
+        utils.BUILD_DIR,
+        utils.SRC_DIR,
+    )
     yield
-    utils.DEFAULT_TIMEOUT, env.Environment.DEFAULT_MEM = original
+    (
+        utils.DEFAULT_TIMEOUT,
+        env.Environment.DEFAULT_MEM,
+        utils.BUILD_DIR,
+        utils.SRC_DIR,
+    ) = original

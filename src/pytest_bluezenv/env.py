@@ -14,7 +14,6 @@ import sys
 import os
 import signal
 import re
-import pwd
 import time
 import argparse
 import shutil
@@ -34,7 +33,8 @@ from subprocess import Popen, DEVNULL, PIPE, run
 
 from gi.repository import GLib
 
-from . import rpc, utils, _bumble
+from . import rpc, utils
+from .controller import BtvirtController, HwController, _asan_env
 
 __all__ = ["HostPlugin", "HostProxy", "PluginProxy"]
 
@@ -714,11 +714,10 @@ class Environment:
         self,
         kernel,
         num_hosts,
-        hw_indices=None,
         timeout=20,
         mem=None,
-        controller=True,
-        btvirt_debug=False,
+        controller=None,
+        debug=False,
         progress_reporter=None,
     ):
         self.kernel = str(self.find_kernel(kernel))
@@ -738,19 +737,9 @@ class Environment:
         self.reuse_group = None
         self.mem = mem
         self.controller = controller
-        self.bumble = None
-        self.btvirt_debug = btvirt_debug
+        self.controller_backend = None
+        self.debug = debug
         self.progress_reporter = progress_reporter
-
-        if hw_indices is None:
-            self.hw_indices = None
-        elif hw_indices is not None and self.num_hosts <= len(hw_indices):
-            self.hw_indices = tuple(hw_indices)
-        else:
-            raise ValueError(
-                "Controller passthrough enabled, but not enough controllers"
-                " for each host"
-            )
 
         if sys.version_info >= (3, 12):
             self.runner = [sys.executable, "-P"]
@@ -815,25 +804,30 @@ class Environment:
         self.path = Path(tempfile.mkdtemp(prefix="pytest-bluezenv-"))
 
         if self.uml:
-            if self.hw_indices is not None:
+            if isinstance(self.controller, HwController):
                 raise ValueError(
                     "Controller passthrough is not supported with User Mode Linux"
                 )
-            if isinstance(self.controller, _bumble.BumbleController):
+            if self.controller is not None and not isinstance(
+                self.controller, BtvirtController
+            ):
                 raise ValueError(
-                    "Bumble controllers are not supported with User Mode Linux"
+                    f"{type(self.controller).__name__} is not supported"
+                    " with User Mode Linux"
                 )
             paths, names = self._start_uml()
             self._start_hosts(paths, names)
             return
 
-        if isinstance(self.controller, _bumble.BumbleController):
-            args = self._start_bumble()
-        elif self.controller:
-            if self.hw_indices is None:
-                args = self._start_btvirt()
-            else:
-                args = self._start_hw()
+        if self.controller is not None:
+            self.controller_backend = self.controller.backend(
+                self.controller,
+                self.path,
+                self.num_hosts,
+                timeout=self.timeout,
+                debug=self.debug,
+            )
+            args = self.controller_backend.runner_args
         else:
             args = [[]] * self.num_hosts
 
@@ -853,10 +847,8 @@ class Environment:
                 job.wait()
         self.kill_jobs.clear()
 
-        if self.bumble is not None:
-            runtime = self.bumble._runtime
-            self.bumble = None
-            runtime.stop()
+        if self.controller_backend is not None:
+            self.controller_backend.stop()
 
         while self.log_streams:
             self.log_streams.pop().close()
@@ -868,12 +860,13 @@ class Environment:
                 # error already logged
                 pass
 
-        # Clean up tmpdir (btvirt, bumble, own sockets, rmdir)
+        # Clean up tmpdir (controller files, own sockets, rmdir)
         if self.path is not None:
+            if self.controller_backend is not None:
+                self.controller_backend.cleanup(self.path)
+
             for f in list(self.path.iterdir()):
                 if f.name.startswith(("bt-", "con-")):
-                    f.unlink()
-                if f.name.startswith("bumble-"):
                     f.unlink()
                 if f.name.startswith("shared-"):
                     shutil.rmtree(f.resolve(), ignore_errors=True)
@@ -892,8 +885,8 @@ class Environment:
                 cmd = utils.quoted(job.args)
                 errors.append("'{}' terminated unexpectedly".format(cmd))
 
-        if self.bumble is not None:
-            errors += self.bumble._runtime.check_errors()
+        if self.controller_backend is not None:
+            errors += self.controller_backend.check_errors()
 
         return errors
 
@@ -919,8 +912,8 @@ class Environment:
 
             errors += self.check_job_errors()
 
-            if self.bumble is not None:
-                self.bumble._stop_devices()
+            if self.controller_backend is not None:
+                self.controller_backend.stop_devices()
 
             if errors:
                 errors = "\n".join(errors)
@@ -930,144 +923,6 @@ class Environment:
         f = cls(*a, **kw)
         self.log_streams.append(f)
         return f.stream
-
-    def _get_asan_env(self):
-        env = dict(os.environ)
-        env.setdefault(
-            "ASAN_OPTIONS",
-            "detect_leaks=1:leak_check_at_exit=0:print_summary=1:abort_on_error=1:"
-            "use_madv_dontdump=1:disable_coredump=0:unmap_shadow_on_exit=1:"
-            "strict_string_checks=1:detect_stack_use_after_return=1:"
-            "check_initialization_order=1:strict_init_order=1",
-        )
-        env.setdefault(
-            "UBSAN_OPTIONS", "print_stacktrace=1:print_summary=1:abort_on_error=1"
-        )
-        env.setdefault("LSAN_OPTIONS", "exitcode=0:log_threads=1")
-        return env
-
-    def _start_btvirt(self):
-        exe = utils.find_exe("emulator", "btvirt")
-        logger = self._add_log("btvirt")
-
-        cmd = [exe, f"--server={self.path}"]
-        if self.btvirt_debug:
-            cmd.append("-d")
-        log.info("Starting btvirt: {}".format(utils.quoted(cmd)))
-
-        job = Popen(
-            cmd, stdout=logger, stderr=logger, stdin=DEVNULL, env=self._get_asan_env()
-        )
-        self.jobs.append(job)
-
-        socket = self.path / "bt-server-bredrle"
-        utils.wait_files([job], [socket])
-        return [[f"-u{socket}"]] * self.num_hosts
-
-    def _start_bumble(self):
-        runtime = _bumble._BumbleRuntime(
-            self.controller,
-            self.num_hosts,
-            self.path,
-            timeout=self.timeout,
-            debug=self.btvirt_debug,
-        )
-        log.info("Starting bumble controllers")
-        runtime.start()
-        self.bumble = runtime.env
-        return [[f"-u{socket}"] for socket in runtime.socket_paths]
-
-    @classmethod
-    def controller_bus(cls, name):
-        """
-        Bus a controller is attached to.
-
-        Returns:
-            bus: "usb", "pci", or None if it is on neither of them
-        """
-        subsys = Path("/sys/class/bluetooth") / name / "device" / "subsystem"
-
-        try:
-            bus = subsys.resolve().name
-        except OSError:
-            return None
-
-        return bus if bus in ("usb", "pci") else None
-
-    @classmethod
-    def check_controller(cls, name):
-        """
-        Check a controller can be passed through to a VM host.
-
-        Returns:
-            args: test-runner arguments passing the controller through
-
-        Raises:
-            ValueError: it cannot be passed through, telling why
-        """
-        bus = cls.controller_bus(name)
-
-        if bus == "usb":
-            return cls._check_usb_controller(name)
-        elif bus == "pci":
-            return cls._check_pcie_controller(name)
-
-        raise ValueError(f"{name} is not an USB or a PCIe device")
-
-    @classmethod
-    def _check_usb_controller(cls, name):
-        devpath = Path(f"/sys/class/bluetooth/{name}/device/../")
-        with open(devpath / "busnum", "r") as f:
-            busnum = "{:03}".format(int(f.read().strip()))
-        with open(devpath / "devnum", "r") as f:
-            devnum = "{:03}".format(int(f.read().strip()))
-
-        devname = f"/dev/bus/usb/{busnum}/{devnum}"
-        if not Path(devname).exists():
-            raise ValueError(f"{devname} does not exist")
-
-        try:
-            with open(devname, "wb") as f:
-                pass
-        except IOError:
-            user = pwd.getpwuid(os.getuid()).pw_name.strip()
-            message = (
-                f"error: cannot open {devname} for {name} USB redirection. "
-                f"Run: 'sudo setfacl -m user:{user}:rw- {devname}' "
-                f"to grant the permission"
-            )
-            raise ValueError(message)
-
-        return ["-U", f"usb-host,hostbus={busnum},hostaddr={devnum}"]
-
-    @classmethod
-    def _check_pcie_controller(cls, name):
-        device = Path(f"/sys/class/bluetooth/{name}/device").resolve()
-        bdf = device.name
-
-        # The device is bound to vfio-pci for the time a VM host uses it,
-        # which is only allowed for the superuser
-        if os.geteuid() != 0:
-            raise ValueError(
-                f"error: passing {name} ({bdf}) through to a VM host binds it"
-                f" to vfio-pci, which requires running the tests as root"
-            )
-
-        if not (device / "iommu_group").exists():
-            raise ValueError(
-                f"error: {name} ({bdf}) has no IOMMU group, enable the IOMMU"
-                f" to pass it through to a VM host"
-            )
-
-        return ["-P", f"vfio-pci,host={bdf}"]
-
-    def _start_hw(self):
-        args = []
-
-        for index in self.hw_indices[: self.num_hosts]:
-            args.append(self.check_controller(index))
-
-        return args
 
     def _uml_mem(self):
         """
@@ -1094,7 +949,7 @@ class Environment:
         logger = self._add_log("btvirt")
 
         cmd = [btvirt]
-        if self.btvirt_debug:
+        if self.debug:
             cmd.append("-d")
         if self.controller:
             cmd += [f"-V{self.path}"]
@@ -1105,9 +960,7 @@ class Environment:
             ]
 
         log.info("Starting btvirt: {}".format(utils.quoted(cmd)))
-        job = Popen(
-            cmd, stdout=logger, stderr=logger, stdin=DEVNULL, env=self._get_asan_env()
-        )
+        job = Popen(cmd, stdout=logger, stderr=logger, stdin=DEVNULL, env=_asan_env())
         self.jobs.append(job)
 
         # Every socket the hosts connect to: btvirt creates the console

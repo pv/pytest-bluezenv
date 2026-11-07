@@ -15,9 +15,10 @@ from pathlib import Path
 
 import pytest
 
-from . import utils, env, build_kernel, progress, _bumble
+from . import utils, env, build_kernel, progress
 from ._bumble import bumble_env
 from .btmon import Btmon
+from .controller import BtvirtController, ControllerBase, HwController
 
 __all__ = [
     "CoredumpWarning",
@@ -38,7 +39,6 @@ __all__ = [
     "pytest_runtest_logfinish",
     # fixtures:
     "kernel",
-    "hw_indices",
     "host_setup",
     "vm_setup",
     "vm",
@@ -53,7 +53,6 @@ VM_REQUIRED_EXE = {
     ("", "chronyd"): False,
     ("", "dbus-daemon"): False,
     ("", "setsid"): False,
-    ("emulator", "btvirt"): True,
     ("tools", "btmgmt"): True,
     ("tools", "test-runner"): True,
 }
@@ -306,11 +305,18 @@ def _get_item_vm_host_setup(item):
 @pytest.hookimpl(tryfirst=True)
 def pytest_collection_modifyitems(session, config, items):
     # Sort VM-using tests to minimize VM setup/teardown
+    def sort_value(value):
+        # ControllerBase specs and the None of no-controller setups
+        # need a shared ordering.
+        if isinstance(value, ControllerBase):
+            return (1, value._sort_key())
+        return (0, value)
+
     def sort_key(item):
         vm_setup, host_setup = _get_item_vm_host_setup(item)
         key = ()
         if vm_setup:
-            key += tuple(sorted(vm_setup.items()))
+            key += tuple((k, sort_value(v)) for k, v in sorted(vm_setup.items()))
         if host_setup:
             key += (host_setup["name"],)
         return key
@@ -658,72 +664,6 @@ def kernel(pytestconfig):
     return kernel
 
 
-def _controller_indices(pytestconfig, option):
-    """
-    Controllers on the given bus that can be passed through to a VM host.
-    """
-    bus = {"usb": "usb", "pcie": "pci"}[option]
-    indices = pytestconfig.getoption(option)
-
-    if indices is None:
-        indices = os.environ.get("FUNCTIONAL_TESTING_CONTROLLERS")
-
-    if indices is None:
-        indices = [item.name for item in Path("/sys/class/bluetooth").iterdir()]
-    else:
-        indices = indices.replace(",", " ").split()
-
-    messages = []
-    for name in list(indices):
-        if env.Environment.controller_bus(name) != bus:
-            indices.remove(name)
-            continue
-
-        try:
-            env.Environment.check_controller(name)
-            messages.append("")
-        except ValueError as exc:
-            indices.remove(name)
-            messages.append(str(exc))
-
-    return indices, messages
-
-
-@pytest.fixture(scope="session")
-def hw_indices(pytestconfig):
-    """
-    Fixture for available HW USB controllers. Skips tests if not available.
-
-    Args:
-        pytestconfig (pytest.Config): pytest configuration.
-
-    Returns:
-        tuple[list[str], list[str]]: controller names and associated
-        availability messages.
-    """
-    kinds = []
-
-    # If command line option given, use only that kind
-    if pytestconfig.getoption("pcie") or pytestconfig.getoption("force_pcie"):
-        kinds.append("pcie")
-    if pytestconfig.getoption("usb") or pytestconfig.getoption("force_usb"):
-        kinds.append("usb")
-    if not kinds:
-        kinds = ["usb", "pcie"]
-
-    indices = []
-    messages = []
-    for kind in kinds:
-        ind, msg = _controller_indices(pytestconfig, kind)
-        indices += ind
-        messages += msg
-
-    # Order messages of valid indices to front
-    messages.sort(key=lambda x: x != "")
-
-    return indices, messages
-
-
 @pytest.fixture(scope="session")
 def host_setup(request):
     """
@@ -770,9 +710,9 @@ def vm_setup(request):
           controllers.
         - ``mem`` (str): memory per VM host, or ``""`` when the default
           applies.
-        - ``controller`` (bool | BumbleController): whether the hosts
-          get a Bluetooth controller; a
-          :obj:`~pytest_bluezenv.BumbleController` selects
+        - ``controller`` (ControllerBase | None): the controller
+          backend of the hosts, ``None`` omitting controllers;
+          e.g. a :obj:`~pytest_bluezenv.BumbleController` selects
           bumble-emulated controllers.
     """
     if getattr(request, "param", None) is None:
@@ -781,15 +721,18 @@ def vm_setup(request):
     return request.param
 
 
-def _check_requirements(controller=None):
+def _check_requirements(controller=None, uml=False):
+    executables = dict(VM_REQUIRED_EXE)
+    if controller is not None:
+        executables.update(controller.executables())
+    if uml:
+        # User Mode Linux relays the host consoles through btvirt
+        # vhost-user sockets even without controllers
+        executables[("emulator", "btvirt")] = True
+
     error = []
 
-    is_bumble = isinstance(controller, _bumble.BumbleController)
-
-    for (path, name), required in sorted(VM_REQUIRED_EXE.items()):
-        if is_bumble and (path, name) == ("emulator", "btvirt"):
-            # bumble environments do not use btvirt
-            continue
+    for (path, name), required in sorted(executables.items()):
         try:
             utils.find_exe(path, name)
         except FileNotFoundError:
@@ -806,21 +749,22 @@ def _check_requirements(controller=None):
 def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     config = request.session.config
 
-    # User Mode Linux hosts take their controllers from btvirt only
+    # User Mode Linux hosts get their controllers from btvirt only
     uml = env.Environment.is_uml_kernel(kernel)
 
-    if isinstance(controller, _bumble.BumbleController):
-        if uml:
-            pytest.skip(reason="BumbleController needs QEMU, not User Mode Linux")
-            return
-        if not _bumble.bumble_available():
+    if controller is not None:
+        if uml and not isinstance(controller, BtvirtController):
             pytest.skip(
-                reason="bumble package not installed"
-                " (pip install pytest-bluezenv[bumble])"
+                reason=f"{type(controller).__name__} needs QEMU, not User Mode Linux"
             )
             return
 
-    err = _check_requirements(controller)
+        reason = controller.check_available()
+        if reason:
+            pytest.skip(reason=reason)
+            return
+
+    err = _check_requirements(controller, uml=uml)
     if err:
         pytest.skip(reason=err)
         return
@@ -828,27 +772,26 @@ def _vm_impl(request, kernel, num_hosts, hw, mem, controller):
     # hardware is selected only for tests that could use it: an
     # explicit spec, e.g. BumbleController, is never replaced
     hw_controllers = (hw or config.option.force_usb or config.option.force_pcie) and (
-        not isinstance(controller, _bumble.BumbleController)
+        controller is None or isinstance(controller, BtvirtController)
     )
     if hw_controllers:
         if uml:
             pytest.skip(reason="controller passthrough needs QEMU, not User Mode Linux")
             return
 
-        hw_indices, messages = request.getfixturevalue("hw_indices")
+        hw_indices, messages = HwController.select(config)
         if len(hw_indices) < num_hosts:
             message = "\n".join(m for m in messages[:num_hosts] if m)
             pytest.skip(reason=f"Not enough HW controllers: {message}")
-    else:
-        hw_indices = None
+        if isinstance(controller, BtvirtController):
+            controller = HwController(hw_indices)
 
     with env.Environment(
         kernel,
         num_hosts,
-        hw_indices=hw_indices,
         mem=mem,
         controller=controller,
-        btvirt_debug=config.option.btvirt_debug,
+        debug=config.option.btvirt_debug,
         timeout=utils.DEFAULT_TIMEOUT,
         progress_reporter=PROGRESS_REPORTER,
     ) as vm:
@@ -868,8 +811,8 @@ def _hosts_impl(request, vm, setup, name, reuse):
     if vm.path is None:
         vm.start()
 
-    if vm.bumble is not None:
-        vm.bumble._start_devices()
+    if vm.controller_backend is not None:
+        vm.controller_backend.start_devices()
 
     try:
         for idx, (h, plugins) in enumerate(zip(vm.hosts, setup)):

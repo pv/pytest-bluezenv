@@ -3,6 +3,7 @@
 
 from .rpc import RemoteError, RemoteTimeoutError
 
+from .controller import *
 from .env import *
 from .utils import *
 from .host_plugins import *
